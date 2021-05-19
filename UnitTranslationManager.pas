@@ -1,11 +1,11 @@
 unit UnitTranslationManager;
-{$I ..\..\KM_CompilerDirectives.inc}
+{$I KM_CompilerDirectives.inc}
 interface
 uses
   Classes, Controls, Dialogs, ExtCtrls, Forms, Graphics, Math, Menus,
   {$IFDEF MSWINDOWS} ComCtrls, FileCtrl, {$ENDIF}
   StdCtrls, StrUtils, Windows, SysUtils, CheckLst,
-  KM_Defaults, KM_IoCommon, KM_ResLocales, KM_TextManager, Unit_PathManager;
+  KM_ResLocales, KM_TextManager, Unit_PathManager;
 
 type
   TKMUsageMode = (umDeveloper, umUser);
@@ -79,6 +79,8 @@ type
     procedure btnPasteFromClipboardAllClick(Sender: TObject);
     procedure btnListMismatchingClick(Sender: TObject);
   private
+    fExeDir: string;
+
     fPathManager: TPathManager;
     fTextManager: TKMTextManager;
     fLocales: TKMResLocales;
@@ -110,7 +112,7 @@ var
 
 implementation
 uses
-  KM_CommonTypes, KM_IoXML;
+  KromUtils, KM_CommonTypes, KM_IoXML;
 
 
 {$R *.dfm}
@@ -118,13 +120,15 @@ uses
 
 procedure TForm1.FormCreate(Sender: TObject);
 begin
-  Caption := GAME_TITLE + ' Translation Manager (' + GAME_REVISION + ')';
+  Caption := 'Translation Manager (' + DateTimeToStr(GetExeBuildTime) + ')';
 
-  ExeDir := ExtractFilePath(ParamStr(0));
+  fExeDir := ExtractFilePath(ParamStr(0));
 
-  gIoPack := TKMIoPack.Create(ExeDir + DATA_FILE);
+  gIoPack := TKMIoPack.Create(fExeDir + DATA_FILE);
 
-  fLocales := TKMResLocales.Create(ExeDir + DATA_FOLDER + 'text\locales.xml');
+  //todo: Load corresponding locales
+  fLocales := TKMResLocales.Create(fExeDir + 'data\locales.txt'); // KMR
+  fLocales := TKMResLocales.Create(fExeDir + 'data\text\locales.xml'); // KP
 
   fMode := umDeveloper;
   //fMode := umUser;
@@ -210,7 +214,7 @@ var
 begin
   lbLibs.Clear;
   fPathManager.Clear;
-  fPathManager.AddPath(ExeDir);
+  fPathManager.AddPath(fExeDir);
 
   for I := 0 to fPathManager.Count - 1 do
     lbLibs.Items.Add(fPathManager[I]);
@@ -237,9 +241,9 @@ begin
 
   // Special case for ingame text library
   if SameText(lbLibs.Items[id], TEXT_PATH) then
-    fTextManager.Load(ExeDir, lbLibs.Items[id], TAGS_PATH, META_PATH, [])
+    fTextManager.Load(fExeDir, lbLibs.Items[id], TAGS_PATH, META_PATH, [])
   else
-    fTextManager.Load(ExeDir, lbLibs.Items[id], '', '', []);
+    fTextManager.Load(fExeDir, lbLibs.Items[id], '', '', []);
 
   RefreshFilter;
   RefreshList;
@@ -720,9 +724,9 @@ var
 begin
   slMiss := TStringList.Create;
   try
-    fTextManager.ListMismatchingAll(ExeDir, fPathManager.GetPaths, slMiss);
+    fTextManager.ListMismatchingAll(fExeDir, fPathManager.GetPaths, slMiss);
 
-    slMiss.SaveToFile(ExeDir + 'TM_Mismatching.txt');
+    slMiss.SaveToFile(fExeDir + 'TM_Mismatching.txt');
     ShowMessage(slMiss.Text);
   finally
     slMiss.Free;
@@ -766,14 +770,14 @@ begin
       slTags.Append(fTextManager[I].Tag);
 
     // Check all *.pas files
-    CheckPasFiles(ExeDir + 'src\');
+    CheckPasFiles(fExeDir + 'src\');
 
     // Remove duplicate EOLs (keep section separators)
     for I := slTags.Count - 2 downto 0 do
     if (slTags[I] = '') and (slTags[I+1] = '') then
       slTags.Delete(I);
 
-    slTags.SaveToFile(ExeDir + 'TM_unused.txt');
+    slTags.SaveToFile(fExeDir + 'TM_unused.txt');
     ShowMessage(slTags.Text);
   finally
     slTags.Free;
@@ -805,7 +809,7 @@ begin
     if clbShowLang.Checked[I] then
       localesToCopy := localesToCopy + [I-1];
 
-  fTextManager.ToClipboardAll(ExeDir, fPathManager.GetPaths, localesToCopy);
+  fTextManager.ToClipboardAll(fExeDir, fPathManager.GetPaths, localesToCopy);
 end;
 
 
@@ -818,7 +822,7 @@ end;
 
 procedure TForm1.btnPasteFromClipboardAllClick(Sender: TObject);
 begin
-  fTextManager.FromClipboardAll(ExeDir);
+  fTextManager.FromClipboardAll(fExeDir);
 end;
 
 

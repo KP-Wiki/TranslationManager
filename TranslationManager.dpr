@@ -1,12 +1,20 @@
 program TranslationManager;
-{$I ..\..\KM_CompilerDirectives.inc}
 uses
   {$IFDEF FPC}
   Interfaces,
-  {$ENDIF }
+  {$ENDIF}
   Forms,
+
   UnitTranslationManager in 'UnitTranslationManager.pas' {Form1},
-  KM_ResLocales in '..\..\src\res\KM_ResLocales.pas',
+
+  KromStringUtils in '3rdparty\KromStringUtils.pas',
+  KromUtils in '3rdparty\KromUtils.pas',
+  KM_CommonTypes in 'common\KM_CommonTypes.pas',
+  KM_IoXml in 'common\KM_IoXml.pas',
+  Xml.VerySimple in 'common\Xml.VerySimple.pas',
+  KM_ResLocales in 'res\KM_ResLocales.pas',
+  KM_Utils in 'KM_Utils.pas',
+
   KM_TextManager in 'KM_TextManager.pas',
   Unit_PathManager in 'Unit_PathManager.pas';
 

@@ -1,12 +1,11 @@
 unit KM_TextManager;
-{$I ..\..\KM_CompilerDirectives.inc}
 interface
 uses
   Classes, Controls, Dialogs, ExtCtrls, FileCtrl, Forms, Graphics, Math, Vcl.Clipbrd, Generics.Collections, Generics.Defaults,
   StdCtrls, StrUtils, SysUtils, Windows, Types,
   KromUtils,
   KM_CommonTypes,
-  KM_ResLocales, KM_IoCommon;
+  KM_ResLocales;
 
 
 type
@@ -118,16 +117,15 @@ type
 
 
 const
-  TEXT_PATH = DATA_FOLDER + 'text\text.%s.libx';
-  TAGS_PATH = DATA_FOLDER + 'text\text_IDs.inc';
-  META_PATH = DATA_FOLDER + 'text\text_meta.xml';
+  TEXT_PATH = 'data\text\text.%s.libx';
+  TAGS_PATH = 'data\text\text_IDs.inc';
+  META_PATH = 'data\text\text_meta.xml';
 
 
 implementation
 uses
   KromStringUtils,
-  KM_IoXml,
-  KM_Utils, KM_ResTexts;
+  KM_IoXml;
 
 
 { TKMLine }
@@ -164,14 +162,6 @@ procedure TKMLine.Autoname(const aPath: string);
 var
   txt: string;
 begin
-  //todo -cThink: Change how names are generated to not depend on Eng line (cos it can change too). Use filename instead?
-  txt := Trim(Strings[LOCALE_DEFAULT]);
-  txt := StripColor(txt);
-  txt := StringReplace(txt, '"', '', [rfReplaceAll]);
-  txt := StringReplace(txt, ' ', '_', [rfReplaceAll]);
-  txt := StringReplace(txt, '|', '_', [rfReplaceAll]);
-  //Tag := 'TX_' + IntToStr(Id) + '_' + UpperCase(LeftStr(txt, 24));
-
   txt := Trim(aPath);
   txt := StringReplace(txt, '.%s.libx', '', [rfReplaceAll]);
   txt := StringReplace(txt, '\', '_', [rfReplaceAll]);
