@@ -113,7 +113,7 @@ var
 
 implementation
 uses
-  KromUtils, KM_CommonTypes, KM_IoXML;
+  KromUtils, KM_IoXML;
 
 
 {$R *.dfm}

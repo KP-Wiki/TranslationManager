@@ -4,11 +4,12 @@ uses
   Classes, Controls, Dialogs, ExtCtrls, FileCtrl, Forms, Graphics, Math, Vcl.Clipbrd, Generics.Collections, Generics.Defaults,
   StdCtrls, StrUtils, SysUtils, Windows, Types,
   KromUtils,
-  KM_CommonTypes,
   KM_ResLocales;
 
 
 type
+  TByteSet = set of Byte;
+
   TKMLibraryType = (ltGame, ltMissions);
   TKMClipboardExport = (
     ceSimple,     // Just columns with locales
