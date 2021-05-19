@@ -125,7 +125,7 @@ const
 implementation
 uses
   KromStringUtils,
-  KM_IoXml;
+  KM_Utils, KM_IoXml;
 
 
 { TKMLine }
@@ -464,7 +464,7 @@ begin
 
   SL := TStringList.Create;
   try
-    gIoPack.GetFileStringList(aFilename, SL);
+    SL.LoadFromFile(aFilename);
 
     for I := 0 to SL.Count - 1 do
     begin
@@ -479,7 +479,7 @@ begin
       Line := StringReplace(Line, '\n', sLineBreak, [rfReplaceAll, rfIgnoreCase]);
       Line := StringReplace(Line, '\\', '\', [rfReplaceAll, rfIgnoreCase]);
 
-      Assert(id <= MAX_LIBX_STRINGS, 'Dont allow too many strings for no reason');
+      Assert(id <= 4096, 'Dont allow too many strings for no reason');
 
       fLines.AddOrAppendString(id, aLocaleId, Line);
     end;

@@ -1,5 +1,5 @@
 unit Unit_PathManager;
-{$I ..\..\KM_CompilerDirectives.inc}
+{$I KM_CompilerDirectives.inc}
 interface
 uses
   Classes, StrUtils, Windows, SysUtils;

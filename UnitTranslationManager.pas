@@ -124,7 +124,7 @@ begin
 
   fExeDir := ExtractFilePath(ParamStr(0));
 
-  gIoPack := TKMIoPack.Create(fExeDir + DATA_FILE);
+  //gIoPack := TKMIoPack.Create(fExeDir + DATA_FILE);
 
   //todo: Load corresponding locales
   fLocales := TKMResLocales.Create(fExeDir + 'data\locales.txt'); // KMR
@@ -151,7 +151,7 @@ begin
   SaveSettings(ChangeFileExt(ParamStr(0), '.xml'));
   fTextManager.Free;
   fLocales.Free;
-  gIoPack.Free;
+  //gIoPack.Free;
 end;
 
 
@@ -740,7 +740,8 @@ var
 
   procedure CheckPasFiles(const aDir: string);
   begin
-    gIoPack.ListFiles(
+    //todo: gIoPack.ListFiles(
+    {
       aDir,
       True,
       procedure (const aFilename: string)
@@ -757,7 +758,7 @@ var
             slTags.Delete(I);
         end;
       end,
-      dlFolder);
+      dlFolder);}
   end;
 var
   I: Integer;
