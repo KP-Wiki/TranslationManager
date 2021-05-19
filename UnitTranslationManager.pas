@@ -178,8 +178,10 @@ begin
     tgKnightsProvince:  fLocales := TKMResLocales.Create(fWorkDir + 'data\text\locales.xml');
   end;
 
-  fMode := umDeveloper;
-  //fMode := umUser;
+  if DebugHook <> 0 then // Detect the run from IDE
+    fMode := umDeveloper
+  else
+    fMode := umUser;
 
   InitLocalesList;
 
