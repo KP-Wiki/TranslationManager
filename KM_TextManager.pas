@@ -89,7 +89,7 @@ type
   public
     constructor Create(aLocales: TKMResLocales);
     procedure Load(const aExeDir, aTextPath, aConstPath, aMetaPath: string; aLocales: TByteSet);
-    procedure Save(aSaveDict: Boolean);
+    procedure Save;
 
     property Count: Integer read GetCount;
     property Items[aIndex: Integer]: TKMLine read GetItem; default;
@@ -394,7 +394,7 @@ begin
 end;
 
 
-procedure TKMTextManager.Save(aSaveDict: Boolean);
+procedure TKMTextManager.Save;
 var
   I: Integer;
   fname: string;
@@ -403,8 +403,7 @@ begin
   begin
     fname := Format(fTextPath, [fLocales[I].Code]);
     SaveLibx(fname, I);
-    if aSaveDict then
-      SaveDict(ChangeFileExt(fname, '.dict'), I);
+    // Did not work out  SaveDict(ChangeFileExt(fname, '.dict'), I);
   end;
 
   if fLibType = ltGame then
@@ -1038,7 +1037,7 @@ begin
   begin
     // Save previous
     if I > 2 then
-      Save(False);
+      Save;
 
     // Take 1st cell and trim the header
     fname := StringFromString(sl[I], #9, 0);
@@ -1086,7 +1085,7 @@ begin
     end;
   end;
 
-  Save(False);
+  Save;
 
   ShowMessage(Format('%d files updated. %d lines updated', [filesCount, changesCount]));
 

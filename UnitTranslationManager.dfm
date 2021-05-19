@@ -313,21 +313,13 @@ object Form1: TForm1
       TabOrder = 5
       OnClick = btnSortByTagClick
     end
-    object cbPreferDict: TCheckBox
-      Left = 104
-      Top = 8
-      Width = 105
-      Height = 17
-      Caption = 'Prefer .dict'
-      TabOrder = 6
-    end
     object btnPasteFromClipboardAll: TButton
       Left = 192
       Top = 32
       Width = 169
       Height = 25
       Caption = 'Paste ALL from clipboard'
-      TabOrder = 7
+      TabOrder = 6
       OnClick = btnPasteFromClipboardAllClick
     end
     object btnCopyToClipboardAll: TButton
@@ -336,7 +328,7 @@ object Form1: TForm1
       Width = 169
       Height = 25
       Caption = 'Copy ALL to clipboard'
-      TabOrder = 8
+      TabOrder = 7
       OnClick = btnCopyToClipboardAllClick
     end
     object btnListMismatching: TButton
@@ -345,7 +337,7 @@ object Form1: TForm1
       Width = 129
       Height = 25
       Caption = 'List mismatching'
-      TabOrder = 9
+      TabOrder = 8
       OnClick = btnListMismatchingClick
     end
   end

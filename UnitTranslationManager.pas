@@ -50,7 +50,6 @@ type
     edFilterText: TEdit;
     Label4: TLabel;
     Label5: TLabel;
-    cbPreferDict: TCheckBox;
     btnPasteFromClipboardAll: TButton;
     btnCopyToClipboardAll: TButton;
     btnListMismatching: TButton;
@@ -241,7 +240,6 @@ begin
   // Hide entries that Users should not access
 
   // Top
-  cbPreferDict.Visible := (fMode = umDeveloper);
   btnSortByIndex.Visible := (fMode = umDeveloper);
   btnSortByTag.Visible := (fMode = umDeveloper);
   btnCompactIndexes.Visible := (fMode = umDeveloper);
@@ -306,7 +304,7 @@ end;
 
 procedure TForm1.btnSaveClick(Sender: TObject);
 begin
-  fTextManager.Save(cbPreferDict.Checked);
+  fTextManager.Save;
 end;
 
 
