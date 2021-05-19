@@ -8,6 +8,7 @@ uses
   KM_ResLocales, KM_TextManager, Unit_PathManager;
 
 type
+  TKMGame = (gmKaMRemake, gmKnightsProvince);
   TKMUsageMode = (umDeveloper, umUser);
 
 type
@@ -118,6 +119,7 @@ uses
 {$R *.dfm}
 
 
+{ TForm1 }
 procedure TForm1.FormCreate(Sender: TObject);
 begin
   Caption := 'Translation Manager (' + DateTimeToStr(GetExeBuildTime) + ')';
@@ -125,6 +127,12 @@ begin
   fExeDir := ExtractFilePath(ParamStr(0));
 
   //gIoPack := TKMIoPack.Create(fExeDir + DATA_FILE);
+
+  // Detect the game
+  //if FileExists
+
+  //TKMGame = (gmKaMRemake, gmKnightsProvince);
+
 
   //todo: Load corresponding locales
   fLocales := TKMResLocales.Create(fExeDir + 'data\locales.txt'); // KMR

@@ -13,7 +13,6 @@ uses
   KM_IoXml in 'common\KM_IoXml.pas',
   Xml.VerySimple in 'common\Xml.VerySimple.pas',
   KM_ResLocales in 'res\KM_ResLocales.pas',
-  KM_Utils in 'KM_Utils.pas',
 
   KM_TextManager in 'KM_TextManager.pas',
   Unit_PathManager in 'Unit_PathManager.pas';

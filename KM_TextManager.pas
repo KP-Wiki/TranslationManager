@@ -124,8 +124,42 @@ const
 
 implementation
 uses
-  KromStringUtils,
-  KM_Utils, KM_IoXml;
+  DateUtils, KromStringUtils,
+  KM_IoXml;
+
+
+// Custom S -> DT -> S functions that read/write into reliable format quickly
+function KMDateTimeToString(const aDateTime: TDateTime): string;
+var
+  y, m, d, h, n, s, ms: Word;
+begin
+  DecodeDateTime(aDateTime, y, m, d, h, n, s, ms);
+
+  // Simplest readable format is: yyyy-mm-dd hh-nn-ss
+  // Loosely based on ISO8601 and RFC3339
+
+  Result := IntToStr(y) + '-' + IfThen(m < 10, '0') + IntToStr(m) + '-' + IfThen(d < 10, '0') + IntToStr(d) + ' ' +
+            IfThen(h < 10, '0') + IntToStr(h) + '-' + IfThen(n < 10, '0') + IntToStr(n) + '-' + IfThen(s < 10, '0') + IntToStr(s);
+end;
+
+
+function KMStringToDateTime(const aString: string): TDateTime;
+var
+  y, m, d, h, n, s: Word;
+begin
+  // Format is set by KMDateTimeToString to be: yyyy-mm-dd hh-nn-ss
+
+  y := StrToInt(Copy(aString, 1, 4));
+  m := StrToInt(Copy(aString, 6, 2));
+  d := StrToInt(Copy(aString, 9, 2));
+  h := StrToInt(Copy(aString, 12, 2));
+  n := StrToInt(Copy(aString, 15, 2));
+  s := StrToInt(Copy(aString, 18, 2));
+
+  Result := EncodeDateTime(y, m, d, h, n, s, 0);
+end;
+
+
 
 
 { TKMLine }
