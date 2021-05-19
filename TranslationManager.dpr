@@ -23,5 +23,9 @@ uses
 begin
   Application.Initialize;
   Application.CreateForm(TForm1, Form1);
+
+  if not Form1.Start then
+    Exit;
+
   Application.Run;
 end.

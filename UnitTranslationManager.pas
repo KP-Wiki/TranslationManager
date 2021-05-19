@@ -8,7 +8,12 @@ uses
   KM_ResLocales, KM_TextManager, Unit_PathManager;
 
 type
-  TKMGame = (gmKaMRemake, gmKnightsProvince);
+  TKMTargetGame = (
+    tgUnknown, // Game could not be detected
+    tgKaMRemake,
+    tgKnightsProvince
+  );
+
   TKMUsageMode = (umDeveloper, umUser);
 
 type
@@ -49,7 +54,6 @@ type
     btnPasteFromClipboardAll: TButton;
     btnCopyToClipboardAll: TButton;
     btnListMismatching: TButton;
-    procedure FormCreate(Sender: TObject);
     procedure lbTagsClick(Sender: TObject);
     procedure btnSortByIndexClick(Sender: TObject);
     procedure btnSortByTagClick(Sender: TObject);
@@ -80,7 +84,9 @@ type
     procedure btnPasteFromClipboardAllClick(Sender: TObject);
     procedure btnListMismatchingClick(Sender: TObject);
   private
-    fExeDir: string;
+    fTargetGame: TKMTargetGame;
+    fWorkDir: string;
+    fSettingsPath: string;
 
     fPathManager: TPathManager;
     fTextManager: TKMTextManager;
@@ -104,6 +110,8 @@ type
     procedure LoadSettings(const aPath: string);
     procedure SaveSettings(const aPath: string);
     procedure UpdateMenuItemVisibility;
+  public
+    function Start: Boolean;
   end;
 
 
@@ -119,24 +127,57 @@ uses
 {$R *.dfm}
 
 
-{ TForm1 }
-procedure TForm1.FormCreate(Sender: TObject);
+procedure DetectGameAndPath(out aTargetGame: TKMTargetGame; out aWorkDir: string);
+const
+  KMR_LOCALES_PATH = 'data\locales.txt';
+  KP_LOCALES_PATH = 'data\text\locales.xml';
+var
+  exeDir: string;
 begin
+  aTargetGame := tgUnknown;
+  aWorkDir := '';
+
+  exeDir := ExtractFilePath(ParamStr(0));
+
+  if FileExists(exeDir + '..\' + KMR_LOCALES_PATH) then
+  begin
+    aTargetGame := tgKaMRemake;
+    aWorkDir := exeDir + '..\';
+  end else
+  if FileExists(exeDir + KMR_LOCALES_PATH) then
+  begin
+    aTargetGame := tgKaMRemake;
+    aWorkDir := exeDir;
+  end else
+  if FileExists(exeDir + KP_LOCALES_PATH) then
+  begin
+    aTargetGame := tgKnightsProvince;
+    aWorkDir := exeDir;
+  end;
+end;
+
+
+{ TForm1 }
+function TForm1.Start: Boolean;
+begin
+  // Detect the game
+  DetectGameAndPath(fTargetGame, fWorkDir);
+
   Caption := 'Translation Manager (' + DateTimeToStr(GetExeBuildTime) + ')';
 
-  fExeDir := ExtractFilePath(ParamStr(0));
-
-  //gIoPack := TKMIoPack.Create(fExeDir + DATA_FILE);
-
-  // Detect the game
-  //if FileExists
-
-  //TKMGame = (gmKaMRemake, gmKnightsProvince);
-
-
-  //todo: Load corresponding locales
-  fLocales := TKMResLocales.Create(fExeDir + 'data\locales.txt'); // KMR
-  fLocales := TKMResLocales.Create(fExeDir + 'data\text\locales.xml'); // KP
+  case fTargetGame of
+    tgUnknown:          begin
+                          MessageBox(
+                            Form1.Handle,
+                            'Can not find locales.txt\locales.xml file.' + sLineBreak +
+                            'Please make sure to run the Translation Manager from the games folder',
+                            'Error',
+                            MB_ICONERROR);
+                          Exit(False);
+                        end;
+    tgKaMRemake:        fLocales := TKMResLocales.Create(fWorkDir + 'data\locales.txt');
+    tgKnightsProvince:  fLocales := TKMResLocales.Create(fWorkDir + 'data\text\locales.xml');
+  end;
 
   fMode := umDeveloper;
   //fMode := umUser;
@@ -150,13 +191,18 @@ begin
 
   UpdateMenuItemVisibility;
 
-  LoadSettings(ChangeFileExt(ParamStr(0), '.xml'));
+  fSettingsPath := ChangeFileExt(ParamStr(0), '.xml');
+  LoadSettings(fSettingsPath);
+
+  Result := True;
 end;
 
 
 procedure TForm1.FormDestroy(Sender: TObject);
 begin
-  SaveSettings(ChangeFileExt(ParamStr(0), '.xml'));
+  if fTargetGame <> tgUnknown then
+    SaveSettings(fSettingsPath);
+
   fTextManager.Free;
   fLocales.Free;
   //gIoPack.Free;
@@ -222,7 +268,7 @@ var
 begin
   lbLibs.Clear;
   fPathManager.Clear;
-  fPathManager.AddPath(fExeDir);
+  fPathManager.AddPath(fWorkDir);
 
   for I := 0 to fPathManager.Count - 1 do
     lbLibs.Items.Add(fPathManager[I]);
@@ -249,9 +295,9 @@ begin
 
   // Special case for ingame text library
   if SameText(lbLibs.Items[id], TEXT_PATH) then
-    fTextManager.Load(fExeDir, lbLibs.Items[id], TAGS_PATH, META_PATH, [])
+    fTextManager.Load(fWorkDir, lbLibs.Items[id], TAGS_PATH, META_PATH, [])
   else
-    fTextManager.Load(fExeDir, lbLibs.Items[id], '', '', []);
+    fTextManager.Load(fWorkDir, lbLibs.Items[id], '', '', []);
 
   RefreshFilter;
   RefreshList;
@@ -732,9 +778,9 @@ var
 begin
   slMiss := TStringList.Create;
   try
-    fTextManager.ListMismatchingAll(fExeDir, fPathManager.GetPaths, slMiss);
+    fTextManager.ListMismatchingAll(fWorkDir, fPathManager.GetPaths, slMiss);
 
-    slMiss.SaveToFile(fExeDir + 'TM_Mismatching.txt');
+    slMiss.SaveToFile(fWorkDir + 'TM_Mismatching.txt');
     ShowMessage(slMiss.Text);
   finally
     slMiss.Free;
@@ -779,14 +825,14 @@ begin
       slTags.Append(fTextManager[I].Tag);
 
     // Check all *.pas files
-    CheckPasFiles(fExeDir + 'src\');
+    CheckPasFiles(fWorkDir + 'src\');
 
     // Remove duplicate EOLs (keep section separators)
     for I := slTags.Count - 2 downto 0 do
     if (slTags[I] = '') and (slTags[I+1] = '') then
       slTags.Delete(I);
 
-    slTags.SaveToFile(fExeDir + 'TM_unused.txt');
+    slTags.SaveToFile(fWorkDir + 'TM_unused.txt');
     ShowMessage(slTags.Text);
   finally
     slTags.Free;
@@ -818,7 +864,7 @@ begin
     if clbShowLang.Checked[I] then
       localesToCopy := localesToCopy + [I-1];
 
-  fTextManager.ToClipboardAll(fExeDir, fPathManager.GetPaths, localesToCopy);
+  fTextManager.ToClipboardAll(fWorkDir, fPathManager.GetPaths, localesToCopy);
 end;
 
 
@@ -831,7 +877,7 @@ end;
 
 procedure TForm1.btnPasteFromClipboardAllClick(Sender: TObject);
 begin
-  fTextManager.FromClipboardAll(fExeDir);
+  fTextManager.FromClipboardAll(fWorkDir);
 end;
 
 
