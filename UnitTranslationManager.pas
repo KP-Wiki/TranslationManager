@@ -126,6 +126,17 @@ uses
 {$R *.dfm}
 
 
+// todo:
+// 1. add libx filter, same as in KMR TM (game / tutorial (?) / maps / mapsMP / campaigns
+// 2. add filter options:
+//   - label name comtains
+//   - label ID or ID range
+// 3. Save via Ctrl + S hotkey
+// 4. Export all languages to ZIP
+// 5. Export selected languages to ZIP
+// 6. use nicer form style / fonts. KMR TM window looks way nicer IMHO
+// 3. 4. 5. could be added as a menu
+
 procedure DetectGameAndPath(out aTargetGame: TKMTargetGame; out aWorkDir: string);
 const
   KMR_LOCALES_PATH = 'data\locales.txt';
