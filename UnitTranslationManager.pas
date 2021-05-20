@@ -188,7 +188,7 @@ end;
 { TForm1 }
 function TForm1.Start: Boolean;
 begin
-  // Load settings first, including WorkDir
+  // Load settings first, including fAltWorkDir
   fSettingsPath := ChangeFileExt(ParamStr(0), '.xml');
   LoadSettings(fSettingsPath);
 
