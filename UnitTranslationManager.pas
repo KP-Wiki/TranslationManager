@@ -14,7 +14,10 @@ type
     tgKnightsProvince
   );
 
-  TKMUsageMode = (umDeveloper, umUser);
+  TKMUsageMode = (
+    umDeveloper,
+    umUser
+  );
 
 type
   TForm1 = class(TForm)
@@ -83,17 +86,22 @@ type
     procedure btnPasteFromClipboardAllClick(Sender: TObject);
     procedure btnListMismatchingClick(Sender: TObject);
   private
-    fTargetGame: TKMTargetGame;
-    fSelectedLocales: string;
-    fWorkDir: string;
+    // Automated things
+    fMode: TKMUsageMode;
     fSettingsPath: string;
+    fTargetGame: TKMTargetGame;
+    fWorkDir: string;
 
+    // Components
     fPathManager: TPathManager;
     fTextManager: TKMTextManager;
     fLocales: TKMResLocales;
 
-    fMode: TKMUsageMode;
+    // User settings
+    fAltWorkDir: string;
+    fSelectedLocales: string;
 
+    // Runtime things
     fTransLabels: array of TLabel;
     fTransMemos: array of TMemo;
 
@@ -130,9 +138,6 @@ const
   KMR_LOCALES_PATH = 'data\locales.txt';
   KP_LOCALES_PATH = 'data\text\locales.xml';
 
-  TARGET_GAME_STR: array[TKMTargetGame] of string = ('Unknown', 'KMR', 'KP');
-
-
 // todo:
 // 1. add libx filter, same as in KMR TM (game / tutorial (?) / maps / mapsMP / campaigns
 // 2. add filter options:
@@ -144,34 +149,38 @@ const
 // 6. use nicer form style / fonts. KMR TM window looks way nicer IMHO
 // 3. 4. 5. could be added as a menu
 
-function DetectGameAndPath(out aTargetGame: TKMTargetGame; out aWorkDir: string): Boolean;
+procedure DetectGameAndPath(aAltWorkDir: string; out aTargetGame: TKMTargetGame; out aWorkDir: string);
 var
   exeDir: string;
 begin
-  Result := False;
   aTargetGame := tgUnknown;
-
   aWorkDir := '';
 
   exeDir := ExtractFilePath(ParamStr(0));
 
+  if FileExists(aAltWorkDir + KMR_LOCALES_PATH) then
+  begin
+    // aAltWorkDir in a completely arbitrary location
+    aTargetGame := tgKaMRemake;
+    aWorkDir := aAltWorkDir;
+  end else
   if FileExists(exeDir + '..\' + KMR_LOCALES_PATH) then
   begin
+    // KaM Remake\Utils\TM.exe
     aTargetGame := tgKaMRemake;
     aWorkDir := exeDir + '..\';
-    Exit(True);
   end else
   if FileExists(exeDir + KMR_LOCALES_PATH) then
   begin
+    // KaM Remake\TM.exe
     aTargetGame := tgKaMRemake;
     aWorkDir := exeDir;
-    Exit(True);
   end else
   if FileExists(exeDir + KP_LOCALES_PATH) then
   begin
+    // Knights Province\TM.exe
     aTargetGame := tgKnightsProvince;
     aWorkDir := exeDir;
-    Exit(True);
   end;
 end;
 
@@ -185,19 +194,18 @@ begin
 
   Caption := 'Translation Manager (' + DateTimeToStr(GetExeBuildTime) + ')';
 
+  // Detect the game
+  DetectGameAndPath(fAltWorkDir, fTargetGame, fWorkDir);
+
   case fTargetGame of
     tgUnknown:          begin
-                          // Detect the game
-                          if not DetectGameAndPath(fTargetGame, fWorkDir) then
-                          begin
-                            MessageBox(
-                              Form1.Handle,
-                              'Can not find locales.txt\locales.xml file.' + sLineBreak +
-                              'Please make sure to run the Translation Manager from the games folder',
-                              'Error',
-                              MB_ICONERROR);
-                            Exit(False);
-                          end;
+                          MessageBox(
+                            Form1.Handle,
+                            'Can not find locales.txt\locales.xml file.' + sLineBreak +
+                            'Please make sure to run the Translation Manager from the games folder',
+                            'Error',
+                            MB_ICONERROR);
+                          Exit(False);
                         end;
     tgKaMRemake:        fLocales := TKMResLocales.Create(fWorkDir + KMR_LOCALES_PATH);
     tgKnightsProvince:  fLocales := TKMResLocales.Create(fWorkDir + KP_LOCALES_PATH);
@@ -481,22 +489,15 @@ end;
 procedure TForm1.LoadSettings(const aPath: string);
 var
   xml: TKMXMLDocument;
-  targetGameStr: string;
   isMaximized: Boolean;
-  TG: TKMTargetGame;
 begin
   xml := TKMXMLDocument.Create;
   try
     xml.LoadFromFile(aPath);
+
     fSelectedLocales := xml.Root.Attributes['Selected_Locales'].AsString(TKMResLocales.DEFAULT_LOCALE);
     isMaximized := xml.Root.Attributes['Maximized'].AsBoolean(True);
-    fWorkDir := xml.Root.Attributes['WorkDir'].AsString('');
-    targetGameStr := xml.Root.Attributes['TargetGame'].AsString(TARGET_GAME_STR[tgUnknown]);
-
-    for TG := Low(TKMTargetGame) to High(TKMTargetGame) do
-      if TARGET_GAME_STR[TG] = targetGameStr then
-        fTargetGame := TG;
-
+    fAltWorkDir := xml.Root.Attributes['AltWorkDir'].AsString('');
   finally
     xml.Free;
   end;
@@ -523,8 +524,8 @@ begin
   try
     xml.Root.Attributes['Selected_Locales'] := locs;
     xml.Root.Attributes['Maximized'] := (WindowState = wsMaximized);
-    xml.Root.Attributes['WorkDir'] := fWorkDir;
-    xml.Root.Attributes['TargetGame'] := TARGET_GAME_STR[fTargetGame];
+    xml.Root.Attributes['AltWorkDir'] := fAltWorkDir;
+
     xml.SaveToFile(aPath);
   finally
     xml.Free;
