@@ -84,6 +84,7 @@ type
     procedure btnListMismatchingClick(Sender: TObject);
   private
     fTargetGame: TKMTargetGame;
+    fSelectedLocales: string;
     fWorkDir: string;
     fSettingsPath: string;
 
@@ -101,6 +102,7 @@ type
     fPreviousFolder: Integer;
     procedure MemoChange(Sender: TObject);
 
+    procedure InitFormControls;
     procedure InitLocalesList;
     procedure RefreshFolders;
     procedure RefreshFilter;
@@ -122,8 +124,13 @@ implementation
 uses
   KromUtils, KM_IoXML;
 
-
 {$R *.dfm}
+
+const
+  KMR_LOCALES_PATH = 'data\locales.txt';
+  KP_LOCALES_PATH = 'data\text\locales.xml';
+
+  TARGET_GAME_STR: array[TKMTargetGame] of string = ('Unknown', 'KMR', 'KP');
 
 
 // todo:
@@ -137,14 +144,13 @@ uses
 // 6. use nicer form style / fonts. KMR TM window looks way nicer IMHO
 // 3. 4. 5. could be added as a menu
 
-procedure DetectGameAndPath(out aTargetGame: TKMTargetGame; out aWorkDir: string);
-const
-  KMR_LOCALES_PATH = 'data\locales.txt';
-  KP_LOCALES_PATH = 'data\text\locales.xml';
+function DetectGameAndPath(out aTargetGame: TKMTargetGame; out aWorkDir: string): Boolean;
 var
   exeDir: string;
 begin
+  Result := False;
   aTargetGame := tgUnknown;
+
   aWorkDir := '';
 
   exeDir := ExtractFilePath(ParamStr(0));
@@ -153,16 +159,19 @@ begin
   begin
     aTargetGame := tgKaMRemake;
     aWorkDir := exeDir + '..\';
+    Exit(True);
   end else
   if FileExists(exeDir + KMR_LOCALES_PATH) then
   begin
     aTargetGame := tgKaMRemake;
     aWorkDir := exeDir;
+    Exit(True);
   end else
   if FileExists(exeDir + KP_LOCALES_PATH) then
   begin
     aTargetGame := tgKnightsProvince;
     aWorkDir := exeDir;
+    Exit(True);
   end;
 end;
 
@@ -170,23 +179,28 @@ end;
 { TForm1 }
 function TForm1.Start: Boolean;
 begin
-  // Detect the game
-  DetectGameAndPath(fTargetGame, fWorkDir);
+  // Load settings first, including WorkDir
+  fSettingsPath := ChangeFileExt(ParamStr(0), '.xml');
+  LoadSettings(fSettingsPath);
 
   Caption := 'Translation Manager (' + DateTimeToStr(GetExeBuildTime) + ')';
 
   case fTargetGame of
     tgUnknown:          begin
-                          MessageBox(
-                            Form1.Handle,
-                            'Can not find locales.txt\locales.xml file.' + sLineBreak +
-                            'Please make sure to run the Translation Manager from the games folder',
-                            'Error',
-                            MB_ICONERROR);
-                          Exit(False);
+                          // Detect the game
+                          if not DetectGameAndPath(fTargetGame, fWorkDir) then
+                          begin
+                            MessageBox(
+                              Form1.Handle,
+                              'Can not find locales.txt\locales.xml file.' + sLineBreak +
+                              'Please make sure to run the Translation Manager from the games folder',
+                              'Error',
+                              MB_ICONERROR);
+                            Exit(False);
+                          end;
                         end;
-    tgKaMRemake:        fLocales := TKMResLocales.Create(fWorkDir + 'data\locales.txt');
-    tgKnightsProvince:  fLocales := TKMResLocales.Create(fWorkDir + 'data\text\locales.xml');
+    tgKaMRemake:        fLocales := TKMResLocales.Create(fWorkDir + KMR_LOCALES_PATH);
+    tgKnightsProvince:  fLocales := TKMResLocales.Create(fWorkDir + KP_LOCALES_PATH);
   end;
 
   if DebugHook <> 0 then // Detect the run from IDE
@@ -203,8 +217,7 @@ begin
 
   UpdateMenuItemVisibility;
 
-  fSettingsPath := ChangeFileExt(ParamStr(0), '.xml');
-  LoadSettings(fSettingsPath);
+  InitFormControls;
 
   Result := True;
 end;
@@ -449,36 +462,49 @@ begin
 end;
 
 
-procedure TForm1.LoadSettings(const aPath: string);
+procedure TForm1.InitFormControls;
 var
   I: Integer;
+begin
+  //If there are any items "All" should be greyed
+  if fSelectedLocales <> '' then
+    clbShowLang.State[0] := cbGrayed;
+
+  for I := 0 to fLocales.Count - 1 do
+  if Pos(fLocales[I].Code, fSelectedLocales) <> 0 then
+    clbShowLang.Checked[I+1] := True;
+
+  UpdateVisibleLocales;
+end;
+
+
+procedure TForm1.LoadSettings(const aPath: string);
+var
   xml: TKMXMLDocument;
-  locs: string;
+  targetGameStr: string;
   isMaximized: Boolean;
+  TG: TKMTargetGame;
 begin
   xml := TKMXMLDocument.Create;
   try
     xml.LoadFromFile(aPath);
-    locs := xml.Root.Attributes['Selected_Locales'].AsString(TKMResLocales.DEFAULT_LOCALE);
+    fSelectedLocales := xml.Root.Attributes['Selected_Locales'].AsString(TKMResLocales.DEFAULT_LOCALE);
     isMaximized := xml.Root.Attributes['Maximized'].AsBoolean(True);
+    fWorkDir := xml.Root.Attributes['WorkDir'].AsString('');
+    targetGameStr := xml.Root.Attributes['TargetGame'].AsString(TARGET_GAME_STR[tgUnknown]);
+
+    for TG := Low(TKMTargetGame) to High(TKMTargetGame) do
+      if TARGET_GAME_STR[TG] = targetGameStr then
+        fTargetGame := TG;
+
   finally
     xml.Free;
   end;
-
-  //If there are any items "All" should be greyed
-  if locs <> '' then
-    clbShowLang.State[0] := cbGrayed;
-
-  for I := 0 to fLocales.Count - 1 do
-  if Pos(fLocales[I].Code, locs) <> 0 then
-    clbShowLang.Checked[I+1] := True;
 
   if isMaximized then
     WindowState := wsMaximized
   else
     WindowState := wsNormal;
-
-  UpdateVisibleLocales;
 end;
 
 
@@ -497,6 +523,8 @@ begin
   try
     xml.Root.Attributes['Selected_Locales'] := locs;
     xml.Root.Attributes['Maximized'] := (WindowState = wsMaximized);
+    xml.Root.Attributes['WorkDir'] := fWorkDir;
+    xml.Root.Attributes['TargetGame'] := TARGET_GAME_STR[fTargetGame];
     xml.SaveToFile(aPath);
   finally
     xml.Free;
