@@ -530,6 +530,7 @@ var
   nTags, nLine, nLastChanged, nDesc, nLastEng: TXmlNode;
   tagName: string;
   lastEng: string;
+  tagExists: Boolean;
 begin
   if not FileExists(aFilename) then Exit;
 
@@ -547,18 +548,22 @@ begin
 
       L := fLines.IndexOfTag(tagName);
 
-      if nLastChanged <> nil then
-        for K := 0 to fLocales.Count - 1 do
-          if nLastChanged.HasAttribute(fLocales[K].Code) then
-            fLines[L].SetLastChanged(K, nLastChanged.Attributes[fLocales[K].Code].AsString);
+      tagExists := L <> -1;
+      if tagExists then
+      begin
+        if nLastChanged <> nil then
+          for K := 0 to fLocales.Count - 1 do
+            if nLastChanged.HasAttribute(fLocales[K].Code) then
+              fLines[L].SetLastChanged(K, nLastChanged.Attributes[fLocales[K].Code].AsString);
 
-      nDesc := nLine.Find('Description');
-      fLines[L].Description := nDesc.Attributes['Value'].AsString;
+        nDesc := nLine.Find('Description');
+        fLines[L].Description := nDesc.Attributes['Value'].AsString;
 
-      nLastEng := nLine.Find('LastEng');
-      lastEng := nLastEng.Attributes['Value'].AsString;
-      if lastEng <> fLines[L].Strings[LOCALE_DEFAULT] then
-        fLines[L].LastChanged[LOCALE_DEFAULT] := Now;
+        nLastEng := nLine.Find('LastEng');
+        lastEng := nLastEng.Attributes['Value'].AsString;
+        if lastEng <> fLines[L].Strings[LOCALE_DEFAULT] then
+          fLines[L].LastChanged[LOCALE_DEFAULT] := Now;
+      end;
     end;
   finally
     xml.Free;
