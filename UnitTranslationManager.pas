@@ -832,50 +832,78 @@ procedure TForm1.btnListUnusedTagsClick(Sender: TObject);
 var
   slTags: TStringList;
 
-  procedure CheckPasFiles(const aDir: string);
+  procedure CheckPasFiles(const aPath: string);
+  var
+    slPaths: TStringList;
+    slPas: TStringList;
+    I, K: Integer;
+    SearchRec: TSearchRec;
+    localName: string;
+    fileName: string;
   begin
-    //todo: gIoPack.ListFiles(
-    {
-      aDir,
-      True,
-      procedure (const aFilename: string)
-      var
-        I: Integer;
-        pasString: AnsiString;
+    if not SysUtils.DirectoryExists(aPath) then Exit;
+
+    slPas := TStringList.Create;
+    slPaths := TStringList.Create;
+    slPaths.Add('');
+    I := 0;
+
+    while I < slPaths.Count do
+    begin
+      if FindFirst(aPath + slPaths[I] + '*', faAnyFile, SearchRec) = 0 then
       begin
-        if (ExtractFileExt(aFilename) = '.pas')
-        and not StartsStr('_', aFilename) then
-        begin
-          pasString := ReadTextA(aDir + aFilename);
-          for I := slTags.Count - 1 downto 0 do
-          if Pos(slTags[I], PasString) <> 0 then
-            slTags.Delete(I);
-        end;
-      end,
-      dlFolder);}
+        repeat
+          if (SearchRec.Attr and faDirectory) <> 0 then
+          begin
+            if (SearchRec.Name <> '.') and (SearchRec.Name <> '..') then
+              slPaths.Append(slPaths[I] + SearchRec.Name + '\');
+          end else
+          if (ExtractFileExt(SearchRec.Name) = '.pas')
+          and not StartsStr('_', SearchRec.Name) then
+          begin
+            slPas.LoadFromFile(aPath + slPaths[I] + SearchRec.Name);
+            for K := slTags.Count - 1 downto 0 do
+            if Pos(slTags[K], slPas.Text) <> 0 then
+              slTags.Delete(K);
+          end;
+        until (FindNext(SearchRec) <> 0);
+
+        Inc(I);
+
+        FindClose(SearchRec);
+      end;
+    end;
+
+    slPas.Free;
+    slPaths.Free;
   end;
 var
   I: Integer;
 begin
-  slTags := TStringList.Create;
+  Cursor := crHourGlass;
   try
-    // Prepare list of all constants we will be looking for (skip enums, marked with __)
-    for I := 0 to fTextManager.Count - 1 do
-    if Pos('__', fTextManager[I].Tag) = 0 then
-      slTags.Append(fTextManager[I].Tag);
+    slTags := TStringList.Create;
+    try
+      // Prepare list of all constants we will be looking for (skip enums, marked with __)
+      for I := 0 to fTextManager.Count - 1 do
+      if Pos('__', fTextManager[I].Tag) = 0 then
+        slTags.Append(fTextManager[I].Tag);
 
-    // Check all *.pas files
-    CheckPasFiles(fWorkDir + 'src\');
+      // Check all *.pas files
+      CheckPasFiles(fWorkDir + 'src\');
 
-    // Remove duplicate EOLs (keep section separators)
-    for I := slTags.Count - 2 downto 0 do
-    if (slTags[I] = '') and (slTags[I+1] = '') then
-      slTags.Delete(I);
+      // Remove duplicate EOLs (keep section separators)
+      for I := slTags.Count - 2 downto 0 do
+      if (slTags[I] = '') and (slTags[I+1] = '') then
+        slTags.Delete(I);
 
-    slTags.SaveToFile(fWorkDir + 'TM_unused.txt');
-    ShowMessage(slTags.Text);
+      slTags.SaveToFile(fWorkDir + 'TM_unused.txt');
+      ShowMessage(slTags.Text);
+    finally
+      slTags.Free;
+    end;
   finally
-    slTags.Free;
+    Cursor := crDefault;
   end;
 end;
 
