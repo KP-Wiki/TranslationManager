@@ -53,6 +53,7 @@ type
     function IndexOfTag(const aTag: string): Integer;
     function AddLine(aLine: TKMLine): Integer;
     procedure AddOrAppendString(aId: Integer; aLocale: Integer; aString: string);
+    procedure Clear; reintroduce;
     procedure TagsAutoName(const aPath: string);
   end;
 
@@ -279,6 +280,14 @@ end;
 
 
 { TKMLines }
+procedure TKMLines.Clear;
+begin
+  inherited Clear;
+
+  fTagToIdLookup.Clear;
+end;
+
+
 constructor TKMLines.Create;
 begin
   inherited;
@@ -298,6 +307,9 @@ end;
 function TKMLines.AddLine(aLine: TKMLine): Integer;
 begin
   Result := Add(aLine);
+
+  Assert(not fTagToIdLookup.ContainsKey(aLine.Tag), Format('Lookup dictionary already contains key "%s"', [aLine.Tag]));
+
   // Save to dictionary for faster lookup
   fTagToIdLookup.Add(aLine.Tag, Result);
 end;
@@ -311,6 +323,8 @@ begin
   if not Items[I].IsSpacer then
   begin
     Items[I].Autoname(aPath);
+
+    Assert(not fTagToIdLookup.ContainsKey(Items[I].Tag), Format('Lookup dictionary already contains key "%s"', [Items[I].Tag]));
 
     // Save to dictionary for faster lookup
     fTagToIdLookup.Add(Items[I].Tag, I);
