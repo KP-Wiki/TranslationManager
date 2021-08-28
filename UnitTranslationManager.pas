@@ -838,8 +838,6 @@ var
     slPas: TStringList;
     I, K: Integer;
     SearchRec: TSearchRec;
-    localName: string;
-    fileName: string;
   begin
     if not SysUtils.DirectoryExists(aPath) then Exit;
 
