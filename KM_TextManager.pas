@@ -58,6 +58,10 @@ type
   end;
 
   TKMTextManager = class
+  private const
+    COL_NAME_TAG = 'Tag';
+    COL_NAME_NEEDS_UPDATE = 'Needs update';
+    COL_NAME_DESC = 'Description';
   private class var
     LOCALE_DEFAULT: Integer;
   private
@@ -87,6 +91,7 @@ type
     procedure TagsAutoName(const aPath: string);
     function ToClipboardHeader(aLocales: TByteSet; aExport: TKMClipboardExport): string;
     function ToClipboardBody(aLocales: TByteSet; aExport: TKMClipboardExport): string;
+    procedure ClipboardColumnsToLocIndex(aLine: string; out aLocIndex: TArray<Integer>);
   public
     constructor Create(aLocales: TKMResLocales);
     procedure Load(const aExeDir, aTextPath, aConstPath, aMetaPath: string; aLocales: TByteSet);
@@ -817,16 +822,16 @@ var
   I: Integer;
 begin
   // First line, list lang names
-  Result := 'Tag';
+  Result := COL_NAME_TAG;
 
   for I := 0 to fLocales.Count - 1 do
   if (aLocales = []) or (I in aLocales) then
     Result := Result + #9 + fLocales[I].Code;
 
   if aExport = ceLastChanged then
-    Result := Result + #9 + 'Needs update';
+    Result := Result + #9 + COL_NAME_NEEDS_UPDATE;
 
-  Result := Result + #9 + 'Description';
+  Result := Result + #9 + COL_NAME_DESC;
 
   Result := Result + sLineBreak;
 end;
@@ -957,27 +962,48 @@ begin
 end;
 
 
+procedure TKMTextManager.ClipboardColumnsToLocIndex(aLine: string; out aLocIndex: TArray<Integer>);
+var
+  ss: TStringDynArray;
+  I: Integer;
+begin
+  ss := SplitString(aLine, #9);
+
+  Assert(Length(ss) > 1, 'Column names line needs to have at least 2 columns (Tag and one Locale)');
+
+  // Always skip first column (Tag)
+  SetLength(aLocIndex, Length(ss) - 1);
+
+  for I := 1 to High(ss) do
+  if (ss[I] <> '')
+  and (ss[I] <> TKMTextManager.COL_NAME_NEEDS_UPDATE)
+  and (ss[I] <> TKMTextManager.COL_NAME_DESC) then
+    aLocIndex[I - 1] := fLocales.IndexByCode(ss[I])
+  else
+  begin
+    SetLength(aLocIndex, I-1);
+    Break;
+  end;
+end;
+
+
 // Update translations
 procedure TKMTextManager.FromClipboard;
 var
   sl: TStringList;
+  locIndex: TArray<Integer>;
   I, K: Integer;
   tag: string;
   txt: array of string;
   idLine, idLoc: Integer;
   changesCount: Integer;
-  ss: TStringDynArray;
-  locIndex: array of Integer;
   s: string;
 begin
   sl := TStringList.Create;
   sl.Text := Clipboard.AsText;
 
   // First line, get lang names
-  ss := SplitString(sl[0], #9);
-  SetLength(locIndex, Length(ss) - 1);
-  for I := 1 to High(ss) do
-    locIndex[I - 1] := fLocales.IndexByCode(ss[I]);
+  ClipboardColumnsToLocIndex(sl[0], locIndex);
 
   SetLength(txt, fLocales.Count);
 
@@ -1023,13 +1049,12 @@ end;
 procedure TKMTextManager.FromClipboardAll(aExeDir: string);
 var
   sl: TStringList;
+  locIndex: TArray<Integer>;
   I, K: Integer;
   tag: string;
   txt: array of string;
   idLine, idLoc: Integer;
   changesCount: Integer;
-  ss: TStringDynArray;
-  locIndex: array of Integer;
   s: string;
   fname: string;
   filesCount: Integer;
@@ -1041,16 +1066,16 @@ begin
   sl.Text := Clipboard.AsText;
 
   // First line, get lang names
-  ss := SplitString(sl[0], #9);
-  SetLength(locIndex, Length(ss) - 1);
-  for I := 1 to High(ss) do
-    locIndex[I - 1] := fLocales.IndexByCode(ss[I]);
+  ClipboardColumnsToLocIndex(sl[0], locIndex);
 
   SetLength(txt, fLocales.Count);
 
   // Other lines, get the strings
   filesCount := 0;
   changesCount := 0;
+
+  // Line 0 - Column names
+  // Line 1 - Translation percentage
   for I := 2 to sl.Count - 1 do
   if StartsStr('>', sl[I]) then
   begin

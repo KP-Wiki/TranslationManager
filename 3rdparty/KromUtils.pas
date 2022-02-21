@@ -641,7 +641,7 @@ begin
   cb := SizeOf(_PROCESS_MEMORY_COUNTERS);
   GetMem(pmc, cb);
   pmc^.cb := cb;
-  if GetProcessMemoryInfo(GetCurrentProcess(), pmc, cb) then
+  if GetProcessMemoryInfo(GetCurrentProcess, pmc, cb) then
     Result := pmc^.WorkingSetSize
   else
     Result := 0;
