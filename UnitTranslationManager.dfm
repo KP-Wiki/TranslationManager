@@ -154,16 +154,6 @@ object Form1: TForm1
       TabOrder = 7
       OnClick = btnInsertSeparatorClick
     end
-    object btnDelete: TButton
-      Left = 136
-      Top = 480
-      Width = 81
-      Height = 25
-      Anchors = [akLeft, akBottom]
-      Caption = 'Delete'
-      TabOrder = 8
-      OnClick = btnDeleteClick
-    end
     object btnRename: TButton
       Left = 136
       Top = 456
@@ -230,6 +220,16 @@ object Form1: TForm1
       Height = 26
       TabOrder = 15
       OnChange = edFilterTextChange
+    end
+    object btnDelete: TButton
+      Left = 136
+      Top = 480
+      Width = 81
+      Height = 25
+      Anchors = [akLeft, akBottom]
+      Caption = 'Delete'
+      TabOrder = 8
+      OnClick = btnDeleteClick
     end
   end
   object StatusBar1: TStatusBar
@@ -313,15 +313,6 @@ object Form1: TForm1
       TabOrder = 5
       OnClick = btnSortByTagClick
     end
-    object btnPasteFromClipboardAll: TButton
-      Left = 192
-      Top = 32
-      Width = 169
-      Height = 25
-      Caption = 'Paste ALL from clipboard'
-      TabOrder = 6
-      OnClick = btnPasteFromClipboardAllClick
-    end
     object btnCopyToClipboardAll: TButton
       Left = 192
       Top = 8
@@ -339,6 +330,15 @@ object Form1: TForm1
       Caption = 'List mismatching'
       TabOrder = 8
       OnClick = btnListMismatchingClick
+    end
+    object btnPasteFromClipboardAll: TButton
+      Left = 192
+      Top = 32
+      Width = 169
+      Height = 25
+      Caption = 'Paste ALL from clipboard'
+      TabOrder = 6
+      OnClick = btnPasteFromClipboardAllClick
     end
   end
   object btnSave: TButton
