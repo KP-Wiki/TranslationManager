@@ -53,6 +53,8 @@ type
     procedure ClipboardColumnsToLocIndex(aLine: string; out aLocIndex: TArray<Integer>);
   public
     constructor Create(aLocales: TKMResLocales);
+    destructor Destroy; override;
+
     procedure Load(const aExeDir, aTextPath, aConstPath, aMetaPath: string; aLocales: TByteSet);
     procedure Save;
 
@@ -104,6 +106,14 @@ begin
   TKMLine.LOCALE_COUNT := fLocales.Count;
   LOCALE_DEFAULT := fLocales.IndexByCode(gResLocales.DEFAULT_LOCALE);
   TKMLine.LOCALE_DEFAULT := LOCALE_DEFAULT;
+end;
+
+
+destructor TKMTextManager.Destroy;
+begin
+  FreeAndNil(fLines);
+
+  inherited;
 end;
 
 

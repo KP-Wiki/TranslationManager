@@ -200,7 +200,7 @@ begin
   case fTargetGame of
     tgUnknown:          begin
                           MessageBox(
-                            Form1.Handle,
+                            Handle,
                             'Can not find locales.txt\locales.xml file.' + sLineBreak +
                             'Please make sure to run the Translation Manager from the games folder',
                             'Error',
@@ -211,7 +211,8 @@ begin
     tgKnightsProvince:  fLocales := TKMResLocales.Create(fWorkDir + KP_LOCALES_PATH);
   end;
 
-  if DebugHook <> 0 then // Detect the run from IDE
+  // Detect the run from IDE
+  if DebugHook <> 0 then
     fMode := umDeveloper
   else
     fMode := umUser;
