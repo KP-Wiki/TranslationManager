@@ -300,7 +300,14 @@ var
 begin
   lbLibs.Clear;
   fPathManager.Clear;
-  fPathManager.AddPath(fWorkDir);
+
+  // Whitelist of paths to scan (so we dont include build folders and such)
+  fPathManager.AddPath(fWorkDir + 'data\');
+  fPathManager.AddPath(fWorkDir + 'campaigns\');
+  fPathManager.AddPath(fWorkDir + 'maps\');
+  fPathManager.AddPath(fWorkDir + 'mapsmp\');
+  fPathManager.AddPath(fWorkDir + 'maps_unofficial\');
+  fPathManager.AddPath(fWorkDir + 'mapsdev\');
 
   for I := 0 to fPathManager.Count - 1 do
     lbLibs.Items.Add(fPathManager[I]);
