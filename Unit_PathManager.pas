@@ -2,11 +2,12 @@ unit Unit_PathManager;
 {$I KM_CompilerDirectives.inc}
 interface
 uses
-  Classes, StrUtils, Windows, SysUtils;
+  Classes, StrUtils, SysUtils;
 
 
 type
   // Scans folder and subfolders in search of a .libx files
+  // Provides list of found files as "fullpath\filename.%s.libx"
   TPathManager = class
   private
     fPaths: TStringList;
@@ -76,13 +77,16 @@ begin
   repeat
     if FindFirst(subFolders[I] + '*', faAnyFile, searchRec) = 0 then
     begin
+      pathAdded := False;
       repeat
         if (searchRec.Name <> '.') and (searchRec.Name <> '..') then
           if (searchRec.Attr and faDirectory = faDirectory) then
+            // Always add sub-folders
             subFolders.Add(subFolders[I] + searchRec.Name + '\')
           else
             if not pathAdded and SameText(ExtractFileExt(searchRec.Name), '.libx') then
             begin
+              // When we see a libx, add its path exactly once
               fileMask := LeftStr(searchRec.Name, Length(searchRec.Name) - 8) + '%s.libx';
               fPaths.Add(ExtractRelativePath(aPath, subFolders[I]) + fileMask);
               pathAdded := True;
@@ -91,7 +95,6 @@ begin
       FindClose(searchRec);
     end;
     Inc(I);
-    pathAdded := False;
   until (I >= subFolders.Count);
 
   subFolders.Free;

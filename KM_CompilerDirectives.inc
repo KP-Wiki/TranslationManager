@@ -48,15 +48,3 @@
 {$IFDEF IOS}       {$DEFINE TABLET} {$ENDIF}
 
 
-// Temp workaround for mission scripting support on tablets
-//----------------------------------------------------------------------------------------------------
-{$IFDEF DESKTOP} {$DEFINE SCRIPTING_DESKTOP} {$ENDIF}
-{$IFDEF TABLET} {$DEFINE SCRIPTING_TABLET} {$ENDIF}
-
-// Features
-//----------------------------------------------------------------------------------------------------
-{.$DEFINE USE_RECAST}
-{.$DEFINE RNG_SPY}
-{.$DEFINE EXTAI_API_DLL}
-{$DEFINE EXTAI_API_EXE}
-
