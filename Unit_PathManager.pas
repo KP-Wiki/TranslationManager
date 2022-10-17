@@ -20,7 +20,7 @@ type
     property Paths[aIndex: Integer]: string read GetPath; default;
     property GetPaths: TStringList read fPaths;
     procedure Clear;
-    procedure AddPath(aPath: string);
+    procedure AddPath(const aRoot, aFolder: string);
   end;
 
 
@@ -62,7 +62,8 @@ begin
 end;
 
 
-procedure TPathManager.AddPath(aPath: string);
+// aRoot - which path is considered to be root
+procedure TPathManager.AddPath(const aRoot, aFolder: string);
 var
   I: Integer;
   fileMask: string;
@@ -70,8 +71,10 @@ var
   subFolders: TStringList;
   pathAdded: Boolean;
 begin
+  Assert(EndsText('\', aFolder));
+
   subFolders := TStringList.Create;
-  subFolders.Add(aPath);
+  subFolders.Add(aRoot + aFolder);
 
   I := 0;
   repeat
@@ -88,7 +91,7 @@ begin
             begin
               // When we see a libx, add its path exactly once
               fileMask := LeftStr(searchRec.Name, Length(searchRec.Name) - 8) + '%s.libx';
-              fPaths.Add(ExtractRelativePath(aPath, subFolders[I]) + fileMask);
+              fPaths.Add(ExtractRelativePath(aRoot, subFolders[I]) + fileMask);
               pathAdded := True;
             end;
       until (FindNext(searchRec) <> 0);
