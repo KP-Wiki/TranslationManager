@@ -246,25 +246,25 @@ end;
 procedure TForm1.FormResize(Sender: TObject);
 var
   I,K: Integer;
-  SelCount, SecHeight: Word;
+  selCount, secHeight: Word;
 begin
-  SelCount := 0;
+  selCount := 0;
   for I := 0 to fLocales.Count - 1 do
-  if (I+1 < clbShowLang.Count) then
+  if I+1 < clbShowLang.Count then
   if clbShowLang.Checked[I+1] then
-    Inc(SelCount);
+    Inc(selCount);
 
-  if SelCount = 0 then
+  if selCount = 0 then
     Exit;
 
-  SecHeight := ScrollBox1.ClientHeight div SelCount;
+  secHeight := ScrollBox1.ClientHeight div selCount;
 
   K := 0;
   for I := 0 to fLocales.Count - 1 do
   if clbShowLang.Checked[I+1] then
   begin
-    fTransLabels[I].SetBounds(8, 2 + K * SecHeight, 100, 20);
-    fTransMemos[I].SetBounds(8, 22 + K * SecHeight, ScrollBox1.Width - 20, SecHeight - 24);
+    fTransLabels[I].SetBounds(8, 2 + K * secHeight, 160, 20);
+    fTransMemos[I].SetBounds(8, 22 + K * secHeight, ScrollBox1.Width - 20, secHeight - 24);
     Inc(K);
   end;
 end;
