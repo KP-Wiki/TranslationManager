@@ -590,18 +590,7 @@ begin
       begin
         s := fLines[I].Strings[K];
 
-        if (s = '=') or (s = #39) then
-          s := #39 + s
-        else
-        // Google Sheets need escaping for some "space" and " symbols.
-        // See TranslationManager to GoogleSheets.txt
-        if StartsStr(' ', s) then
-          // - when starting with whitespace -> wrap whole string into "" and Replace every " with double ""
-          s := '"' + StringReplace(s, '"', '""', [rfReplaceAll]) + '"'
-        else
-        if StartsStr('"', s) then
-          // - when starting with " -> triple it and the next closing instance
-          s := '"""' + StringReplace(RightStr(s, Length(s)-1), '"', '"""', []);
+        s := EscapeTextForGoogleSheets(s);
 
         Result := Result + #9 + s;
 

@@ -20,6 +20,7 @@ interface
 
   function UpperCaseByWord(const aString: string): string;
 
+  function EscapeTextForGoogleSheets(const aString: string): string;
 
 implementation
 uses
@@ -175,6 +176,31 @@ begin
   for I := StringLow(Result) to StringHigh(Result) do
     if (I = StringLow(Result)) or (Result[I-1] = #32) then
       Result[I] := UpCase(Result[I]);
+end;
+
+
+// Intended for the new GoogleSheet with all cells set to "Automatic" type
+function EscapeTextForGoogleSheets(const aString: string): string;
+var
+  s: string;
+begin
+  s := aString;
+
+  // When the first character is a ' or '=' - escape it with another '
+  if (s <> '') then
+  begin
+    if (s[1] = #39) or (s[1] = '=') then
+      s := #39 + s;
+
+    // When there are " or spaces - wrap and escape everything with "
+    if (Pos('"', s) > 0) or (s[1] = ' ') or (s[High(s)] = ' ') then
+    begin
+      s := StringReplace(s, '"', '""', [rfReplaceAll]);
+      s := '"' + s + '"';
+    end;
+  end;
+
+  Result := s;
 end;
 
 
