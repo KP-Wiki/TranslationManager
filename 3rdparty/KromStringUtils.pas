@@ -5,7 +5,6 @@ interface
   function StringLow(const aString: string): Integer; inline;
   function StringHigh(const aString: string): Integer; inline;
   function StringStart: Integer; inline;
-  function StringPad(const aString: string; aLength: Integer): string;
 
   function FixDecimalSeparator(const aString: string): string;
 
@@ -66,12 +65,6 @@ begin
     Result := 1;        // Delphi XE2 and below can't use Low(s), but don't have ZEROBASEDSTRINGS either
     {$IFEND}
   {$ENDIF}
-end;
-
-
-function StringPad(const aString: string; aLength: Integer): string;
-begin
-  Result := Copy(aString, StringStart, aLength) + DupeString(' ', aLength - Length(aString));
 end;
 
 
