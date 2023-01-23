@@ -9,7 +9,7 @@ uses
 
 type
   TKMTargetGame = (
-    tgUnknown, // Game could not be detected
+    tgUnknown,        // Game could not be detected
     tgKaMRemake,
     tgKnightsProvince
   );
@@ -624,7 +624,7 @@ end;
 
 procedure TForm1.btnInsertClick(Sender: TObject);
 var
-  idx: integer;
+  idx: Integer;
 begin
   idx := lbTags.ItemIndex; // Item place we are adding
   if idx = -1 then Exit;
@@ -636,7 +636,7 @@ end;
 
 procedure TForm1.btnInsertSeparatorClick(Sender: TObject);
 var
-  idx: integer;
+  idx: Integer;
 begin
   idx := lbTags.ItemIndex; //Item place we are adding
   if idx = -1 then Exit;
@@ -648,7 +648,7 @@ end;
 
 procedure TForm1.btnDeleteClick(Sender: TObject);
 var
-  idx: integer;
+  idx: Integer;
 begin
   idx := lbTags.ItemIndex; //Item place we are deleting
   if idx = -1 then Exit;
@@ -660,7 +660,7 @@ end;
 
 procedure TForm1.btnMoveUpClick(Sender: TObject);
 var
-  idx: integer;
+  idx: Integer;
 begin
   idx := lbTags.ItemIndex;
 
@@ -732,7 +732,7 @@ end;
 
 procedure TForm1.btnMoveDownClick(Sender: TObject);
 var
-  idx: integer;
+  idx: Integer;
 begin
   idx := lbTags.ItemIndex;
   if idx = -1 then Exit;

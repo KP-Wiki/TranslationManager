@@ -172,7 +172,7 @@ end;
 procedure TKMTextManager.SaveTags(const aFilename: string);
 var
   myFile: TextFile;
-  I: integer;
+  I: Integer;
 begin
   AssignFile(myFile, aFilename);
   Rewrite(myFile);
