@@ -29,7 +29,7 @@ type
     function GetLineForDict(aLoc: Integer): string;
     function GetLastChanged(aLoc: Integer): string;
     procedure SetLastChanged(aLoc: Integer; aLastChanged: string);
-    function Matching(aChar: Char): Boolean;
+    function CheckMatchingForCharCount(const aSub: string): Boolean;
   end;
 
   TKMLines = class(TList<TKMLine>)
@@ -135,26 +135,28 @@ begin
 end;
 
 
-function TKMLine.Matching(aChar: Char): Boolean;
+function TKMLine.CheckMatchingForCharCount(const aSub: string): Boolean;
 var
-  I, K: Integer;
-  charCount: array of Integer;
+  I, localizationsCount: Integer;
+  charCount: array {locale} of Integer;
 begin
   Result := True;
 
   SetLength(charCount, Length(Strings));
 
-  K := 0;
+  localizationsCount := 0;
   for I := 0 to High(Strings) do
   if Length(Strings[I]) > 0 then
   begin
-    charCount[K] := Length(Strings[I]) - Length(StringReplace(Strings[I], aChar, '', [rfReplaceAll]));
+    charCount[localizationsCount] := Length(Strings[I]) - Length(StringReplace(Strings[I], aSub, '', [rfReplaceAll]));
 
-    Inc(K);
+    // Some localizations could be missing, so we count each line separately
+    Inc(localizationsCount);
   end;
 
-  for I := 0 to K - 2 do
-  if (charCount[I] <> charCount[I+1]) then
+  // We can compare adjucent pairs - if there's a mismatch it will show up
+  for I := 0 to localizationsCount - 2 do
+  if charCount[I] <> charCount[I+1] then
     Exit(False);
 end;
 

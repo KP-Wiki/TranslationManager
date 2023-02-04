@@ -884,13 +884,21 @@ begin
     Load(aExeDir, aFolders[I], '', '', []);
 
     newFile := True;
+
+    // Linebreaks
     for K := 0 to fLines.Count - 1 do
-      if not fLines[K].Matching('|') then
+      if not fLines[K].CheckMatchingForCharCount('|') then
         Append('| in ' + fLines[K].Tag);
 
+    // Formats
     for K := 0 to fLines.Count - 1 do
-      if not fLines[K].Matching('%') then
+      if not fLines[K].CheckMatchingForCharCount('%') then
         Append('% in ' + fLines[K].Tag);
+
+    // Colors
+    for K := 0 to fLines.Count - 1 do
+      if not fLines[K].CheckMatchingForCharCount('[$') then
+        Append('[$ in ' + fLines[K].Tag);
   end;
 end;
 
