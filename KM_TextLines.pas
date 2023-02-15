@@ -121,13 +121,18 @@ procedure TKMLine.Autoname(const aPath: string);
 var
   txt: string;
 begin
-  txt := Trim(aPath);
+  if LOCALE_DEFAULT <= High(Strings) then
+    txt := Strings[LOCALE_DEFAULT]
+  else
+    txt := Trim(aPath);
+
   txt := StringReplace(txt, '.%s.libx', '', [rfReplaceAll]);
   txt := StringReplace(txt, '\', '_', [rfReplaceAll]);
   txt := StringReplace(txt, '.', '_', [rfReplaceAll]);
   txt := StringReplace(txt, ' ', '_', [rfReplaceAll]);
 
-  Tag := 'TX_' + UpperCase(LeftStr(txt, 32)) + '_' + IntToStr(Id);
+  // All tags must be unique, thats why we need to add ID
+  Tag := 'TX_' + IntToStr(Id) + '_' + UpperCase(LeftStr(txt, 32));
 end;
 
 
