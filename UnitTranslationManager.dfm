@@ -26,13 +26,14 @@ object Form1: TForm1
     Left = 0
     Top = 65
     Width = 993
-    Height = 516
+    Height = 535
     Align = alClient
     BevelOuter = bvNone
-    TabOrder = 1
+    TabOrder = 0
+    ExplicitHeight = 516
     DesignSize = (
       993
-      516)
+      535)
     object Label1: TLabel
       Left = 8
       Top = 0
@@ -80,7 +81,7 @@ object Form1: TForm1
       Left = 488
       Top = 16
       Width = 497
-      Height = 460
+      Height = 479
       HorzScrollBar.Visible = False
       VertScrollBar.Smooth = True
       VertScrollBar.Tracking = True
@@ -89,6 +90,7 @@ object Form1: TForm1
       BevelInner = bvNone
       BevelOuter = bvNone
       TabOrder = 0
+      ExplicitHeight = 460
     end
     object lbLibs: TListBox
       Left = 8
@@ -112,17 +114,18 @@ object Form1: TForm1
     end
     object btnCopy: TButton
       Left = 488
-      Top = 483
+      Top = 502
       Width = 121
       Height = 25
       Anchors = [akLeft, akBottom]
       Caption = 'Copy all strings'
       TabOrder = 3
       OnClick = btnCopyClick
+      ExplicitTop = 483
     end
     object btnEraseAllButEng: TButton
       Left = 744
-      Top = 483
+      Top = 502
       Width = 161
       Height = 25
       Anchors = [akLeft, akBottom]
@@ -130,10 +133,11 @@ object Form1: TForm1
       Default = True
       TabOrder = 4
       OnClick = btnEraseAllButEngClick
+      ExplicitTop = 483
     end
     object btnPaste: TButton
       Left = 616
-      Top = 483
+      Top = 502
       Width = 121
       Height = 25
       Anchors = [akLeft, akBottom]
@@ -141,67 +145,74 @@ object Form1: TForm1
       Enabled = False
       TabOrder = 5
       OnClick = btnPasteClick
+      ExplicitTop = 483
     end
     object btnInsert: TButton
       Left = 8
-      Top = 456
+      Top = 475
       Width = 121
       Height = 25
       Anchors = [akLeft, akBottom]
       Caption = 'Insert New'
       TabOrder = 6
       OnClick = btnInsertClick
+      ExplicitTop = 456
     end
     object btnInsertSeparator: TButton
       Left = 8
-      Top = 480
+      Top = 499
       Width = 121
       Height = 25
       Anchors = [akLeft, akBottom]
       Caption = 'Insert Separator'
       TabOrder = 7
       OnClick = btnInsertSeparatorClick
+      ExplicitTop = 480
     end
     object btnRename: TButton
       Left = 136
-      Top = 456
+      Top = 475
       Width = 81
       Height = 25
       Anchors = [akLeft, akBottom]
       Caption = 'Rename'
       TabOrder = 9
       OnClick = btnRenameClick
+      ExplicitTop = 456
     end
     object btnMoveUp: TButton
       Left = 224
-      Top = 456
+      Top = 475
       Width = 105
       Height = 25
       Anchors = [akLeft, akBottom]
       Caption = 'Move Up'
       TabOrder = 10
       OnClick = btnMoveUpClick
+      ExplicitTop = 456
     end
     object btnMoveDown: TButton
       Left = 224
-      Top = 480
+      Top = 499
       Width = 105
       Height = 25
       Anchors = [akLeft, akBottom]
       Caption = 'Move Down'
       TabOrder = 11
       OnClick = btnMoveDownClick
+      ExplicitTop = 480
     end
     object lbTags: TListBox
       Left = 8
       Top = 264
       Width = 321
-      Height = 185
+      Height = 204
       Anchors = [akLeft, akTop, akBottom]
       ItemHeight = 19
       TabOrder = 12
       OnClick = lbTagsClick
       OnKeyPress = lbTagsKeyPress
+      ExplicitHeight = 185
     end
     object cbFilterDuplicateTexts: TCheckBox
       Left = 336
@@ -231,13 +242,14 @@ object Form1: TForm1
     end
     object btnDelete: TButton
       Left = 136
-      Top = 480
+      Top = 499
       Width = 81
       Height = 25
       Anchors = [akLeft, akBottom]
       Caption = 'Delete'
       TabOrder = 8
       OnClick = btnDeleteClick
+      ExplicitTop = 480
     end
     object edFilterTagName: TEdit
       Left = 336
@@ -257,19 +269,6 @@ object Form1: TForm1
       OnClick = cbFilterEmptyTextsClick
     end
   end
-  object StatusBar1: TStatusBar
-    Left = 0
-    Top = 581
-    Width = 993
-    Height = 19
-    Panels = <
-      item
-        Width = 100
-      end
-      item
-        Width = 50
-      end>
-  end
   object pnTop: TPanel
     Left = 0
     Top = 0
@@ -277,10 +276,10 @@ object Form1: TForm1
     Height = 65
     Align = alTop
     BevelOuter = bvNone
-    TabOrder = 2
+    TabOrder = 1
     object btnCompactIndexes: TButton
-      Left = 816
-      Top = 8
+      Left = 840
+      Top = 32
       Width = 129
       Height = 25
       Caption = 'Compact indexes'
@@ -288,7 +287,7 @@ object Form1: TForm1
       OnClick = btnCompactIndexesClick
     end
     object btnCopyToClipboard: TButton
-      Left = 368
+      Left = 528
       Top = 8
       Width = 169
       Height = 25
@@ -297,7 +296,7 @@ object Form1: TForm1
       OnClick = btnCopyToCBClick
     end
     object btnListUnusedTags: TButton
-      Left = 680
+      Left = 840
       Top = 8
       Width = 129
       Height = 25
@@ -306,7 +305,7 @@ object Form1: TForm1
       OnClick = btnListUnusedTagsClick
     end
     object btnPasteFromClipboard: TButton
-      Left = 368
+      Left = 528
       Top = 32
       Width = 169
       Height = 25
@@ -315,7 +314,7 @@ object Form1: TForm1
       OnClick = btnPasteFromCBClick
     end
     object btnSortByIndex: TButton
-      Left = 544
+      Left = 704
       Top = 8
       Width = 129
       Height = 25
@@ -324,7 +323,7 @@ object Form1: TForm1
       OnClick = btnSortByIndexClick
     end
     object btnSortByTag: TButton
-      Left = 544
+      Left = 704
       Top = 32
       Width = 129
       Height = 25
@@ -333,7 +332,7 @@ object Form1: TForm1
       OnClick = btnSortByTagClick
     end
     object btnCopyToClipboardAll: TButton
-      Left = 192
+      Left = 176
       Top = 8
       Width = 169
       Height = 25
@@ -342,16 +341,16 @@ object Form1: TForm1
       OnClick = btnCopyToClipboardAllClick
     end
     object btnListMismatching: TButton
-      Left = 680
-      Top = 32
-      Width = 129
+      Left = 352
+      Top = 8
+      Width = 169
       Height = 25
-      Caption = 'List mismatching'
+      Caption = 'List ALL mismatching'
       TabOrder = 8
       OnClick = btnListMismatchingClick
     end
     object btnPasteFromClipboardAll: TButton
-      Left = 192
+      Left = 176
       Top = 32
       Width = 169
       Height = 25

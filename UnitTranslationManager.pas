@@ -27,7 +27,6 @@ type
     btnCopy: TButton;
     btnPaste: TButton;
     clbShowLang: TCheckListBox;
-    StatusBar1: TStatusBar;
     btnEraseAllButEng: TButton;
     Label1: TLabel;
     Label2: TLabel;
@@ -449,7 +448,7 @@ begin
 
   lbTagsClick(lbTags);
 
-  StatusBar1.Panels[0].Text := 'Count ' + IntToStr(lbTags.Count);
+  Label5.Caption := 'Tags (' + IntToStr(lbTags.Count) + ')';
 end;
 
 
