@@ -48,8 +48,8 @@ type
     btnRename: TButton;
     btnMoveUp: TButton;
     btnMoveDown: TButton;
-    cbFilterDuplicate: TCheckBox;
-    cbFilterMissing: TCheckBox;
+    cbFilterDuplicateTexts: TCheckBox;
+    cbFilterEmptyTexts: TCheckBox;
     edFilterEngText: TEdit;
     Label4: TLabel;
     Label5: TLabel;
@@ -79,7 +79,7 @@ type
     procedure btnRenameClick(Sender: TObject);
     procedure clbShowLangClickCheck(Sender: TObject);
     procedure FormResize(Sender: TObject);
-    procedure cbFilterMissingClick(Sender: TObject);
+    procedure cbFilterEmptyTextsClick(Sender: TObject);
     procedure btnEraseAllButEngClick(Sender: TObject);
     procedure lbTagsKeyPress(Sender: TObject; var Key: Char);
     procedure btnCopyToCBClick(Sender: TObject);
@@ -363,7 +363,7 @@ procedure TForm1.RefreshList;
     defLoc := fLocales.IndexByCode(gResLocales.DEFAULT_LOCALE);
 
     // Hide lines that have text
-    if cbFilterMissing.Checked then
+    if cbFilterEmptyTexts.Checked then
     begin
       Result := False;
       if not aLine.IsSpacer then
@@ -373,15 +373,16 @@ procedure TForm1.RefreshList;
     end;
 
     // Show lines that are the same in selected locales
-    if Result and cbFilterDuplicate.Checked then
+    if Result and cbFilterDuplicateTexts.Checked then
     begin
       Result := False;
       if not aLine.IsSpacer then
         for I := 0 to fLocales.Count - 1 do
           if clbShowLang.Checked[I+1] then
-          for K := 0 to fLocales.Count - 1 do
-            if (K <> I) and clbShowLang.Checked[K+1] then
-              Result := Result or (aLine.Strings[I] = aLine.Strings[K]);
+            if aLine.Strings[I] <> '' then // Empty strings are not interesting to see in terms of duplicates
+            for K := 0 to fLocales.Count - 1 do
+              if (K <> I) and clbShowLang.Checked[K+1] then
+                Result := Result or (aLine.Strings[I] = aLine.Strings[K]);
     end;
 
     // Cutting corners here, we check wildcard only on first/last place
@@ -764,7 +765,7 @@ begin
 end;
 
 
-procedure TForm1.cbFilterMissingClick(Sender: TObject);
+procedure TForm1.cbFilterEmptyTextsClick(Sender: TObject);
 begin
   RefreshControls;
   RefreshList;
@@ -784,13 +785,13 @@ begin
 
   isItemSelected := id <> -1;
   isMainFile := isItemSelected and SameText(lbLibs.Items[id], TEXT_PATH);
-  isFiltered := cbFilterMissing.Checked or cbFilterDuplicate.Checked or (edFilterEngText.Text <> '') or (edFilterTagName.Text <> '');
+  isFiltered := cbFilterEmptyTexts.Checked or cbFilterDuplicateTexts.Checked or (edFilterEngText.Text <> '') or (edFilterTagName.Text <> '');
 
   btnCopyToClipboard.Enabled := isItemSelected;
   btnPasteFromClipboard.Enabled := isItemSelected;
 
-  cbFilterDuplicate.Enabled := isItemSelected;
-  cbFilterMissing.Enabled := isItemSelected;
+  cbFilterDuplicateTexts.Enabled := isItemSelected;
+  cbFilterEmptyTexts.Enabled := isItemSelected;
 
   btnSortByIndex.Enabled := isItemSelected and isMainFile and not isFiltered;
   btnSortByTag.Enabled := isItemSelected and isMainFile and not isFiltered;

@@ -203,23 +203,23 @@ object Form1: TForm1
       OnClick = lbTagsClick
       OnKeyPress = lbTagsKeyPress
     end
-    object cbFilterDuplicate: TCheckBox
+    object cbFilterDuplicateTexts: TCheckBox
       Left = 336
       Top = 304
       Width = 145
       Height = 17
       Caption = 'Filter repeating texts'
       TabOrder = 13
-      OnClick = cbFilterMissingClick
+      OnClick = cbFilterEmptyTextsClick
     end
-    object cbFilterMissing: TCheckBox
+    object cbFilterEmptyTexts: TCheckBox
       Left = 336
       Top = 288
       Width = 137
       Height = 17
       Caption = 'Filter empty texts'
       TabOrder = 14
-      OnClick = cbFilterMissingClick
+      OnClick = cbFilterEmptyTextsClick
     end
     object edFilterEngText: TEdit
       Left = 336
@@ -350,15 +350,6 @@ object Form1: TForm1
       TabOrder = 6
       OnClick = btnPasteFromClipboardAllClick
     end
-    object btnExit: TButton
-      Left = 8
-      Top = 32
-      Width = 89
-      Height = 25
-      Caption = 'Exit'
-      TabOrder = 9
-      OnClick = btnExitClick
-    end
     object btnSave: TButton
       Left = 8
       Top = 8
@@ -367,6 +358,15 @@ object Form1: TForm1
       Caption = 'Save'
       TabOrder = 10
       OnClick = btnSaveClick
+    end
+    object btnExit: TButton
+      Left = 8
+      Top = 32
+      Width = 89
+      Height = 25
+      Caption = 'Exit'
+      TabOrder = 9
+      OnClick = btnExitClick
     end
   end
 end
