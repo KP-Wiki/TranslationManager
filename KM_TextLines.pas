@@ -6,6 +6,8 @@ uses
 
 
 type
+  TByteSet = set of Byte;
+
   // Maybe slower, but it's much simpler to manage classes (when there are strings in them)
   TKMLine = class
   private const
@@ -29,7 +31,7 @@ type
     function GetLineForDict(aLoc: Integer): string;
     function GetLastChanged(aLoc: Integer): string;
     procedure SetLastChanged(aLoc: Integer; aLastChanged: string);
-    function CheckMatchingForCharCount(const aSub: string): Boolean;
+    function CheckMatchingForCharCount(const aSub: array of string; aLocales: TByteSet): Boolean;
   end;
 
   TKMLines = class(TList<TKMLine>)
@@ -135,29 +137,34 @@ begin
 end;
 
 
-function TKMLine.CheckMatchingForCharCount(const aSub: string): Boolean;
+function TKMLine.CheckMatchingForCharCount(const aSub: array of string; aLocales: TByteSet): Boolean;
 var
   I, localizationsCount: Integer;
   charCount: array {locale} of Integer;
+  K: Integer;
 begin
   Result := True;
 
-  SetLength(charCount, Length(Strings));
-
-  localizationsCount := 0;
-  for I := 0 to High(Strings) do
-  if Length(Strings[I]) > 0 then
+  for K := Low(aSub) to High(aSub) do
   begin
-    charCount[localizationsCount] := Length(Strings[I]) - Length(StringReplace(Strings[I], aSub, '', [rfReplaceAll]));
+    SetLength(charCount, Length(Strings));
 
-    // Some localizations could be missing, so we count each line separately
-    Inc(localizationsCount);
+    localizationsCount := 0;
+    for I := 0 to High(Strings) do
+    if (aLocales = []) or (I in aLocales) then
+    if Length(Strings[I]) > 0 then
+    begin
+      charCount[localizationsCount] := Length(Strings[I]) - Length(StringReplace(Strings[I], aSub[K], '', [rfReplaceAll]));
+
+      // Some localizations could be missing, so we count each line separately
+      Inc(localizationsCount);
+    end;
+
+    // We can compare adjucent pairs - if there's a mismatch it will show up
+    for I := 0 to localizationsCount - 2 do
+    if charCount[I] <> charCount[I+1] then
+      Exit(False);
   end;
-
-  // We can compare adjucent pairs - if there's a mismatch it will show up
-  for I := 0 to localizationsCount - 2 do
-  if charCount[I] <> charCount[I+1] then
-    Exit(False);
 end;
 
 

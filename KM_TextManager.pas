@@ -8,8 +8,6 @@ uses
 
 
 type
-  TByteSet = set of Byte;
-
   TKMLibraryType = (ltGame, ltMissions);
   TKMClipboardExport = (
     ceSimple,     // Just columns with locales
@@ -887,17 +885,17 @@ begin
 
     // Linebreaks
     for K := 0 to fLines.Count - 1 do
-      if not fLines[K].CheckMatchingForCharCount('|') then
+      if not fLines[K].CheckMatchingForCharCount(['|'], []) then
         Append('| in ' + fLines[K].Tag);
 
     // Formats
     for K := 0 to fLines.Count - 1 do
-      if not fLines[K].CheckMatchingForCharCount('%') then
+      if not fLines[K].CheckMatchingForCharCount(['%'], []) then
         Append('% in ' + fLines[K].Tag);
 
     // Colors
     for K := 0 to fLines.Count - 1 do
-      if not fLines[K].CheckMatchingForCharCount('[$') then
+      if not fLines[K].CheckMatchingForCharCount(['[$'], []) then
         Append('[$ in ' + fLines[K].Tag);
   end;
 end;

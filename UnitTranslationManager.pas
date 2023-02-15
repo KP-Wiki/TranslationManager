@@ -58,6 +58,7 @@ type
     btnListMismatching: TButton;
     Label3: TLabel;
     edFilterTagName: TEdit;
+    cbFilterMismatching: TCheckBox;
     procedure lbTagsClick(Sender: TObject);
     procedure btnSortByIndexClick(Sender: TObject);
     procedure btnSortByTagClick(Sender: TObject);
@@ -354,14 +355,16 @@ end;
 
 
 procedure TForm1.RefreshList;
+var
+  defLoc: Integer;
+  selectedLocales: TByteSet;
+
   function ShowTag(aLine: TKMLine): Boolean;
   var
-    I,K, defLoc: Integer;
+    I,K: Integer;
     filterTagName: string;
   begin
     Result := True;
-    defLoc := fLocales.IndexByCode(gResLocales.DEFAULT_LOCALE);
-
     // Hide lines that have text
     if cbFilterEmptyTexts.Checked then
     begin
@@ -383,6 +386,12 @@ procedure TForm1.RefreshList;
             for K := 0 to fLocales.Count - 1 do
               if (K <> I) and clbShowLang.Checked[K+1] then
                 Result := Result or (aLine.Strings[I] = aLine.Strings[K]);
+    end;
+
+    // Show lines that have mismatching characters
+    if Result and cbFilterMismatching.Checked then
+    begin
+      Result := not aLine.CheckMatchingForCharCount([{'|',} '%', '[$'], selectedLocales);
     end;
 
     // Cutting corners here, we check wildcard only on first/last place
@@ -413,6 +422,13 @@ begin
 
     SetLength(ListBoxLookup, 0);
     SetLength(ListBoxLookup, fTextManager.Count);
+
+    defLoc := fLocales.IndexByCode(gResLocales.DEFAULT_LOCALE);
+
+    selectedLocales := [];
+    for I := 0 to fLocales.Count - 1 do
+      if clbShowLang.Checked[I+1] then
+        selectedLocales := selectedLocales + [I];
 
     for I := 0 to fTextManager.Count - 1 do
     if ShowTag(fTextManager[I]) then
@@ -785,13 +801,15 @@ begin
 
   isItemSelected := id <> -1;
   isMainFile := isItemSelected and SameText(lbLibs.Items[id], TEXT_PATH);
-  isFiltered := cbFilterEmptyTexts.Checked or cbFilterDuplicateTexts.Checked or (edFilterEngText.Text <> '') or (edFilterTagName.Text <> '');
+  isFiltered := (edFilterEngText.Text <> '') or (edFilterTagName.Text <> '') or
+                cbFilterEmptyTexts.Checked or cbFilterDuplicateTexts.Checked or cbFilterMismatching.Checked;
 
   btnCopyToClipboard.Enabled := isItemSelected;
   btnPasteFromClipboard.Enabled := isItemSelected;
 
   cbFilterDuplicateTexts.Enabled := isItemSelected;
   cbFilterEmptyTexts.Enabled := isItemSelected;
+  cbFilterMismatching.Enabled := isItemSelected;
 
   btnSortByIndex.Enabled := isItemSelected and isMainFile and not isFiltered;
   btnSortByTag.Enabled := isItemSelected and isMainFile and not isFiltered;

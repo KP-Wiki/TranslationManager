@@ -247,6 +247,15 @@ object Form1: TForm1
       TabOrder = 16
       OnChange = edFilterEngTextChange
     end
+    object cbFilterMismatching: TCheckBox
+      Left = 336
+      Top = 320
+      Width = 145
+      Height = 17
+      Caption = 'Filter mismatching texts'
+      TabOrder = 17
+      OnClick = cbFilterEmptyTextsClick
+    end
   end
   object StatusBar1: TStatusBar
     Left = 0
