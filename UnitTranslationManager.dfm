@@ -2,7 +2,7 @@ object Form1: TForm1
   Left = 230
   Top = 140
   Caption = 'Translation Manager'
-  ClientHeight = 600
+  ClientHeight = 720
   ClientWidth = 993
   Color = clBtnFace
   Constraints.MinHeight = 600
@@ -26,14 +26,14 @@ object Form1: TForm1
     Left = 0
     Top = 65
     Width = 993
-    Height = 535
+    Height = 655
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 0
     ExplicitHeight = 516
     DesignSize = (
       993
-      535)
+      655)
     object Label1: TLabel
       Left = 8
       Top = 0
@@ -50,7 +50,7 @@ object Form1: TForm1
       Transparent = True
     end
     object lbTagName: TLabel
-      Left = 488
+      Left = 544
       Top = 0
       Width = 91
       Height = 18
@@ -78,10 +78,10 @@ object Form1: TForm1
       Caption = 'English text filter:'
     end
     object ScrollBox1: TScrollBox
-      Left = 488
+      Left = 544
       Top = 16
-      Width = 497
-      Height = 479
+      Width = 441
+      Height = 599
       HorzScrollBar.Visible = False
       VertScrollBar.Smooth = True
       VertScrollBar.Tracking = True
@@ -90,7 +90,7 @@ object Form1: TForm1
       BevelInner = bvNone
       BevelOuter = bvNone
       TabOrder = 0
-      ExplicitHeight = 460
+      ExplicitHeight = 479
     end
     object lbLibs: TListBox
       Left = 8
@@ -104,7 +104,7 @@ object Form1: TForm1
     object clbShowLang: TCheckListBox
       Left = 336
       Top = 16
-      Width = 145
+      Width = 201
       Height = 153
       OnClickCheck = clbShowLangClickCheck
       AutoComplete = False
@@ -113,19 +113,19 @@ object Form1: TForm1
       TabOrder = 2
     end
     object btnCopy: TButton
-      Left = 488
-      Top = 502
+      Left = 544
+      Top = 624
       Width = 121
       Height = 25
       Anchors = [akLeft, akBottom]
       Caption = 'Copy all strings'
       TabOrder = 3
       OnClick = btnCopyClick
-      ExplicitTop = 483
+      ExplicitTop = 504
     end
     object btnEraseAllButEng: TButton
-      Left = 744
-      Top = 502
+      Left = 800
+      Top = 624
       Width = 161
       Height = 25
       Anchors = [akLeft, akBottom]
@@ -133,11 +133,11 @@ object Form1: TForm1
       Default = True
       TabOrder = 4
       OnClick = btnEraseAllButEngClick
-      ExplicitTop = 483
+      ExplicitTop = 504
     end
     object btnPaste: TButton
-      Left = 616
-      Top = 502
+      Left = 672
+      Top = 624
       Width = 121
       Height = 25
       Anchors = [akLeft, akBottom]
@@ -145,33 +145,31 @@ object Form1: TForm1
       Enabled = False
       TabOrder = 5
       OnClick = btnPasteClick
-      ExplicitTop = 483
+      ExplicitTop = 504
     end
     object btnInsert: TButton
       Left = 8
-      Top = 475
+      Top = 595
       Width = 121
       Height = 25
       Anchors = [akLeft, akBottom]
       Caption = 'Insert New'
       TabOrder = 6
       OnClick = btnInsertClick
-      ExplicitTop = 456
     end
     object btnInsertSeparator: TButton
       Left = 8
-      Top = 499
+      Top = 619
       Width = 121
       Height = 25
       Anchors = [akLeft, akBottom]
       Caption = 'Insert Separator'
       TabOrder = 7
       OnClick = btnInsertSeparatorClick
-      ExplicitTop = 480
     end
     object btnRename: TButton
       Left = 136
-      Top = 475
+      Top = 595
       Width = 81
       Height = 25
       Anchors = [akLeft, akBottom]
@@ -182,7 +180,7 @@ object Form1: TForm1
     end
     object btnMoveUp: TButton
       Left = 224
-      Top = 475
+      Top = 595
       Width = 105
       Height = 25
       Anchors = [akLeft, akBottom]
@@ -193,7 +191,7 @@ object Form1: TForm1
     end
     object btnMoveDown: TButton
       Left = 224
-      Top = 499
+      Top = 619
       Width = 105
       Height = 25
       Anchors = [akLeft, akBottom]
@@ -206,7 +204,7 @@ object Form1: TForm1
       Left = 8
       Top = 264
       Width = 321
-      Height = 204
+      Height = 324
       Anchors = [akLeft, akTop, akBottom]
       ItemHeight = 19
       TabOrder = 12
@@ -235,14 +233,14 @@ object Form1: TForm1
     object edFilterEngText: TEdit
       Left = 336
       Top = 240
-      Width = 145
+      Width = 201
       Height = 26
       TabOrder = 15
       OnChange = edFilterEngTextChange
     end
     object btnDelete: TButton
       Left = 136
-      Top = 499
+      Top = 619
       Width = 81
       Height = 25
       Anchors = [akLeft, akBottom]
@@ -254,7 +252,7 @@ object Form1: TForm1
     object edFilterTagName: TEdit
       Left = 336
       Top = 192
-      Width = 145
+      Width = 201
       Height = 26
       TabOrder = 16
       OnChange = edFilterEngTextChange
