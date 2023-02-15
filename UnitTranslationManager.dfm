@@ -17,10 +17,11 @@ object Form1: TForm1
   Position = poScreenCenter
   Scaled = False
   OnCloseQuery = FormCloseQuery
+  OnCreate = FormCreate
   OnDestroy = FormDestroy
   OnResize = FormResize
   PixelsPerInch = 96
-  TextHeight = 18
+  TextHeight = 19
   object pnBody: TPanel
     Left = 0
     Top = 65
@@ -55,18 +56,25 @@ object Form1: TForm1
       Caption = 'TX_TAG_NAME'
     end
     object Label4: TLabel
-      Left = 136
-      Top = 256
-      Width = 63
+      Left = 336
+      Top = 176
+      Width = 95
       Height = 18
-      Caption = 'Text filter:'
+      Caption = 'Tag name filter:'
     end
     object Label5: TLabel
       Left = 8
       Top = 248
-      Width = 61
+      Width = 26
       Height = 18
-      Caption = 'Constants'
+      Caption = 'Tags'
+    end
+    object Label3: TLabel
+      Left = 336
+      Top = 224
+      Width = 109
+      Height = 18
+      Caption = 'English text filter:'
     end
     object ScrollBox1: TScrollBox
       Left = 488
@@ -87,7 +95,7 @@ object Form1: TForm1
       Top = 16
       Width = 321
       Height = 225
-      ItemHeight = 18
+      ItemHeight = 19
       TabOrder = 1
       OnClick = lbLibsClick
     end
@@ -99,7 +107,7 @@ object Form1: TForm1
       OnClickCheck = clbShowLangClickCheck
       AutoComplete = False
       Columns = 3
-      ItemHeight = 18
+      ItemHeight = 19
       TabOrder = 2
     end
     object btnCopy: TButton
@@ -186,40 +194,40 @@ object Form1: TForm1
     end
     object lbTags: TListBox
       Left = 8
-      Top = 304
+      Top = 264
       Width = 321
-      Height = 145
+      Height = 185
       Anchors = [akLeft, akTop, akBottom]
-      ItemHeight = 18
+      ItemHeight = 19
       TabOrder = 12
       OnClick = lbTagsClick
       OnKeyPress = lbTagsKeyPress
     end
     object cbFilterDuplicate: TCheckBox
-      Left = 8
-      Top = 280
-      Width = 113
+      Left = 336
+      Top = 304
+      Width = 145
       Height = 17
-      Caption = 'Filter duplicate'
+      Caption = 'Filter repeating texts'
       TabOrder = 13
       OnClick = cbFilterMissingClick
     end
     object cbFilterMissing: TCheckBox
-      Left = 8
-      Top = 264
-      Width = 113
+      Left = 336
+      Top = 288
+      Width = 137
       Height = 17
-      Caption = 'Filter missing'
+      Caption = 'Filter empty texts'
       TabOrder = 14
       OnClick = cbFilterMissingClick
     end
-    object edFilterText: TEdit
-      Left = 136
-      Top = 272
+    object edFilterEngText: TEdit
+      Left = 336
+      Top = 240
       Width = 145
       Height = 26
       TabOrder = 15
-      OnChange = edFilterTextChange
+      OnChange = edFilterEngTextChange
     end
     object btnDelete: TButton
       Left = 136
@@ -230,6 +238,14 @@ object Form1: TForm1
       Caption = 'Delete'
       TabOrder = 8
       OnClick = btnDeleteClick
+    end
+    object edFilterTagName: TEdit
+      Left = 336
+      Top = 192
+      Width = 145
+      Height = 26
+      TabOrder = 16
+      OnChange = edFilterEngTextChange
     end
   end
   object StatusBar1: TStatusBar
@@ -259,7 +275,6 @@ object Form1: TForm1
       Width = 129
       Height = 25
       Caption = 'Compact indexes'
-      Enabled = False
       TabOrder = 0
       OnClick = btnCompactIndexesClick
     end
@@ -269,7 +284,6 @@ object Form1: TForm1
       Width = 169
       Height = 25
       Caption = 'Copy to clipboard'
-      Enabled = False
       TabOrder = 1
       OnClick = btnCopyToCBClick
     end
@@ -279,7 +293,6 @@ object Form1: TForm1
       Width = 129
       Height = 25
       Caption = 'List unused tags'
-      Enabled = False
       TabOrder = 2
       OnClick = btnListUnusedTagsClick
     end
@@ -289,7 +302,6 @@ object Form1: TForm1
       Width = 169
       Height = 25
       Caption = 'Paste from clipboard'
-      Enabled = False
       TabOrder = 3
       OnClick = btnPasteFromCBClick
     end
@@ -299,7 +311,6 @@ object Form1: TForm1
       Width = 129
       Height = 25
       Caption = 'Sort by index'
-      Enabled = False
       TabOrder = 4
       OnClick = btnSortByIndexClick
     end
@@ -309,7 +320,6 @@ object Form1: TForm1
       Width = 129
       Height = 25
       Caption = 'Sort by tag'
-      Enabled = False
       TabOrder = 5
       OnClick = btnSortByTagClick
     end
@@ -340,23 +350,23 @@ object Form1: TForm1
       TabOrder = 6
       OnClick = btnPasteFromClipboardAllClick
     end
-  end
-  object btnSave: TButton
-    Left = 8
-    Top = 8
-    Width = 89
-    Height = 25
-    Caption = 'Save'
-    TabOrder = 3
-    OnClick = btnSaveClick
-  end
-  object btnExit: TButton
-    Left = 8
-    Top = 32
-    Width = 89
-    Height = 25
-    Caption = 'Exit'
-    TabOrder = 4
-    OnClick = btnExitClick
+    object btnExit: TButton
+      Left = 8
+      Top = 32
+      Width = 89
+      Height = 25
+      Caption = 'Exit'
+      TabOrder = 9
+      OnClick = btnExitClick
+    end
+    object btnSave: TButton
+      Left = 8
+      Top = 8
+      Width = 89
+      Height = 25
+      Caption = 'Save'
+      TabOrder = 10
+      OnClick = btnSaveClick
+    end
   end
 end

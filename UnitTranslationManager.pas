@@ -50,12 +50,14 @@ type
     btnMoveDown: TButton;
     cbFilterDuplicate: TCheckBox;
     cbFilterMissing: TCheckBox;
-    edFilterText: TEdit;
+    edFilterEngText: TEdit;
     Label4: TLabel;
     Label5: TLabel;
     btnPasteFromClipboardAll: TButton;
     btnCopyToClipboardAll: TButton;
     btnListMismatching: TButton;
+    Label3: TLabel;
+    edFilterTagName: TEdit;
     procedure lbTagsClick(Sender: TObject);
     procedure btnSortByIndexClick(Sender: TObject);
     procedure btnSortByTagClick(Sender: TObject);
@@ -70,7 +72,7 @@ type
     procedure lbLibsClick(Sender: TObject);
     procedure btnCopyClick(Sender: TObject);
     procedure btnPasteClick(Sender: TObject);
-    procedure edFilterTextChange(Sender: TObject);
+    procedure edFilterEngTextChange(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
     procedure btnListUnusedTagsClick(Sender: TObject);
     procedure btnExitClick(Sender: TObject);
@@ -85,6 +87,7 @@ type
     procedure btnCopyToClipboardAllClick(Sender: TObject);
     procedure btnPasteFromClipboardAllClick(Sender: TObject);
     procedure btnListMismatchingClick(Sender: TObject);
+    procedure FormCreate(Sender: TObject);
   private
     // Automated things
     fMode: TKMUsageMode;
@@ -113,7 +116,7 @@ type
     procedure InitFormControls;
     procedure InitLocalesList;
     procedure RefreshFolders;
-    procedure RefreshFilter;
+    procedure RefreshControls;
     procedure UpdateVisibleLocales;
     procedure RefreshList;
     procedure LoadSettings(const aPath: string);
@@ -339,7 +342,7 @@ begin
   else
     fTextManager.Load(fWorkDir, lbLibs.Items[id], '', '', []);
 
-  RefreshFilter;
+  RefreshControls;
   RefreshList;
 end;
 
@@ -354,6 +357,7 @@ procedure TForm1.RefreshList;
   function ShowTag(aLine: TKMLine): Boolean;
   var
     I,K, defLoc: Integer;
+    filterTagName: string;
   begin
     Result := True;
     defLoc := fLocales.IndexByCode(gResLocales.DEFAULT_LOCALE);
@@ -380,8 +384,21 @@ procedure TForm1.RefreshList;
               Result := Result or (aLine.Strings[I] = aLine.Strings[K]);
     end;
 
-    if Result and (edFilterText.Text <> '') then
-      Result := not aLine.IsSpacer and (Pos(UpperCase(edFilterText.Text), UpperCase(aLine.Strings[defLoc])) <> 0);
+    // Cutting corners here, we check wildcard only on first/last place
+    filterTagName := UpperCase(edFilterTagName.Text);
+    if Result and (filterTagName <> '') then
+      if Length(filterTagName) - Length(ReplaceStr(filterTagName, '*', '')) <> 1 then
+        // No wildcards or more than 1 wildcard - do the normal matching
+        Result := Pos(filterTagName, UpperCase(aLine.Tag)) <> 0
+      else
+      if StartsText('*', filterTagName) then
+        Result := EndsText(ReplaceStr(filterTagName, '*', ''), UpperCase(aLine.Tag))
+      else
+      if EndsText('*', filterTagName) then
+        Result := StartsText(ReplaceStr(filterTagName, '*', ''), UpperCase(aLine.Tag));
+
+    if Result and (edFilterEngText.Text <> '') then
+      Result := Pos(UpperCase(edFilterEngText.Text), UpperCase(aLine.Strings[defLoc])) <> 0;
   end;
 var
   I, TopIdx, ItemIdx: Integer;
@@ -390,26 +407,29 @@ begin
   lbTags.Items.BeginUpdate;
   ItemIdx := lbTags.ItemIndex;
   TopIdx := lbTags.TopIndex;
-  lbTags.Clear;
+  try
+    lbTags.Clear;
 
-  SetLength(ListBoxLookup, 0);
-  SetLength(ListBoxLookup, fTextManager.Count);
+    SetLength(ListBoxLookup, 0);
+    SetLength(ListBoxLookup, fTextManager.Count);
 
-  for I := 0 to fTextManager.Count - 1 do
-  if ShowTag(fTextManager[I]) then
-  begin
-    ListBoxLookup[lbTags.Items.Count] := I;
-    if fTextManager[I].IsSpacer then
-      s := ''
-    else
-      s := IntToStr(fTextManager[I].Id) + ': ' + fTextManager[I].Tag;
+    for I := 0 to fTextManager.Count - 1 do
+    if ShowTag(fTextManager[I]) then
+    begin
+      ListBoxLookup[lbTags.Items.Count] := I;
+      if fTextManager[I].IsSpacer then
+        s := ''
+      else
+        s := IntToStr(fTextManager[I].Id) + ': ' + fTextManager[I].Tag;
 
-    lbTags.Items.Add(s);
+      lbTags.Items.Add(s);
+    end;
+  finally
+    lbTags.Items.EndUpdate;
+    lbTags.ItemIndex := EnsureRange(ItemIdx, 0, lbTags.Count - 1);
+    lbTags.TopIndex := TopIdx;
   end;
 
-  lbTags.Items.EndUpdate;
-  lbTags.ItemIndex := EnsureRange(ItemIdx, 0, lbTags.Count - 1);
-  lbTags.TopIndex := TopIdx;
   lbTagsClick(lbTags);
 
   StatusBar1.Panels[0].Text := 'Count ' + IntToStr(lbTags.Count);
@@ -593,9 +613,9 @@ begin
 end;
 
 
-procedure TForm1.edFilterTextChange(Sender: TObject);
+procedure TForm1.edFilterEngTextChange(Sender: TObject);
 begin
-  RefreshFilter;
+  RefreshControls;
   RefreshList;
 end;
 
@@ -746,7 +766,7 @@ end;
 
 procedure TForm1.cbFilterMissingClick(Sender: TObject);
 begin
-  RefreshFilter;
+  RefreshControls;
   RefreshList;
 
   //Select the first item
@@ -755,32 +775,34 @@ begin
 end;
 
 
-procedure TForm1.RefreshFilter;
+procedure TForm1.RefreshControls;
 var
   id: Integer;
-  isFiltered, isMainFile: Boolean;
+  isItemSelected, isMainFile, isFiltered: Boolean;
 begin
   id := lbLibs.ItemIndex;
-  if id = -1 then Exit;
 
-  isMainFile := SameText(lbLibs.Items[id], TEXT_PATH);
-  isFiltered := cbFilterMissing.Checked or cbFilterDuplicate.Checked or (edFilterText.Text <> '');
+  isItemSelected := id <> -1;
+  isMainFile := isItemSelected and SameText(lbLibs.Items[id], TEXT_PATH);
+  isFiltered := cbFilterMissing.Checked or cbFilterDuplicate.Checked or (edFilterEngText.Text <> '') or (edFilterTagName.Text <> '');
 
-  // Disable buttons
-  btnCopyToClipboard.Enabled := True;
-  btnPasteFromClipboard.Enabled := True;
+  btnCopyToClipboard.Enabled := isItemSelected;
+  btnPasteFromClipboard.Enabled := isItemSelected;
 
-  btnSortByIndex.Enabled := isMainFile and not isFiltered;
-  btnSortByTag.Enabled := isMainFile and not isFiltered;
-  btnCompactIndexes.Enabled := isMainFile and not isFiltered;
-  btnListUnusedTags.Enabled := isMainFile and not isFiltered;
+  cbFilterDuplicate.Enabled := isItemSelected;
+  cbFilterMissing.Enabled := isItemSelected;
 
-  btnInsert.Enabled := not isFiltered;
-  btnInsertSeparator.Enabled := isMainFile and not isFiltered;
-  btnRename.Enabled := isMainFile;
-  btnDelete.Enabled := not isFiltered;
-  btnMoveUp.Enabled := isMainFile and not isFiltered;
-  btnMoveDown.Enabled := isMainFile and not isFiltered;
+  btnSortByIndex.Enabled := isItemSelected and isMainFile and not isFiltered;
+  btnSortByTag.Enabled := isItemSelected and isMainFile and not isFiltered;
+  btnCompactIndexes.Enabled := isItemSelected and isMainFile and not isFiltered;
+  btnListUnusedTags.Enabled := isItemSelected and isMainFile and not isFiltered;
+
+  btnInsert.Enabled := isItemSelected and not isFiltered;
+  btnInsertSeparator.Enabled := isItemSelected and isMainFile and not isFiltered;
+  btnRename.Enabled := isItemSelected and isMainFile;
+  btnDelete.Enabled := isItemSelected and not isFiltered;
+  btnMoveUp.Enabled := isItemSelected and isMainFile and not isFiltered;
+  btnMoveDown.Enabled := isItemSelected and isMainFile and not isFiltered;
 end;
 
 
@@ -817,6 +839,12 @@ end;
 procedure TForm1.FormCloseQuery(Sender: TObject; var CanClose: Boolean);
 begin
   CanClose := not fTextManager.HasChanges or (MessageDlg('Exit without saving?', mtWarning, [mbYes, mbNo], 0) = mrYes);
+end;
+
+
+procedure TForm1.FormCreate(Sender: TObject);
+begin
+  RefreshControls;
 end;
 
 
