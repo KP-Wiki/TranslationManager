@@ -36,11 +36,8 @@ type
     btnListUnusedTags: TButton;
     btnCopyToClipboard: TButton;
     btnPasteFromClipboard: TButton;
-    pnBody: TPanel;
-    pnTop: TPanel;
     lbTags: TListBox;
     btnSave: TButton;
-    btnExit: TButton;
     btnInsert: TButton;
     btnInsertSeparator: TButton;
     btnDelete: TButton;
@@ -58,6 +55,9 @@ type
     Label3: TLabel;
     edFilterTagName: TEdit;
     cbFilterMismatching: TCheckBox;
+    Label6: TLabel;
+    Label7: TLabel;
+    Label8: TLabel;
     procedure lbTagsClick(Sender: TObject);
     procedure btnSortByIndexClick(Sender: TObject);
     procedure btnSortByTagClick(Sender: TObject);
@@ -407,7 +407,7 @@ var
         Result := StartsText(ReplaceStr(filterTagName, '*', ''), UpperCase(aLine.Tag));
 
     if Result and (edFilterEngText.Text <> '') then
-      Result := Pos(UpperCase(edFilterEngText.Text), UpperCase(aLine.Strings[defLoc])) <> 0;
+      Result := not aLine.IsSpacer and (Pos(UpperCase(edFilterEngText.Text), UpperCase(aLine.Strings[defLoc])) <> 0);
   end;
 var
   I, TopIdx, ItemIdx: Integer;
