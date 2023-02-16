@@ -13,11 +13,13 @@ object Form1: TForm1
   Font.Height = -13
   Font.Name = 'Tahoma'
   Font.Style = []
+  KeyPreview = True
   OldCreateOrder = True
   Position = poScreenCenter
   Scaled = False
   OnCloseQuery = FormCloseQuery
   OnDestroy = FormDestroy
+  OnKeyDown = FormKeyDown
   OnResize = FormResize
   DesignSize = (
     993
@@ -229,9 +231,9 @@ object Form1: TForm1
   end
   object lbLibs: TListBox
     Left = 8
-    Top = 16
+    Top = 80
     Width = 321
-    Height = 225
+    Height = 161
     TabOrder = 25
     OnClick = lbLibsClick
   end
@@ -348,5 +350,16 @@ object Form1: TForm1
     Caption = 'List ALL mismatching'
     TabOrder = 8
     OnClick = btnListMismatchingClick
+  end
+  object cbLibxDomains: TCheckListBox
+    Left = 8
+    Top = 16
+    Width = 321
+    Height = 57
+    OnClickCheck = clbShowLangClickCheck
+    AutoComplete = False
+    Columns = 3
+    TabOrder = 28
+    OnClick = cbLibxDomainsClick
   end
 end

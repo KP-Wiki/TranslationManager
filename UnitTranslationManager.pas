@@ -8,20 +8,16 @@ uses
   KM_ResLocales, KM_TextLines, KM_TextManager, Unit_PathManager;
 
 type
-  TKMTargetGame = (
-    tgUnknown,        // Game could not be detected
-    tgKaMRemake,
-    tgKnightsProvince
-  );
+  TKMTargetGame = (tgUnknown, tgKaMRemake, tgKnightsProvince);
 
-  TKMUsageMode = (
-    umDeveloper,
-    umUser
-  );
+  TKMUsageMode = (umDeveloper, umUser);
+
+  TKMLibxDomain = (ldGame, ldTutorials, ldCampaigns, ldMaps, ldMapsMP, ldMapsUnofficial, ldMapdDev);
 
 const
   TARGET_GAME: array [TKMTargetGame] of string = ('Unknown', 'KaM Remake', 'Knights Province');
   USAGE_MODE: array [TKMUsageMode] of string = ('Developer mode', 'User mode');
+  LIBX_DOMAIN: array [TKMLibxDomain] of string = ('data\', 'tutorials\', 'campaigns\', 'maps\', 'mapsmp\', 'maps_unofficial\', 'mapsdev\');
 
 const
   LOCALES_PATH: array [TKMTargetGame] of string = ('', 'data\locales.txt', 'data\text\locales.xml');
@@ -67,6 +63,7 @@ type
     Label6: TLabel;
     Label7: TLabel;
     Label8: TLabel;
+    cbLibxDomains: TCheckListBox;
     procedure lbTagsClick(Sender: TObject);
     procedure btnSortByIndexClick(Sender: TObject);
     procedure btnSortByTagClick(Sender: TObject);
@@ -96,6 +93,8 @@ type
     procedure btnCopyToClipboardAllClick(Sender: TObject);
     procedure btnPasteFromClipboardAllClick(Sender: TObject);
     procedure btnListMismatchingClick(Sender: TObject);
+    procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
+    procedure cbLibxDomainsClick(Sender: TObject);
   private
     // Automated things
     fMode: TKMUsageMode;
@@ -110,6 +109,7 @@ type
 
     // User settings
     fAltWorkDir: string;
+    fSelectedFolders: string;
     fSelectedLocales: string;
 
     // Runtime things
@@ -122,6 +122,7 @@ type
     procedure MemoChange(Sender: TObject);
 
     procedure InitFormControls;
+    procedure InitLibxDomainsList;
     procedure InitLocalesList;
     procedure RefreshFolders;
     procedure RefreshControls;
@@ -142,15 +143,14 @@ uses
 {$R *.dfm}
 
 
-// todo: TM
-// 1. add libx filter, same as in KMR TM (game / tutorial (?) / maps / mapsMP / campaigns
-// 2. add filter options:
-//   - label name comtains
-//   - label ID or ID range
-// 3. Save via Ctrl + S hotkey
+// todo: Feature requests by Rey:
+// + 1. add libx filter, same as in KMR TM (game / tutorial (?) / maps / mapsMP / campaigns
+// + 2. add filter for label name contains
+// 2. add filter for label ID or ID range
+// + 3. Save via Ctrl + S hotkey
 // 4. Export all languages to ZIP
 // 5. Export selected languages to ZIP
-// 6. use nicer form style / fonts. KMR TM window looks way nicer IMHO
+// + 6. use nicer form style / fonts. KMR TM window looks way nicer IMHO
 // 3. 4. 5. could be added as a menu
 
 procedure DetectGameAndPath(aAltWorkDir: string; out aTargetGame: TKMTargetGame; out aWorkDir: string);
@@ -221,6 +221,7 @@ begin
 
   Caption := Format('Translation Manager (%s) [%s] [%s]', [DateTimeToStr(GetExeBuildTime), TARGET_GAME[fTargetGame], USAGE_MODE[fMode]]);
 
+  InitLibxDomainsList;
   InitLocalesList;
 
   fPathManager := TPathManager.Create;
@@ -245,6 +246,13 @@ begin
   fTextManager.Free;
   fLocales.Free;
   //gIoPack.Free;
+end;
+
+
+procedure TForm1.FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
+begin
+  if (ssCtrl in Shift) and (Key = Ord('S')) then
+    fTextManager.Save;
 end;
 
 
@@ -308,12 +316,9 @@ begin
   fPathManager.Clear;
 
   // Whitelist of paths to scan (so we dont include build folders and such)
-  fPathManager.AddPath(fWorkDir, 'data\');
-  fPathManager.AddPath(fWorkDir, 'campaigns\');
-  fPathManager.AddPath(fWorkDir, 'maps\');
-  fPathManager.AddPath(fWorkDir, 'mapsmp\');
-  fPathManager.AddPath(fWorkDir, 'maps_unofficial\');
-  fPathManager.AddPath(fWorkDir, 'mapsdev\');
+  for I := 0 to cbLibxDomains.Count - 1 do
+  if cbLibxDomains.Checked[I] then
+    fPathManager.AddPath(fWorkDir, cbLibxDomains.Items[I]);
 
   for I := 0 to fPathManager.Count - 1 do
     lbLibs.Items.Add(fPathManager[I]);
@@ -450,6 +455,21 @@ begin
 end;
 
 
+procedure TForm1.InitLibxDomainsList;
+var
+  LD: TKMLibxDomain;
+begin
+  cbLibxDomains.Clear;
+
+  for LD := Low(TKMLibxDomain) to High(TKMLibxDomain) do
+  if DirectoryExists(fWorkDir + LIBX_DOMAIN[LD]) then
+  begin
+    cbLibxDomains.AddItem(LIBX_DOMAIN[LD], TObject(LD));
+    cbLibxDomains.Checked[cbLibxDomains.Count-1] := Pos(IntToStr(Ord(LD)), fSelectedFolders) <> 0;
+  end;
+end;
+
+
 procedure TForm1.InitLocalesList;
   function GetCharset(const aLang: string): TFontCharset;
   begin
@@ -537,6 +557,7 @@ begin
   try
     xml.LoadFromFile(aPath);
 
+    fSelectedFolders := xml.Root.Attributes['SelectedFolders'].AsString('1,2,3,4,5,6,7,8,9');
     fSelectedLocales := xml.Root.Attributes['Selected_Locales'].AsString(TKMResLocales.DEFAULT_LOCALE);
     isMaximized := xml.Root.Attributes['Maximized'].AsBoolean(True);
     fAltWorkDir := xml.Root.Attributes['AltWorkDir'].AsString('');
@@ -553,18 +574,25 @@ end;
 
 procedure TForm1.SaveSettings(const aPath: string);
 var
-  locs: string;
+  selectedLocales: string;
+  selectedFolders: string;
   I: Integer;
   xml: TKMXMLDocument;
 begin
-  locs := '';
+  selectedFolders := '';
+  for I := 0 to cbLibxDomains.Count - 1 do
+  if cbLibxDomains.Checked[I] then
+    selectedFolders := selectedFolders + IfThen(selectedFolders <> '', ',') + IntToStr(Integer(cbLibxDomains.Items.Objects[I]));
+
+  selectedLocales := '';
   for I := 0 to fLocales.Count - 1 do
   if clbShowLang.Checked[I+1] then
-    locs := locs + IfThen(locs <> '', ',') + fLocales[I].Code;
+    selectedLocales := selectedLocales + IfThen(selectedLocales <> '', ',') + fLocales[I].Code;
 
   xml := TKMXMLDocument.Create;
   try
-    xml.Root.Attributes['Selected_Locales'] := locs;
+    xml.Root.Attributes['SelectedFolders'] := selectedFolders;
+    xml.Root.Attributes['Selected_Locales'] := selectedLocales;
     xml.Root.Attributes['Maximized'] := (WindowState = wsMaximized);
     xml.Root.Attributes['AltWorkDir'] := fAltWorkDir;
 
@@ -786,6 +814,12 @@ begin
   //Select the first item
   lbTags.ItemIndex := 0;
   lbTagsClick(lbTags);
+end;
+
+
+procedure TForm1.cbLibxDomainsClick(Sender: TObject);
+begin
+  RefreshFolders;
 end;
 
 
