@@ -3,7 +3,6 @@ unit UnitTranslationManager;
 interface
 uses
   Classes, Controls, Dialogs, ExtCtrls, Forms, Graphics, Math, Menus,
-  {$IFDEF MSWINDOWS} ComCtrls, FileCtrl, {$ENDIF}
   StdCtrls, StrUtils, Windows, SysUtils, CheckLst,
   KM_ResLocales, KM_TextLines, KM_TextManager, Unit_PathManager;
 
