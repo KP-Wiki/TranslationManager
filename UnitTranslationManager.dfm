@@ -41,14 +41,14 @@ object Form1: TForm1
   end
   object Label3: TLabel
     Left = 336
-    Top = 248
+    Top = 272
     Width = 100
     Height = 16
     Caption = 'English text filter:'
   end
   object Label4: TLabel
     Left = 336
-    Top = 200
+    Top = 224
     Width = 93
     Height = 16
     Caption = 'Tag name filter:'
@@ -69,28 +69,28 @@ object Form1: TForm1
   end
   object Label6: TLabel
     Left = 336
-    Top = 312
+    Top = 328
     Width = 28
     Height = 16
     Caption = 'Tags'
   end
   object Label7: TLabel
     Left = 336
-    Top = 464
+    Top = 480
     Width = 66
     Height = 16
     Caption = 'Current libx'
   end
   object Label8: TLabel
     Left = 336
-    Top = 560
+    Top = 576
     Width = 37
     Height = 16
     Caption = 'All libx'
   end
   object btnCompactIndexes: TButton
     Left = 336
-    Top = 408
+    Top = 424
     Width = 225
     Height = 25
     Caption = 'Compact indexes'
@@ -109,7 +109,7 @@ object Form1: TForm1
   end
   object btnCopyToClipboard: TButton
     Left = 336
-    Top = 480
+    Top = 496
     Width = 225
     Height = 25
     Caption = 'Copy to clipboard'
@@ -118,7 +118,7 @@ object Form1: TForm1
   end
   object btnCopyToClipboardAll: TButton
     Left = 336
-    Top = 576
+    Top = 592
     Width = 225
     Height = 25
     Caption = 'Copy ALL to clipboard'
@@ -149,7 +149,7 @@ object Form1: TForm1
   end
   object btnPasteFromClipboard: TButton
     Left = 336
-    Top = 504
+    Top = 520
     Width = 225
     Height = 25
     Caption = 'Paste from clipboard'
@@ -158,7 +158,7 @@ object Form1: TForm1
   end
   object btnPasteFromClipboardAll: TButton
     Left = 336
-    Top = 600
+    Top = 616
     Width = 225
     Height = 25
     Caption = 'Paste ALL from clipboard'
@@ -167,7 +167,7 @@ object Form1: TForm1
   end
   object btnSave: TButton
     Left = 336
-    Top = 664
+    Top = 680
     Width = 225
     Height = 33
     Caption = 'Save'
@@ -176,7 +176,7 @@ object Form1: TForm1
   end
   object cbFilterDuplicateTexts: TCheckBox
     Left = 336
-    Top = 160
+    Top = 184
     Width = 145
     Height = 17
     Caption = 'Filter repeating texts'
@@ -185,7 +185,7 @@ object Form1: TForm1
   end
   object cbFilterEmptyTexts: TCheckBox
     Left = 336
-    Top = 144
+    Top = 168
     Width = 137
     Height = 17
     Caption = 'Filter empty texts'
@@ -194,7 +194,7 @@ object Form1: TForm1
   end
   object cbFilterMismatching: TCheckBox
     Left = 336
-    Top = 176
+    Top = 200
     Width = 145
     Height = 17
     Caption = 'Filter mismatching texts'
@@ -205,7 +205,7 @@ object Form1: TForm1
     Left = 336
     Top = 16
     Width = 225
-    Height = 113
+    Height = 145
     OnClickCheck = clbShowLangClickCheck
     AutoComplete = False
     Columns = 4
@@ -213,7 +213,7 @@ object Form1: TForm1
   end
   object edFilterEngText: TEdit
     Left = 336
-    Top = 264
+    Top = 288
     Width = 225
     Height = 24
     TabOrder = 23
@@ -221,7 +221,7 @@ object Form1: TForm1
   end
   object edFilterTagName: TEdit
     Left = 336
-    Top = 216
+    Top = 240
     Width = 225
     Height = 24
     TabOrder = 24
@@ -261,7 +261,7 @@ object Form1: TForm1
   end
   object btnInsert: TButton
     Left = 336
-    Top = 328
+    Top = 344
     Width = 113
     Height = 25
     Caption = 'Insert New'
@@ -270,7 +270,7 @@ object Form1: TForm1
   end
   object btnInsertSeparator: TButton
     Left = 448
-    Top = 328
+    Top = 344
     Width = 113
     Height = 25
     Caption = 'Insert Separator'
@@ -279,7 +279,7 @@ object Form1: TForm1
   end
   object btnRename: TButton
     Left = 336
-    Top = 352
+    Top = 368
     Width = 113
     Height = 25
     Caption = 'Rename'
@@ -288,7 +288,7 @@ object Form1: TForm1
   end
   object btnDelete: TButton
     Left = 448
-    Top = 352
+    Top = 368
     Width = 113
     Height = 25
     Caption = 'Delete'
@@ -297,7 +297,7 @@ object Form1: TForm1
   end
   object btnMoveUp: TButton
     Left = 336
-    Top = 376
+    Top = 392
     Width = 113
     Height = 25
     Caption = 'Move Up'
@@ -306,7 +306,7 @@ object Form1: TForm1
   end
   object btnMoveDown: TButton
     Left = 448
-    Top = 376
+    Top = 392
     Width = 113
     Height = 25
     Caption = 'Move Down'
@@ -315,7 +315,7 @@ object Form1: TForm1
   end
   object btnSortByIndex: TButton
     Left = 336
-    Top = 432
+    Top = 448
     Width = 113
     Height = 25
     Caption = 'Sort by index'
@@ -324,7 +324,7 @@ object Form1: TForm1
   end
   object btnSortByTag: TButton
     Left = 448
-    Top = 432
+    Top = 448
     Width = 113
     Height = 25
     Caption = 'Sort by tag'
@@ -333,7 +333,7 @@ object Form1: TForm1
   end
   object btnListUnusedTags: TButton
     Left = 336
-    Top = 528
+    Top = 544
     Width = 225
     Height = 25
     Caption = 'List unused tags'
@@ -342,7 +342,7 @@ object Form1: TForm1
   end
   object btnListMismatching: TButton
     Left = 336
-    Top = 624
+    Top = 640
     Width = 225
     Height = 25
     Caption = 'List ALL mismatching'
