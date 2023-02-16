@@ -50,7 +50,10 @@ type
     function ToClipboardHeader(aLocales: TByteSet; aExport: TKMClipboardExport): string;
     function ToClipboardBody(aLocales: TByteSet; aExport: TKMClipboardExport): string;
     procedure ClipboardColumnsToLocIndex(aLine: string; out aLocIndex: TArray<Integer>);
-  public
+  public const
+    // Path matches for KMR and KP
+    GAME_TEXT_PATH = 'data\text\text.%s.libx';
+
     constructor Create(aLocales: TKMResLocales; const aWorkDir: string);
     destructor Destroy; override;
 
@@ -84,7 +87,6 @@ type
 
 
 const
-  TEXT_PATH = 'data\text\text.%s.libx';
   TAGS_PATH = 'data\text\text_IDs.inc';
   META_PATH = 'data\text\text_meta.xml';
 
@@ -128,7 +130,8 @@ begin
 
   fLines.Clear;
 
-  if FileExists(fTagsPath) then
+  // See if this is a game libx or a mission
+  if Pos(GAME_TEXT_PATH, fTextPath) <> 0 then
     fLibType := ltGame
   else
     fLibType := ltMissions;
@@ -672,11 +675,7 @@ begin
     s := s + '> ' + aList[I] + sLineBreak;
     Inc(lineCount);
 
-    // Special case for ingame text library
-    if SameText(aList[I], TEXT_PATH) then
-      Load4(aList[I], TAGS_PATH, META_PATH, aLocales)
-    else
-      Load4(aList[I], '', '', aLocales);
+    Load4(aList[I], TAGS_PATH, META_PATH, aLocales);
 
     s := s + ToClipboardBody(aLocales, exportMode);
     Inc(lineCount, fLines.Count);
@@ -811,10 +810,7 @@ begin
     fname := StringFromString(sl[I], #9, 0);
     fname := StringReplace(fname, '> ', '', [rfReplaceAll]);
 
-    if SameText(fname, TEXT_PATH) then
-      Load4(fname, TAGS_PATH, META_PATH, [])
-    else
-      Load4(fname, '', '', []);
+    Load4(fname, TAGS_PATH, META_PATH, []);
 
     Inc(filesCount);
   end else

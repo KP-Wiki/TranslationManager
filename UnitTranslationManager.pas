@@ -340,11 +340,7 @@ begin
   id := lbLibs.ItemIndex;
   if id = -1 then Exit;
 
-  // Special case for ingame text library
-  if SameText(lbLibs.Items[id], TEXT_PATH) then
-    fTextManager.Load4(lbLibs.Items[id], TAGS_PATH, META_PATH, [])
-  else
-    fTextManager.Load4(lbLibs.Items[id], '', '', []);
+  fTextManager.Load4(lbLibs.Items[id], TAGS_PATH, META_PATH, []);
 
   RefreshControls;
   RefreshList;
@@ -803,7 +799,7 @@ begin
   id := lbLibs.ItemIndex;
 
   isItemSelected := id <> -1;
-  isMainFile := isItemSelected and SameText(lbLibs.Items[id], TEXT_PATH);
+  isMainFile := isItemSelected and SameText(lbLibs.Items[id], TKMTextManager.GAME_TEXT_PATH);
   isFiltered := (edFilterEngText.Text <> '') or (edFilterTagName.Text <> '') or
                 cbFilterEmptyTexts.Checked or cbFilterDuplicateTexts.Checked or cbFilterMismatching.Checked;
 
