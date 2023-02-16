@@ -213,8 +213,8 @@ begin
                             MB_ICONERROR);
                           Exit(False);
                         end;
-    tgKaMRemake:        fLocales := TKMResLocales.Create(fWorkDir + LOCALES_PATH[tgKaMRemake]);
-    tgKnightsProvince:  fLocales := TKMResLocales.Create(fWorkDir + LOCALES_PATH[tgKnightsProvince]);
+    tgKaMRemake:        fLocales := TKMResLocales.Create(fWorkDir + LOCALES_PATH[tgKaMRemake], 'KMR');
+    tgKnightsProvince:  fLocales := TKMResLocales.Create(fWorkDir + LOCALES_PATH[tgKnightsProvince], 'KP');
   end;
 
   // Detect the run from IDE
