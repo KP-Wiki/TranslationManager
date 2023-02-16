@@ -358,59 +358,26 @@ end;
 
 procedure TForm1.RefreshList;
 var
-  defLoc: Integer;
   selectedLocales: TByteSet;
 
   function ShowTag(aLine: TKMLine): Boolean;
-  var
-    I,K: Integer;
-    filterTagName: string;
   begin
     Result := True;
-    // Hide lines that have text
+
     if cbFilterEmptyTexts.Checked then
-    begin
-      Result := False;
-      if not aLine.IsSpacer then
-        for I := 0 to fLocales.Count - 1 do
-          if clbShowLang.Checked[I+1] then
-            Result := Result or (aLine.Strings[I] = '');
-    end;
+      Result := aLine.HasEmptyTexts(selectedLocales);
 
-    // Show lines that are the same in selected locales
     if Result and cbFilterDuplicateTexts.Checked then
-    begin
-      Result := False;
-      if not aLine.IsSpacer then
-        for I := 0 to fLocales.Count - 1 do
-          if clbShowLang.Checked[I+1] then
-            if aLine.Strings[I] <> '' then // Empty strings are not interesting to see in terms of duplicates
-            for K := 0 to fLocales.Count - 1 do
-              if (K <> I) and clbShowLang.Checked[K+1] then
-                Result := Result or (aLine.Strings[I] = aLine.Strings[K]);
-    end;
+      Result := aLine.HasDuplicates(selectedLocales);
 
-    // Show lines that have mismatching characters
     if Result and cbFilterMismatching.Checked then
-    begin
       Result := not aLine.CheckMatchingForCharCount([{'|',} '%', '[$'], selectedLocales);
-    end;
 
-    // Cutting corners here, we check wildcard only on first/last place
-    filterTagName := UpperCase(edFilterTagName.Text);
-    if Result and (filterTagName <> '') then
-      if Length(filterTagName) - Length(ReplaceStr(filterTagName, '*', '')) <> 1 then
-        // No wildcards or more than 1 wildcard - do the normal matching
-        Result := Pos(filterTagName, UpperCase(aLine.Tag)) <> 0
-      else
-      if StartsText('*', filterTagName) then
-        Result := EndsText(ReplaceStr(filterTagName, '*', ''), UpperCase(aLine.Tag))
-      else
-      if EndsText('*', filterTagName) then
-        Result := StartsText(ReplaceStr(filterTagName, '*', ''), UpperCase(aLine.Tag));
+    if Result and (edFilterTagName.Text <> '') then
+      Result := aLine.HasTagNameFilter(edFilterTagName.Text);
 
     if Result and (edFilterEngText.Text <> '') then
-      Result := not aLine.IsSpacer and (Pos(UpperCase(edFilterEngText.Text), UpperCase(aLine.Strings[defLoc])) <> 0);
+      Result := aLine.HasEngNameFilter(edFilterEngText.Text);
   end;
 var
   I, TopIdx, ItemIdx: Integer;
@@ -424,8 +391,6 @@ begin
 
     SetLength(ListBoxLookup, 0);
     SetLength(ListBoxLookup, fTextManager.Count);
-
-    defLoc := fLocales.IndexByCode(TKMResLocales.DEFAULT_LOCALE);
 
     selectedLocales := [];
     for I := 0 to fLocales.Count - 1 do

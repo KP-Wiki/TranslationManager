@@ -32,6 +32,11 @@ type
     function GetLastChanged(aLoc: Integer): string;
     procedure SetLastChanged(aLoc: Integer; aLastChanged: string);
     function CheckMatchingForCharCount(const aSub: array of string; aLocales: TByteSet): Boolean;
+
+    function HasDuplicates(aSelectedLocales: TByteSet): Boolean;
+    function HasEmptyTexts(aSelectedLocales: TByteSet): Boolean;
+    function HasEngNameFilter(const aSub: string): Boolean;
+    function HasTagNameFilter(const aSub: string): Boolean;
   end;
 
   TKMLines = class(TList<TKMLine>)
@@ -211,6 +216,62 @@ begin
   Result := Tag + ':' + Strings[aLoc];
   Result := StringReplace(Result, '\', '\\', [rfReplaceAll, rfIgnoreCase]);
   Result := StringReplace(Result, sLineBreak, '\n', [rfReplaceAll, rfIgnoreCase]);
+end;
+
+
+function TKMLine.HasDuplicates(aSelectedLocales: TByteSet): Boolean;
+var
+  I, K: Integer;
+begin
+  Result := False;
+  if not IsSpacer then
+    for I := 0 to LOCALE_COUNT - 1 do
+      if (I in aSelectedLocales) and (Strings[I] <> '') then // Empty strings are not interesting to see in terms of duplicates
+        for K := 0 to LOCALE_COUNT - 1 do
+          if (K <> I) and (K in aSelectedLocales) and (Strings[K] <> '') then
+            if Strings[I] = Strings[K] then
+              Exit(True);
+end;
+
+
+function TKMLine.HasEmptyTexts(aSelectedLocales: TByteSet): Boolean;
+var
+  I: Integer;
+begin
+  Result := False;
+  if not IsSpacer then
+    for I := 0 to LOCALE_COUNT - 1 do
+    if I in aSelectedLocales then
+      if Strings[I] = '' then
+        Exit(True);
+end;
+
+
+function TKMLine.HasEngNameFilter(const aSub: string): Boolean;
+begin
+  Result := not IsSpacer and (Pos(UpperCase(aSub), UpperCase(Strings[LOCALE_DEFAULT])) <> 0);
+end;
+
+
+function TKMLine.HasTagNameFilter(const aSub: string): Boolean;
+var
+  I: Integer;
+  subTag: string;
+begin
+  if aSub = '' then Exit(True);
+
+  // Cutting corners here, we check wildcard only on first/last place
+  subTag := UpperCase(aSub);
+
+  if Length(subTag) - Length(ReplaceStr(subTag, '*', '')) <> 1 then
+    // No wildcards or more than 1 wildcard - do the normal matching
+    Result := Pos(subTag, UpperCase(Tag)) <> 0
+  else
+  if StartsText('*', subTag) then
+    Result := EndsText(ReplaceStr(subTag, '*', ''), UpperCase(Tag))
+  else
+  if EndsText('*', subTag) then
+    Result := StartsText(ReplaceStr(subTag, '*', ''), UpperCase(Tag));
 end;
 
 
