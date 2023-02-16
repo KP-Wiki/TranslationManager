@@ -54,10 +54,10 @@ type
     // Path matches for KMR and KP
     GAME_TEXT_PATH = 'data\text\text.%s.libx';
 
-    constructor Create(aLocales: TKMResLocales; const aWorkDir: string);
+    constructor Create(aLocales: TKMResLocales; const aWorkDir, aTagsPath, aMetaPath: string);
     destructor Destroy; override;
 
-    procedure Load4(const aTextPath, aTagsPath, aMetaPath: string; aLocales: TByteSet);
+    procedure Load4(const aTextPath: string; aLocales: TByteSet);
     procedure Save;
 
     property Count: Integer read GetCount;
@@ -86,11 +86,6 @@ type
   end;
 
 
-const
-  TAGS_PATH = 'data\text\text_IDs.inc';
-  META_PATH = 'data\text\text_meta.xml';
-
-
 implementation
 uses
   KromStringUtils,
@@ -98,16 +93,18 @@ uses
 
 
 { TKMTextManager }
-constructor TKMTextManager.Create(aLocales: TKMResLocales; const aWorkDir: string);
+constructor TKMTextManager.Create(aLocales: TKMResLocales; const aWorkDir, aTagsPath, aMetaPath: string);
 begin
   inherited Create;
 
   fLines := TKMLines.Create;
   fLocales := aLocales;
   fWorkDir := aWorkDir;
+  fTagsPath := fWorkDir + aTagsPath;
+  fMetaPath := fWorkDir + aMetaPath;
 
   TKMLine.LOCALE_COUNT := fLocales.Count;
-  LOCALE_DEFAULT := fLocales.IndexByCode(gResLocales.DEFAULT_LOCALE);
+  LOCALE_DEFAULT := fLocales.IndexByCode(TKMResLocales.DEFAULT_LOCALE);
   TKMLine.LOCALE_DEFAULT := LOCALE_DEFAULT;
 end;
 
@@ -120,13 +117,11 @@ begin
 end;
 
 
-procedure TKMTextManager.Load4(const aTextPath, aTagsPath, aMetaPath: string; aLocales: TByteSet);
+procedure TKMTextManager.Load4(const aTextPath: string; aLocales: TByteSet);
 var
   I: Integer;
 begin
   fTextPath := fWorkDir + aTextPath;
-  fTagsPath := fWorkDir + aTagsPath;
-  fMetaPath := fWorkDir + aMetaPath;
 
   fLines.Clear;
 
@@ -677,7 +672,7 @@ begin
     s := s + '> ' + aList[I] + sLineBreak;
     Inc(lineCount);
 
-    Load4(aList[I], TAGS_PATH, META_PATH, aLocales);
+    Load4(aList[I], aLocales);
 
     s := s + ToClipboardBody(aLocales, exportMode);
     Inc(lineCount, fLines.Count);
@@ -812,7 +807,7 @@ begin
     fname := StringFromString(sl[I], #9, 0);
     fname := StringReplace(fname, '> ', '', [rfReplaceAll]);
 
-    Load4(fname, TAGS_PATH, META_PATH, []);
+    Load4(fname, []);
 
     Inc(filesCount);
   end else
@@ -880,7 +875,7 @@ var
 begin
   for I := 0 to aFolders.Count - 1 do
   begin
-    Load4(aFolders[I], TAGS_PATH, META_PATH, []);
+    Load4(aFolders[I], []);
 
     newFile := True;
 

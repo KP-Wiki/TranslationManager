@@ -23,6 +23,11 @@ const
   TARGET_GAME: array [TKMTargetGame] of string = ('Unknown', 'KaM Remake', 'Knights Province');
   USAGE_MODE: array [TKMUsageMode] of string = ('Developer mode', 'User mode');
 
+const
+  LOCALES_PATH: array [TKMTargetGame] of string = ('', 'data\locales.txt', 'data\text\locales.xml');
+  TAGS_PATH: array [TKMTargetGame] of string = ('', 'KM_TextIDs.inc', 'data\text\text_IDs.inc');
+  META_PATH: array [TKMTargetGame] of string = ('', 'KM_TextMeta.xml', 'data\text\text_meta.xml');
+
 type
   TForm1 = class(TForm)
     lbTagName: TLabel;
@@ -140,9 +145,6 @@ uses
 
 {$R *.dfm}
 
-const
-  KMR_LOCALES_PATH = 'data\locales.txt';
-  KP_LOCALES_PATH = 'data\text\locales.xml';
 
 // todo: TM
 // 1. add libx filter, same as in KMR TM (game / tutorial (?) / maps / mapsMP / campaigns
@@ -164,25 +166,25 @@ begin
 
   exeDir := ExtractFilePath(ParamStr(0));
 
-  if FileExists(aAltWorkDir + KMR_LOCALES_PATH) then
+  if FileExists(aAltWorkDir + LOCALES_PATH[tgKaMRemake]) then
   begin
     // aAltWorkDir in a completely arbitrary location
     aTargetGame := tgKaMRemake;
     aWorkDir := aAltWorkDir;
   end else
-  if FileExists(exeDir + '..\' + KMR_LOCALES_PATH) then
+  if FileExists(exeDir + '..\' + LOCALES_PATH[tgKaMRemake]) then
   begin
     // KaM Remake\Utils\TM.exe
     aTargetGame := tgKaMRemake;
     aWorkDir := exeDir + '..\';
   end else
-  if FileExists(exeDir + KMR_LOCALES_PATH) then
+  if FileExists(exeDir + LOCALES_PATH[tgKaMRemake]) then
   begin
     // KaM Remake\TM.exe
     aTargetGame := tgKaMRemake;
     aWorkDir := exeDir;
   end else
-  if FileExists(exeDir + KP_LOCALES_PATH) then
+  if FileExists(exeDir + LOCALES_PATH[tgKnightsProvince]) then
   begin
     // Knights Province\TM.exe
     aTargetGame := tgKnightsProvince;
@@ -211,8 +213,8 @@ begin
                             MB_ICONERROR);
                           Exit(False);
                         end;
-    tgKaMRemake:        fLocales := TKMResLocales.Create(fWorkDir + KMR_LOCALES_PATH);
-    tgKnightsProvince:  fLocales := TKMResLocales.Create(fWorkDir + KP_LOCALES_PATH);
+    tgKaMRemake:        fLocales := TKMResLocales.Create(fWorkDir + LOCALES_PATH[tgKaMRemake]);
+    tgKnightsProvince:  fLocales := TKMResLocales.Create(fWorkDir + LOCALES_PATH[tgKnightsProvince]);
   end;
 
   // Detect the run from IDE
@@ -228,7 +230,7 @@ begin
   fPathManager := TPathManager.Create;
   RefreshFolders;
 
-  fTextManager := TKMTextManager.Create(fLocales, fWorkDir);
+  fTextManager := TKMTextManager.Create(fLocales, fWorkDir, TAGS_PATH[fTargetGame], META_PATH[fTargetGame]);
 
   UpdateMenuItemVisibility;
 
@@ -340,7 +342,7 @@ begin
   id := lbLibs.ItemIndex;
   if id = -1 then Exit;
 
-  fTextManager.Load4(lbLibs.Items[id], TAGS_PATH, META_PATH, []);
+  fTextManager.Load4(lbLibs.Items[id], []);
 
   RefreshControls;
   RefreshList;
@@ -422,7 +424,7 @@ begin
     SetLength(ListBoxLookup, 0);
     SetLength(ListBoxLookup, fTextManager.Count);
 
-    defLoc := fLocales.IndexByCode(gResLocales.DEFAULT_LOCALE);
+    defLoc := fLocales.IndexByCode(TKMResLocales.DEFAULT_LOCALE);
 
     selectedLocales := [];
     for I := 0 to fLocales.Count - 1 do

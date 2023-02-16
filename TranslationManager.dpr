@@ -11,6 +11,7 @@ uses
   KromUtils in '3rdparty\KromUtils.pas',
   KM_IoXml in 'common\KM_IoXml.pas',
   Xml.VerySimple in 'common\Xml.VerySimple.pas',
+
   KM_ResLocales in 'res\KM_ResLocales.pas',
 
   KM_TextLines in 'KM_TextLines.pas',
