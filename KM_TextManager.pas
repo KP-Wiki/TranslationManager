@@ -23,6 +23,7 @@ type
     LOCALE_DEFAULT: Integer;
   private
     fLocales: TKMResLocales;
+    fWorkDir: string;
 
     fTextPath: string;
     fTagsPath: string; // We use consts only for ingame library, others don't need them
@@ -50,10 +51,10 @@ type
     function ToClipboardBody(aLocales: TByteSet; aExport: TKMClipboardExport): string;
     procedure ClipboardColumnsToLocIndex(aLine: string; out aLocIndex: TArray<Integer>);
   public
-    constructor Create(aLocales: TKMResLocales);
+    constructor Create(aLocales: TKMResLocales; const aWorkDir: string);
     destructor Destroy; override;
 
-    procedure Load(const aExeDir, aTextPath, aTagsPath, aMetaPath: string; aLocales: TByteSet);
+    procedure Load4(const aTextPath, aTagsPath, aMetaPath: string; aLocales: TByteSet);
     procedure Save;
 
     property Count: Integer read GetCount;
@@ -74,11 +75,11 @@ type
     procedure CompactIndexes;
 
     procedure ToClipboard(aLocales: TByteSet; aExport: TKMClipboardExport);
-    procedure ToClipboardAll(aExeDir: string; aList: TStringList; aLocales: TByteSet);
+    procedure ToClipboardAll(aList: TStringList; aLocales: TByteSet);
     procedure FromClipboard;
-    procedure FromClipboardAll(aExeDir: string);
+    procedure FromClipboardAll;
 
-    procedure ListMismatchingAll(aExeDir: string; aFolders: TStringList; aList: TStringList);
+    procedure ListMismatchingAll(aFolders: TStringList; aList: TStringList);
   end;
 
 
@@ -95,12 +96,14 @@ uses
 
 
 { TKMTextManager }
-constructor TKMTextManager.Create(aLocales: TKMResLocales);
+constructor TKMTextManager.Create(aLocales: TKMResLocales; const aWorkDir: string);
 begin
   inherited Create;
 
   fLines := TKMLines.Create;
   fLocales := aLocales;
+  fWorkDir := aWorkDir;
+
   TKMLine.LOCALE_COUNT := fLocales.Count;
   LOCALE_DEFAULT := fLocales.IndexByCode(gResLocales.DEFAULT_LOCALE);
   TKMLine.LOCALE_DEFAULT := LOCALE_DEFAULT;
@@ -115,13 +118,13 @@ begin
 end;
 
 
-procedure TKMTextManager.Load(const aExeDir, aTextPath, aTagsPath, aMetaPath: string; aLocales: TByteSet);
+procedure TKMTextManager.Load4(const aTextPath, aTagsPath, aMetaPath: string; aLocales: TByteSet);
 var
   I: Integer;
 begin
-  fTextPath := aExeDir + aTextPath;
-  fTagsPath := aExeDir + aTagsPath;
-  fMetaPath := aExeDir + aMetaPath;
+  fTextPath := fWorkDir + aTextPath;
+  fTagsPath := fWorkDir + aTagsPath;
+  fMetaPath := fWorkDir + aMetaPath;
 
   fLines.Clear;
 
@@ -627,7 +630,7 @@ end;
 
 // Copy to clipboard to be pasted into Excel/Sheets
 // Tag Text Text Text
-procedure TKMTextManager.ToClipboardAll(aExeDir: string; aList: TStringList; aLocales: TByteSet);
+procedure TKMTextManager.ToClipboardAll(aList: TStringList; aLocales: TByteSet);
   function TranslationPercent(aLineFrom, aLineTo: Integer): string;
   var
     I, K: Integer;
@@ -671,9 +674,9 @@ begin
 
     // Special case for ingame text library
     if SameText(aList[I], TEXT_PATH) then
-      Load(aExeDir, aList[I], TAGS_PATH, META_PATH, aLocales)
+      Load4(aList[I], TAGS_PATH, META_PATH, aLocales)
     else
-      Load(aExeDir, aList[I], '', '', aLocales);
+      Load4(aList[I], '', '', aLocales);
 
     s := s + ToClipboardBody(aLocales, exportMode);
     Inc(lineCount, fLines.Count);
@@ -767,7 +770,7 @@ begin
 end;
 
 
-procedure TKMTextManager.FromClipboardAll(aExeDir: string);
+procedure TKMTextManager.FromClipboardAll;
 var
   sl: TStringList;
   locIndex: TArray<Integer>;
@@ -809,9 +812,9 @@ begin
     fname := StringReplace(fname, '> ', '', [rfReplaceAll]);
 
     if SameText(fname, TEXT_PATH) then
-      Load(aExeDir, fname, TAGS_PATH, META_PATH, [])
+      Load4(fname, TAGS_PATH, META_PATH, [])
     else
-      Load(aExeDir, fname, '', '', []);
+      Load4(fname, '', '', []);
 
     Inc(filesCount);
   end else
@@ -858,7 +861,7 @@ begin
 end;
 
 
-procedure TKMTextManager.ListMismatchingAll(aExeDir: string; aFolders: TStringList; aList: TStringList);
+procedure TKMTextManager.ListMismatchingAll(aFolders: TStringList; aList: TStringList);
 var
   I, K: Integer;
   newFile: Boolean;
@@ -879,7 +882,7 @@ var
 begin
   for I := 0 to aFolders.Count - 1 do
   begin
-    Load(aExeDir, aFolders[I], '', '', []);
+    Load4(aFolders[I], '', '', []);
 
     newFile := True;
 

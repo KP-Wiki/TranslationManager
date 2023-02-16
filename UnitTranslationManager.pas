@@ -228,7 +228,7 @@ begin
   fPathManager := TPathManager.Create;
   RefreshFolders;
 
-  fTextManager := TKMTextManager.Create(fLocales);
+  fTextManager := TKMTextManager.Create(fLocales, fWorkDir);
 
   UpdateMenuItemVisibility;
 
@@ -342,9 +342,9 @@ begin
 
   // Special case for ingame text library
   if SameText(lbLibs.Items[id], TEXT_PATH) then
-    fTextManager.Load(fWorkDir, lbLibs.Items[id], TAGS_PATH, META_PATH, [])
+    fTextManager.Load4(lbLibs.Items[id], TAGS_PATH, META_PATH, [])
   else
-    fTextManager.Load(fWorkDir, lbLibs.Items[id], '', '', []);
+    fTextManager.Load4(lbLibs.Items[id], '', '', []);
 
   RefreshControls;
   RefreshList;
@@ -870,7 +870,7 @@ var
 begin
   slMiss := TStringList.Create;
   try
-    fTextManager.ListMismatchingAll(fWorkDir, fPathManager.GetPaths, slMiss);
+    fTextManager.ListMismatchingAll(fPathManager.GetPaths, slMiss);
 
     slMiss.SaveToFile(fWorkDir + 'TM_Mismatching.txt');
     ShowMessage(slMiss.Text);
@@ -982,7 +982,7 @@ begin
     if clbShowLang.Checked[I] then
       localesToCopy := localesToCopy + [I-1];
 
-  fTextManager.ToClipboardAll(fWorkDir, fPathManager.GetPaths, localesToCopy);
+  fTextManager.ToClipboardAll(fPathManager.GetPaths, localesToCopy);
 end;
 
 
@@ -995,7 +995,7 @@ end;
 
 procedure TForm1.btnPasteFromClipboardAllClick(Sender: TObject);
 begin
-  fTextManager.FromClipboardAll(fWorkDir);
+  fTextManager.FromClipboardAll;
 end;
 
 
