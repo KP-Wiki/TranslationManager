@@ -137,12 +137,14 @@ begin
     fLibType := ltMissions;
 
   // If we have consts - good, use them
-  LoadTags(fTagsPath);
+  if fLibType = ltGame then
+    LoadTags(fTagsPath);
 
   for I := 0 to fLocales.Count - 1 do
     LoadLibx(Format(fTextPath, [fLocales[I].Code]), I);
 
-  LoadMeta(fMetaPath);
+  if fLibType = ltGame then
+    LoadMeta(fMetaPath);
 
   if fLibType = ltMissions then
     TagsAutoName(aTextPath); // Name tags just for UI, they wont be saved
