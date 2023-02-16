@@ -90,6 +90,13 @@ object Form1: TForm1
     Height = 16
     Caption = 'All libx'
   end
+  object Label9: TLabel
+    Left = 512
+    Top = 192
+    Width = 73
+    Height = 16
+    Caption = 'Tag ID filter:'
+  end
   object btnCompactIndexes: TButton
     Left = 336
     Top = 424
@@ -361,5 +368,13 @@ object Form1: TForm1
     Columns = 3
     TabOrder = 28
     OnClick = cbLibxDomainsClick
+  end
+  object edFilterTagId: TEdit
+    Left = 512
+    Top = 208
+    Width = 225
+    Height = 24
+    TabOrder = 29
+    OnChange = edFilterEngTextChange
   end
 end

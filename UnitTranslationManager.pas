@@ -64,6 +64,8 @@ type
     Label7: TLabel;
     Label8: TLabel;
     cbLibxDomains: TCheckListBox;
+    edFilterTagId: TEdit;
+    Label9: TLabel;
     procedure lbTagsClick(Sender: TObject);
     procedure btnSortByIndexClick(Sender: TObject);
     procedure btnSortByTagClick(Sender: TObject);
@@ -146,7 +148,7 @@ uses
 // todo: Feature requests by Rey:
 // + 1. add libx filter, same as in KMR TM (game / tutorial (?) / maps / mapsMP / campaigns
 // + 2. add filter for label name contains
-// 2. add filter for label ID or ID range
+// + 2. add filter for label ID or ID range
 // + 3. Save via Ctrl + S hotkey
 // 4. Export all languages to ZIP
 // 5. Export selected languages to ZIP
@@ -378,6 +380,9 @@ var
 
     if Result and (edFilterEngText.Text <> '') then
       Result := aLine.HasEngNameFilter(edFilterEngText.Text);
+
+    if Result and (edFilterTagId.Text <> '') then
+      Result := aLine.HasTagIdFilter(Trim(edFilterTagId.Text));
   end;
 var
   I, TopIdx, ItemIdx: Integer;

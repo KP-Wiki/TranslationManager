@@ -36,6 +36,7 @@ type
     function HasDuplicates(aSelectedLocales: TByteSet): Boolean;
     function HasEmptyTexts(aSelectedLocales: TByteSet): Boolean;
     function HasEngNameFilter(const aSub: string): Boolean;
+    function HasTagIdFilter(const aFilter: string): Boolean;
     function HasTagNameFilter(const aSub: string): Boolean;
   end;
 
@@ -57,7 +58,7 @@ type
 
 implementation
 uses
-  DateUtils;
+  Classes, DateUtils, Math;
 
 
 // Custom S -> DT -> S functions that read/write into reliable format quickly
@@ -89,6 +90,66 @@ begin
   s := StrToInt(Copy(aString, 18, 2));
 
   Result := EncodeDateTime(y, m, d, h, n, s, 0);
+end;
+
+
+function ArrayContains(aValue: Integer; const aArray: TArray<Integer>): Boolean;
+var
+  I: Integer;
+begin
+  Result := False;
+  for I := Low(aArray) to High(aArray) do
+    if aValue = aArray[I] then
+      Exit(True);
+end;
+
+
+function ParseRange(const aString: string; out aFrom, aTo: Integer): Boolean;
+var
+  p: Integer;
+  sFrom, sTo: String;
+begin
+  Result := False;
+  aFrom := -1;
+  aTo := -1;
+  p := Pos('-', aString);
+  if p > 0 then
+  begin
+    sFrom := Copy(aString, 1, p - 1);
+    sTo := Copy(aString, p + 1, Length(aString) - p);
+    if Trim(sFrom) = '' then // allow '-100' range: all IDs <= 100
+      sFrom := '0';
+
+    if Trim(sTo) = '' then // allow '100-' range: all IDs >= 100
+      sTo := IntToStr(MaxInt);
+
+    if TryStrToInt(Trim(sFrom), aFrom)
+    and TryStrToInt(Trim(sTo), aTo) then
+      Result := True;
+  end;
+end;
+
+
+function ParseList(const aString: string; out aIdArray: TArray<Integer>): Boolean;
+var
+  I, newValue: Integer;
+  sl: TStringList;
+begin
+  Result := False;
+  sl := TStringList.Create;
+  try
+    // Treat all possible separators
+    ExtractStrings([';', ',', ' '], [], PWideChar(WideString(aString)), sl);
+    for I := 0 to sl.Count - 1 do
+    if TryStrToInt(Trim(sl[I]), newValue) then
+    begin
+      SetLength(aIdArray, Length(aIdArray) + 1);
+      aIdArray[Length(aIdArray) - 1] := newValue;
+      Result := True;
+    end;
+  finally
+    sl.Free;
+  end;
 end;
 
 
@@ -253,14 +314,27 @@ begin
 end;
 
 
+function TKMLine.HasTagIdFilter(const aFilter: string): Boolean;
+var
+  idOne: Integer;
+  idFrom, idTo: Integer;
+  idArray: TArray<Integer>;
+begin
+  if IsSpacer then Exit(False);
+
+  Result := (TryStrToInt(aFilter, idOne) and (Id = idOne))
+            or (ParseRange(aFilter, idFrom, idTo) and InRange(Id, idFrom, idTo))
+            or (ParseList(aFilter, idArray) and ArrayContains(Id, idArray));
+end;
+
+
+// Cutting corners here, we check wildcard only on first/last place
 function TKMLine.HasTagNameFilter(const aSub: string): Boolean;
 var
-  I: Integer;
   subTag: string;
 begin
   if aSub = '' then Exit(True);
 
-  // Cutting corners here, we check wildcard only on first/last place
   subTag := UpperCase(aSub);
 
   if Length(subTag) - Length(ReplaceStr(subTag, '*', '')) <> 1 then
