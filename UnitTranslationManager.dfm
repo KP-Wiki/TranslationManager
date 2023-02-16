@@ -17,7 +17,6 @@ object Form1: TForm1
   Position = poScreenCenter
   Scaled = False
   OnCloseQuery = FormCloseQuery
-  OnCreate = FormCreate
   OnDestroy = FormDestroy
   OnResize = FormResize
   DesignSize = (

@@ -19,6 +19,10 @@ type
     umUser
   );
 
+const
+  TARGET_GAME: array [TKMTargetGame] of string = ('Unknown', 'KaM Remake', 'Knights Province');
+  USAGE_MODE: array [TKMUsageMode] of string = ('Developer mode', 'User mode');
+
 type
   TForm1 = class(TForm)
     lbTagName: TLabel;
@@ -87,7 +91,6 @@ type
     procedure btnCopyToClipboardAllClick(Sender: TObject);
     procedure btnPasteFromClipboardAllClick(Sender: TObject);
     procedure btnListMismatchingClick(Sender: TObject);
-    procedure FormCreate(Sender: TObject);
   private
     // Automated things
     fMode: TKMUsageMode;
@@ -141,7 +144,7 @@ const
   KMR_LOCALES_PATH = 'data\locales.txt';
   KP_LOCALES_PATH = 'data\text\locales.xml';
 
-// todo:
+// todo: TM
 // 1. add libx filter, same as in KMR TM (game / tutorial (?) / maps / mapsMP / campaigns
 // 2. add filter options:
 //   - label name comtains
@@ -195,8 +198,6 @@ begin
   fSettingsPath := ChangeFileExt(ParamStr(0), '.xml');
   LoadSettings(fSettingsPath);
 
-  Caption := 'Translation Manager (' + DateTimeToStr(GetExeBuildTime) + ')';
-
   // Detect the game
   DetectGameAndPath(fAltWorkDir, fTargetGame, fWorkDir);
 
@@ -220,6 +221,8 @@ begin
   else
     fMode := umUser;
 
+  Caption := Format('Translation Manager (%s) [%s] [%s]', [DateTimeToStr(GetExeBuildTime), TARGET_GAME[fTargetGame], USAGE_MODE[fMode]]);
+
   InitLocalesList;
 
   fPathManager := TPathManager.Create;
@@ -230,6 +233,7 @@ begin
   UpdateMenuItemVisibility;
 
   InitFormControls;
+  RefreshControls;
 
   Result := True;
 end;
@@ -518,7 +522,7 @@ procedure TForm1.InitFormControls;
 var
   I: Integer;
 begin
-  //If there are any items "All" should be greyed
+  // If there are any items "All" should be greyed
   if fSelectedLocales <> '' then
     clbShowLang.State[0] := cbGrayed;
 
@@ -857,12 +861,6 @@ end;
 procedure TForm1.FormCloseQuery(Sender: TObject; var CanClose: Boolean);
 begin
   CanClose := not fTextManager.HasChanges or (MessageDlg('Exit without saving?', mtWarning, [mbYes, mbNo], 0) = mrYes);
-end;
-
-
-procedure TForm1.FormCreate(Sender: TObject);
-begin
-  RefreshControls;
 end;
 
 
