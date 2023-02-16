@@ -880,7 +880,7 @@ var
 begin
   for I := 0 to aFolders.Count - 1 do
   begin
-    Load4(aFolders[I], '', '', []);
+    Load4(aFolders[I], TAGS_PATH, META_PATH, []);
 
     newFile := True;
 
