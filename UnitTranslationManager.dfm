@@ -99,7 +99,7 @@ object Form1: TForm1
   end
   object btnCopy: TButton
     Left = 568
-    Top = 689
+    Top = 688
     Width = 121
     Height = 25
     Anchors = [akLeft, akBottom]
@@ -127,7 +127,7 @@ object Form1: TForm1
   end
   object btnEraseAllButEng: TButton
     Left = 824
-    Top = 689
+    Top = 688
     Width = 161
     Height = 25
     Anchors = [akLeft, akBottom]
@@ -138,7 +138,7 @@ object Form1: TForm1
   end
   object btnPaste: TButton
     Left = 696
-    Top = 689
+    Top = 688
     Width = 121
     Height = 25
     Anchors = [akLeft, akBottom]

@@ -135,10 +135,6 @@ type
   end;
 
 
-var
-  Form1: TForm1;
-
-
 implementation
 uses
   KromUtils, KM_IoXML;
@@ -485,12 +481,12 @@ begin
   SetLength(fTransMemos, fLocales.Count);
   for I := 0 to fLocales.Count - 1 do
   begin
-    fTransLabels[I] := TLabel.Create(Form1);
+    fTransLabels[I] := TLabel.Create(Self);
     fTransLabels[I].Parent := ScrollBox1;
     fTransLabels[I].Caption := fLocales[I].Title + ' (' + fLocales[I].Code + ')';
     fTransLabels[I].Hide;
 
-    fTransMemos[I] := TMemo.Create(Form1);
+    fTransMemos[I] := TMemo.Create(Self);
     fTransMemos[I].Parent := ScrollBox1;
     fTransMemos[I].Anchors := [akLeft, akRight, akTop];
     fTransMemos[I].Font.Name := 'Arial Unicode MS'; //If not found, parent font is used

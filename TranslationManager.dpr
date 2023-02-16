@@ -1,8 +1,5 @@
 program TranslationManager;
 uses
-  {$IFDEF FPC}
-  Interfaces,
-  {$ENDIF}
   Forms,
 
   UnitTranslationManager in 'UnitTranslationManager.pas' {Form1},
@@ -20,9 +17,10 @@ uses
   KM_TextManager in 'KM_TextManager.pas',
   Unit_PathManager in 'Unit_PathManager.pas';
 
-{$IFDEF WDC}
 {$R *.res}
-{$ENDIF}
+
+var
+  Form1: TForm1;
 
 begin
   Application.Initialize;
