@@ -25,7 +25,7 @@ type
     fLocales: TKMResLocales;
 
     fTextPath: string;
-    fConstPath: string; // We use consts only for ingame library, others don't need them
+    fTagsPath: string; // We use consts only for ingame library, others don't need them
     fMetaPath: string; // We use meta only for ingame library, others don't need it
 
     fLines: TKMLines;
@@ -53,7 +53,7 @@ type
     constructor Create(aLocales: TKMResLocales);
     destructor Destroy; override;
 
-    procedure Load(const aExeDir, aTextPath, aConstPath, aMetaPath: string; aLocales: TByteSet);
+    procedure Load(const aExeDir, aTextPath, aTagsPath, aMetaPath: string; aLocales: TByteSet);
     procedure Save;
 
     property Count: Integer read GetCount;
@@ -115,23 +115,23 @@ begin
 end;
 
 
-procedure TKMTextManager.Load(const aExeDir, aTextPath, aConstPath, aMetaPath: string; aLocales: TByteSet);
+procedure TKMTextManager.Load(const aExeDir, aTextPath, aTagsPath, aMetaPath: string; aLocales: TByteSet);
 var
   I: Integer;
 begin
   fTextPath := aExeDir + aTextPath;
-  fConstPath := aExeDir + aConstPath;
+  fTagsPath := aExeDir + aTagsPath;
   fMetaPath := aExeDir + aMetaPath;
 
   fLines.Clear;
 
-  if FileExists(fConstPath) then
+  if FileExists(fTagsPath) then
     fLibType := ltGame
   else
     fLibType := ltMissions;
 
   // If we have consts - good, use them
-  LoadTags(fConstPath);
+  LoadTags(fTagsPath);
 
   for I := 0 to fLocales.Count - 1 do
     LoadLibx(Format(fTextPath, [fLocales[I].Code]), I);
@@ -159,7 +159,7 @@ begin
 
   if fLibType = ltGame then
   begin
-    SaveTags(fConstPath);
+    SaveTags(fTagsPath);
     SaveMeta(fMetaPath);
   end;
 
