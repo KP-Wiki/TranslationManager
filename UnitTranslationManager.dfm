@@ -2,7 +2,7 @@ object Form1: TForm1
   Left = 230
   Top = 140
   Caption = 'Translation Manager'
-  ClientHeight = 721
+  ClientHeight = 753
   ClientWidth = 993
   Color = clBtnFace
   Constraints.MinHeight = 600
@@ -23,7 +23,7 @@ object Form1: TForm1
   OnResize = FormResize
   DesignSize = (
     993
-    721)
+    753)
   PixelsPerInch = 96
   TextHeight = 16
   object Label1: TLabel
@@ -43,7 +43,7 @@ object Form1: TForm1
   end
   object Label3: TLabel
     Left = 336
-    Top = 272
+    Top = 304
     Width = 100
     Height = 16
     Caption = 'English text filter:'
@@ -71,35 +71,35 @@ object Form1: TForm1
   end
   object Label6: TLabel
     Left = 336
-    Top = 328
+    Top = 360
     Width = 28
     Height = 16
     Caption = 'Tags'
   end
   object Label7: TLabel
     Left = 336
-    Top = 480
+    Top = 512
     Width = 66
     Height = 16
     Caption = 'Current libx'
   end
   object Label8: TLabel
     Left = 336
-    Top = 576
+    Top = 608
     Width = 37
     Height = 16
     Caption = 'All libx'
   end
   object Label9: TLabel
-    Left = 512
-    Top = 192
+    Left = 336
+    Top = 264
     Width = 73
     Height = 16
     Caption = 'Tag ID filter:'
   end
   object btnCompactIndexes: TButton
     Left = 336
-    Top = 424
+    Top = 456
     Width = 225
     Height = 25
     Caption = 'Compact indexes'
@@ -108,17 +108,18 @@ object Form1: TForm1
   end
   object btnCopy: TButton
     Left = 568
-    Top = 688
+    Top = 720
     Width = 121
     Height = 25
     Anchors = [akLeft, akBottom]
     Caption = 'Copy all strings'
     TabOrder = 1
     OnClick = btnCopyClick
+    ExplicitTop = 688
   end
   object btnCopyToClipboard: TButton
     Left = 336
-    Top = 496
+    Top = 528
     Width = 225
     Height = 25
     Caption = 'Copy to clipboard'
@@ -127,7 +128,7 @@ object Form1: TForm1
   end
   object btnCopyToClipboardAll: TButton
     Left = 336
-    Top = 592
+    Top = 624
     Width = 225
     Height = 25
     Caption = 'Copy ALL to clipboard'
@@ -136,7 +137,7 @@ object Form1: TForm1
   end
   object btnEraseAllButEng: TButton
     Left = 824
-    Top = 688
+    Top = 720
     Width = 161
     Height = 25
     Anchors = [akLeft, akBottom]
@@ -144,10 +145,11 @@ object Form1: TForm1
     Default = True
     TabOrder = 5
     OnClick = btnEraseAllButEngClick
+    ExplicitTop = 688
   end
   object btnPaste: TButton
     Left = 696
-    Top = 688
+    Top = 720
     Width = 121
     Height = 25
     Anchors = [akLeft, akBottom]
@@ -155,10 +157,11 @@ object Form1: TForm1
     Enabled = False
     TabOrder = 12
     OnClick = btnPasteClick
+    ExplicitTop = 688
   end
   object btnPasteFromClipboard: TButton
     Left = 336
-    Top = 520
+    Top = 552
     Width = 225
     Height = 25
     Caption = 'Paste from clipboard'
@@ -167,7 +170,7 @@ object Form1: TForm1
   end
   object btnPasteFromClipboardAll: TButton
     Left = 336
-    Top = 616
+    Top = 648
     Width = 225
     Height = 25
     Caption = 'Paste ALL from clipboard'
@@ -176,7 +179,7 @@ object Form1: TForm1
   end
   object btnSave: TButton
     Left = 336
-    Top = 680
+    Top = 712
     Width = 225
     Height = 33
     Caption = 'Save'
@@ -204,7 +207,7 @@ object Form1: TForm1
   object cbFilterMismatching: TCheckBox
     Left = 336
     Top = 200
-    Width = 145
+    Width = 153
     Height = 17
     Caption = 'Filter mismatching texts'
     TabOrder = 21
@@ -222,7 +225,7 @@ object Form1: TForm1
   end
   object edFilterEngText: TEdit
     Left = 336
-    Top = 288
+    Top = 320
     Width = 225
     Height = 24
     TabOrder = 23
@@ -248,17 +251,18 @@ object Form1: TForm1
     Left = 8
     Top = 264
     Width = 321
-    Height = 451
+    Height = 483
     Anchors = [akLeft, akTop, akBottom]
     TabOrder = 26
     OnClick = lbTagsClick
     OnKeyPress = lbTagsKeyPress
+    ExplicitHeight = 451
   end
   object ScrollBox1: TScrollBox
     Left = 568
     Top = 16
     Width = 417
-    Height = 665
+    Height = 697
     HorzScrollBar.Visible = False
     VertScrollBar.Smooth = True
     VertScrollBar.Tracking = True
@@ -267,10 +271,11 @@ object Form1: TForm1
     BevelInner = bvNone
     BevelOuter = bvNone
     TabOrder = 27
+    ExplicitHeight = 665
   end
   object btnInsert: TButton
     Left = 336
-    Top = 344
+    Top = 376
     Width = 113
     Height = 25
     Caption = 'Insert New'
@@ -279,7 +284,7 @@ object Form1: TForm1
   end
   object btnInsertSeparator: TButton
     Left = 448
-    Top = 344
+    Top = 376
     Width = 113
     Height = 25
     Caption = 'Insert Separator'
@@ -288,7 +293,7 @@ object Form1: TForm1
   end
   object btnRename: TButton
     Left = 336
-    Top = 368
+    Top = 400
     Width = 113
     Height = 25
     Caption = 'Rename'
@@ -297,7 +302,7 @@ object Form1: TForm1
   end
   object btnDelete: TButton
     Left = 448
-    Top = 368
+    Top = 400
     Width = 113
     Height = 25
     Caption = 'Delete'
@@ -306,7 +311,7 @@ object Form1: TForm1
   end
   object btnMoveUp: TButton
     Left = 336
-    Top = 392
+    Top = 424
     Width = 113
     Height = 25
     Caption = 'Move Up'
@@ -315,7 +320,7 @@ object Form1: TForm1
   end
   object btnMoveDown: TButton
     Left = 448
-    Top = 392
+    Top = 424
     Width = 113
     Height = 25
     Caption = 'Move Down'
@@ -324,7 +329,7 @@ object Form1: TForm1
   end
   object btnSortByIndex: TButton
     Left = 336
-    Top = 448
+    Top = 480
     Width = 113
     Height = 25
     Caption = 'Sort by index'
@@ -333,7 +338,7 @@ object Form1: TForm1
   end
   object btnSortByTag: TButton
     Left = 448
-    Top = 448
+    Top = 480
     Width = 113
     Height = 25
     Caption = 'Sort by tag'
@@ -342,7 +347,7 @@ object Form1: TForm1
   end
   object btnListUnusedTags: TButton
     Left = 336
-    Top = 544
+    Top = 576
     Width = 225
     Height = 25
     Caption = 'List unused tags'
@@ -351,7 +356,7 @@ object Form1: TForm1
   end
   object btnListMismatching: TButton
     Left = 336
-    Top = 640
+    Top = 672
     Width = 225
     Height = 25
     Caption = 'List ALL mismatching'
@@ -370,8 +375,8 @@ object Form1: TForm1
     OnClick = cbLibxDomainsClick
   end
   object edFilterTagId: TEdit
-    Left = 512
-    Top = 208
+    Left = 336
+    Top = 280
     Width = 225
     Height = 24
     TabOrder = 29
