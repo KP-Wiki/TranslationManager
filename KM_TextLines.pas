@@ -332,20 +332,21 @@ end;
 function TKMLine.HasTagNameFilter(const aSub: string): Boolean;
 var
   subTag: string;
+  wildcardCount: Integer;
 begin
   if aSub = '' then Exit(True);
 
   subTag := UpperCase(aSub);
+  wildcardCount := Length(subTag) - Length(ReplaceStr(subTag, '*', ''));
 
-  if Length(subTag) - Length(ReplaceStr(subTag, '*', '')) <> 1 then
-    // No wildcards or more than 1 wildcard - do the normal matching
-    Result := Pos(subTag, UpperCase(Tag)) <> 0
-  else
-  if StartsText('*', subTag) then
+  if (wildcardCount = 1) and StartsText('*', subTag) then
     Result := EndsText(ReplaceStr(subTag, '*', ''), UpperCase(Tag))
   else
-  if EndsText('*', subTag) then
-    Result := StartsText(ReplaceStr(subTag, '*', ''), UpperCase(Tag));
+  if (wildcardCount = 1) and EndsText('*', subTag) then
+    Result := StartsText(ReplaceStr(subTag, '*', ''), UpperCase(Tag))
+  else
+    // No wildcards or more than 1 wildcard or wildcard in the middle - do the normal matching
+    Result := Pos(subTag, UpperCase(Tag)) <> 0;
 end;
 
 
