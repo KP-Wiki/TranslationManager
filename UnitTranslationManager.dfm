@@ -115,7 +115,6 @@ object Form1: TForm1
     Caption = 'Copy all strings'
     TabOrder = 1
     OnClick = btnCopyClick
-    ExplicitTop = 688
   end
   object btnCopyToClipboard: TButton
     Left = 336
@@ -145,7 +144,6 @@ object Form1: TForm1
     Default = True
     TabOrder = 5
     OnClick = btnEraseAllButEngClick
-    ExplicitTop = 688
   end
   object btnPaste: TButton
     Left = 696
@@ -157,7 +155,6 @@ object Form1: TForm1
     Enabled = False
     TabOrder = 12
     OnClick = btnPasteClick
-    ExplicitTop = 688
   end
   object btnPasteFromClipboard: TButton
     Left = 336
@@ -256,7 +253,6 @@ object Form1: TForm1
     TabOrder = 26
     OnClick = lbTagsClick
     OnKeyPress = lbTagsKeyPress
-    ExplicitHeight = 451
   end
   object ScrollBox1: TScrollBox
     Left = 568
@@ -271,7 +267,6 @@ object Form1: TForm1
     BevelInner = bvNone
     BevelOuter = bvNone
     TabOrder = 27
-    ExplicitHeight = 665
   end
   object btnInsert: TButton
     Left = 336
@@ -381,5 +376,30 @@ object Form1: TForm1
     Height = 24
     TabOrder = 29
     OnChange = edFilterEngTextChange
+  end
+  object btnSaveToZip: TButton
+    Left = 384
+    Top = 584
+    Width = 225
+    Height = 25
+    Caption = 'Save to ZIP'
+    TabOrder = 30
+    OnClick = btnSaveToZipClick
+  end
+  object btnSaveAllToZip: TButton
+    Left = 368
+    Top = 688
+    Width = 225
+    Height = 25
+    Caption = 'Save ALL to ZIP'
+    TabOrder = 31
+    OnClick = btnSaveAllToZipClick
+  end
+  object sdExportZIP: TSaveDialog
+    DefaultExt = 'zip'
+    Filter = 'ZIP file|*.zip'
+    Options = [ofOverwritePrompt, ofHideReadOnly, ofEnableSizing]
+    Left = 344
+    Top = 24
   end
 end

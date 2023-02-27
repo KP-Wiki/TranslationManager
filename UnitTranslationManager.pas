@@ -65,6 +65,9 @@ type
     cbLibxDomains: TCheckListBox;
     edFilterTagId: TEdit;
     Label9: TLabel;
+    btnSaveToZip: TButton;
+    btnSaveAllToZip: TButton;
+    sdExportZIP: TSaveDialog;
     procedure lbTagsClick(Sender: TObject);
     procedure btnSortByIndexClick(Sender: TObject);
     procedure btnSortByTagClick(Sender: TObject);
@@ -96,6 +99,8 @@ type
     procedure btnListMismatchingClick(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure cbLibxDomainsClick(Sender: TObject);
+    procedure btnSaveToZipClick(Sender: TObject);
+    procedure btnSaveAllToZipClick(Sender: TObject);
   private
     // Automated things
     fMode: TKMUsageMode;
@@ -132,6 +137,7 @@ type
     procedure LoadSettings(const aPath: string);
     procedure SaveSettings(const aPath: string);
     procedure UpdateMenuItemVisibility;
+    procedure SaveToZip(const aZipName: string; aLocales: TByteSet);
   public
     function Start: Boolean;
   end;
@@ -139,7 +145,8 @@ type
 
 implementation
 uses
-  KromUtils, KM_IoXML;
+  KromUtils, Zippit,
+  KM_IoXML;
 
 {$R *.dfm}
 
@@ -149,8 +156,8 @@ uses
 // + 2. add filter for label name contains
 // + 2. add filter for label ID or ID range
 // + 3. Save via Ctrl + S hotkey
-// 4. Export all languages to ZIP
-// 5. Export selected languages to ZIP
+// + 4. Export all languages to ZIP
+// + 5. Export selected languages to ZIP
 // + 6. use nicer form style / fonts. KMR TM window looks way nicer IMHO
 // 3. 4. 5. could be added as a menu
 
@@ -354,6 +361,56 @@ end;
 procedure TForm1.btnSaveClick(Sender: TObject);
 begin
   fTextManager.Save;
+end;
+
+
+procedure TForm1.btnSaveToZipClick(Sender: TObject);
+var
+  I: Integer;
+  localesToZip: TByteSet;
+begin
+  sdExportZIP.InitialDir := fWorkDir;
+  if not sdExportZIP.Execute(Handle) then Exit;
+
+  localesToZip := [];
+  for I := 1 to clbShowLang.Count - 1 do
+    if clbShowLang.Checked[I] then
+      localesToZip := localesToZip + [I-1];
+
+  SaveToZip(sdExportZIP.FileName, localesToZip);
+end;
+
+
+procedure TForm1.btnSaveAllToZipClick(Sender: TObject);
+begin
+  sdExportZIP.InitialDir := fWorkDir;
+  if not sdExportZIP.Execute(Handle) then Exit;
+
+  SaveToZip(sdExportZIP.FileName, []);
+end;
+
+
+procedure TForm1.SaveToZip(const aZipName: string; aLocales: TByteSet);
+var
+  newZip: TZippit;
+  I, K: Integer;
+  libxName: string;
+begin
+  newZip := TZippit.Create;
+  try
+    for I := 0 to fPathManager.Count - 1 do
+      for K := 0 to fLocales.Count - 1 do
+        if (aLocales = []) or (K in aLocales) then
+        begin
+          libxName := Format(fPathManager[I], [fLocales[K].Code]);
+          if FileExists(fWorkDir + libxName) then
+            newZip.AddFile(fWorkDir + libxName, ExtractFilePath(libxName));
+        end;
+
+    newZip.SaveToFile(aZipName);
+  finally
+    newZip.Free;
+  end;
 end;
 
 

@@ -87,6 +87,8 @@
         </DCCReference>
         <DCCReference Include="3rdparty\KromStringUtils.pas"/>
         <DCCReference Include="3rdparty\KromUtils.pas"/>
+        <DCCReference Include="3rdparty\SciZipFile.pas"/>
+        <DCCReference Include="3rdparty\Zippit.pas"/>
         <DCCReference Include="common\KM_IoXml.pas"/>
         <DCCReference Include="common\Xml.VerySimple.pas"/>
         <DCCReference Include="res\KM_ResLocales.pas"/>

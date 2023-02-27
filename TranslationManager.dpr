@@ -6,6 +6,8 @@ uses
 
   KromStringUtils in '3rdparty\KromStringUtils.pas',
   KromUtils in '3rdparty\KromUtils.pas',
+  SciZipFile in '3rdparty\SciZipFile.pas',
+  Zippit in '3rdparty\Zippit.pas',
   KM_IoXml in 'common\KM_IoXml.pas',
   Xml.VerySimple in 'common\Xml.VerySimple.pas',
 

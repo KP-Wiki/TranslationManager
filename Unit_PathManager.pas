@@ -71,7 +71,7 @@ var
   subFolders: TStringList;
   pathAdded: Boolean;
 begin
-  Assert(EndsText('\', aFolder));
+  Assert(EndsText('\', aRoot + aFolder));
 
   subFolders := TStringList.Create;
   subFolders.Add(aRoot + aFolder);
