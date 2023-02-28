@@ -51,9 +51,9 @@ object Form1: TForm1
   object Label4: TLabel
     Left = 336
     Top = 224
-    Width = 93
+    Width = 211
     Height = 16
-    Caption = 'Tag name filter:'
+    Caption = 'Tag name filter (*TAG, TAG, TAG*):'
   end
   object Label5: TLabel
     Left = 8
@@ -93,9 +93,9 @@ object Form1: TForm1
   object Label9: TLabel
     Left = 336
     Top = 264
-    Width = 73
+    Width = 150
     Height = 16
-    Caption = 'Tag ID filter:'
+    Caption = 'Tag ID filter (1,2,3, 8-15):'
   end
   object btnCompactIndexes: TButton
     Left = 336
