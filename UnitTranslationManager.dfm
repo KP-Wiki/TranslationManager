@@ -44,9 +44,9 @@ object Form1: TForm1
   object Label3: TLabel
     Left = 336
     Top = 304
-    Width = 100
+    Width = 60
     Height = 16
-    Caption = 'English text filter:'
+    Caption = 'Text filter:'
   end
   object Label4: TLabel
     Left = 336
@@ -220,13 +220,13 @@ object Form1: TForm1
     Columns = 4
     TabOrder = 22
   end
-  object edFilterEngText: TEdit
+  object edFilterText: TEdit
     Left = 336
     Top = 320
     Width = 225
     Height = 24
     TabOrder = 23
-    OnChange = edFilterEngTextChange
+    OnChange = edFilterTextChange
   end
   object edFilterTagName: TEdit
     Left = 336
@@ -234,7 +234,7 @@ object Form1: TForm1
     Width = 225
     Height = 24
     TabOrder = 24
-    OnChange = edFilterEngTextChange
+    OnChange = edFilterTextChange
   end
   object lbLibs: TListBox
     Left = 8
@@ -375,7 +375,7 @@ object Form1: TForm1
     Width = 225
     Height = 24
     TabOrder = 29
-    OnChange = edFilterEngTextChange
+    OnChange = edFilterTextChange
   end
   object btnSaveToZip: TButton
     Left = 384

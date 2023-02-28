@@ -50,7 +50,7 @@ type
     btnMoveDown: TButton;
     cbFilterDuplicateTexts: TCheckBox;
     cbFilterEmptyTexts: TCheckBox;
-    edFilterEngText: TEdit;
+    edFilterText: TEdit;
     Label4: TLabel;
     Label5: TLabel;
     btnPasteFromClipboardAll: TButton;
@@ -82,7 +82,7 @@ type
     procedure lbLibsClick(Sender: TObject);
     procedure btnCopyClick(Sender: TObject);
     procedure btnPasteClick(Sender: TObject);
-    procedure edFilterEngTextChange(Sender: TObject);
+    procedure edFilterTextChange(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
     procedure btnListUnusedTagsClick(Sender: TObject);
     procedure btnExitClick(Sender: TObject);
@@ -434,8 +434,8 @@ var
     if Result and (edFilterTagName.Text <> '') then
       Result := aLine.HasTagNameFilter(edFilterTagName.Text);
 
-    if Result and (edFilterEngText.Text <> '') then
-      Result := aLine.HasEngNameFilter(edFilterEngText.Text);
+    if Result and (edFilterText.Text <> '') then
+      Result := aLine.HasTextFilter(edFilterText.Text, selectedLocales);
 
     if Result and (edFilterTagId.Text <> '') then
       Result := aLine.HasTagIdFilter(Trim(edFilterTagId.Text));
@@ -681,7 +681,7 @@ begin
 end;
 
 
-procedure TForm1.edFilterEngTextChange(Sender: TObject);
+procedure TForm1.edFilterTextChange(Sender: TObject);
 begin
   RefreshControls;
   RefreshList;
@@ -858,7 +858,7 @@ begin
 
   isItemSelected := id <> -1;
   isMainFile := isItemSelected and SameText(lbLibs.Items[id], TKMTextManager.GAME_TEXT_PATH);
-  isFiltered := (edFilterEngText.Text <> '') or (edFilterTagName.Text <> '') or
+  isFiltered := (edFilterText.Text <> '') or (edFilterTagName.Text <> '') or
                 cbFilterEmptyTexts.Checked or cbFilterDuplicateTexts.Checked or cbFilterMismatching.Checked;
 
   btnCopyToClipboard.Enabled := isItemSelected;

@@ -35,7 +35,7 @@ type
 
     function HasDuplicates(aSelectedLocales: TByteSet): Boolean;
     function HasEmptyTexts(aSelectedLocales: TByteSet): Boolean;
-    function HasEngNameFilter(const aSub: string): Boolean;
+    function HasTextFilter(const aSub: string; aSelectedLocales: TByteSet): Boolean;
     function HasTagIdFilter(const aFilter: string): Boolean;
     function HasTagNameFilter(const aSub: string): Boolean;
   end;
@@ -308,9 +308,16 @@ begin
 end;
 
 
-function TKMLine.HasEngNameFilter(const aSub: string): Boolean;
+function TKMLine.HasTextFilter(const aSub: string; aSelectedLocales: TByteSet): Boolean;
+var
+  I: Integer;
 begin
-  Result := not IsSpacer and (Pos(UpperCase(aSub), UpperCase(Strings[LOCALE_DEFAULT])) <> 0);
+  Result := False;
+  if not IsSpacer then
+    for I := 0 to LOCALE_COUNT - 1 do
+    if I in aSelectedLocales then
+      if (Pos(UpperCase(aSub), UpperCase(Strings[I])) <> 0) then
+        Exit(True);
 end;
 
 
