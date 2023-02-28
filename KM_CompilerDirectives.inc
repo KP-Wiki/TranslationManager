@@ -12,7 +12,9 @@
 {$IFDEF VER300} {$DEFINE WDC} {$ENDIF} // Delphi 10 Seattle - untested
 {$IFDEF VER310} {$DEFINE WDC} {$ENDIF} // Delphi 10.1 Berlin - untested
 {$IFDEF VER320} {$DEFINE WDC} {$ENDIF} // Delphi 10.2 Tokyo - untested
-{$IFDEF VER340} {$DEFINE WDC} {$ENDIF} // Delphi 10.4 Sydney - untested
+{$IFDEF VER330} {$DEFINE WDC} {$ENDIF} // Define 10.3 Rio compiler - untested
+{$IFDEF VER340} {$DEFINE WDC} {$ENDIF} // Define 10.4 Sydney compiler
+{$IFDEF VER350} {$DEFINE WDC} {$ENDIF} // Define 11 Alexandria
 {.$DEFINE FPC} // Define Free Pascal compiler (defined automatically by Lazarus)
 
 
