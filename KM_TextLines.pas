@@ -1,4 +1,5 @@
 unit KM_TextLines;
+{$I KM_CompilerDirectives.inc}
 interface
 uses
   Generics.Collections,

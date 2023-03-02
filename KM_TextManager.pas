@@ -1,4 +1,5 @@
 unit KM_TextManager;
+{$I KM_CompilerDirectives.inc}
 interface
 uses
   Classes, Dialogs, Math, Vcl.Clipbrd, Generics.Defaults,
