@@ -37,7 +37,7 @@
     <PropertyGroup Condition="'$(Base)'!=''">
         <Icon_MainIcon>TranslationManager_Icon.ico</Icon_MainIcon>
         <DCC_Alignment>0</DCC_Alignment>
-        <DCC_ExeOutput>..\..\</DCC_ExeOutput>
+        <DCC_ExeOutput>.</DCC_ExeOutput>
         <Manifest_File>$(BDS)\bin\default_app.manifest</Manifest_File>
         <DCC_DcuOutput>dcu</DCC_DcuOutput>
         <DCC_Namespace>Vcl;Vcl.Imaging;Vcl.Touch;Vcl.Samples;Vcl.Shell;System;Xml;Data;Datasnap;Web;Soap;Winapi;$(DCC_Namespace)</DCC_Namespace>
