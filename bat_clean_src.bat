@@ -6,8 +6,8 @@ rmdir /S /Q logs dcu dcu.android dcu.win32
 
 erase /F /Q /S *.~* *.ddp *.drc *.dcp *.dcu
 erase /F /Q /S *.o *.or *.ppu *.compiled *.local
-erase /F /Q /S *.tmp *.log thumbs.db KnightsProvince.map descript.ion *.skincfg *.identcache *.tvsconfig *.mi *.LOG.txt *.stat bugreport.txt
+erase /F /Q /S *.tmp *.log thumbs.db descript.ion *.skincfg *.identcache *.tvsconfig *.mi *.LOG.txt *.stat bugreport.txt
 
 erase /F /Q /S /A:H *.~* *.ddp *.drc *.dcp *.dcu
 erase /F /Q /S /A:H *.o *.or *.ppu *.compiled *.local
-erase /F /Q /S /A:H *.tmp *.log thumbs.db KnightsProvince.map descript.ion *.skincfg *.identcache *.tvsconfig *.mi *.LOG.txt *.stat bugreport.txt
+erase /F /Q /S /A:H *.tmp *.log thumbs.db descript.ion *.skincfg *.identcache *.tvsconfig *.mi *.LOG.txt *.stat bugreport.txt
