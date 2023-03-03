@@ -18,11 +18,6 @@ const
   USAGE_MODE: array [TKMUsageMode] of string = ('Developer mode', 'User mode');
   LIBX_DOMAIN: array [TKMLibxDomain] of string = ('data\', 'tutorials\', 'campaigns\', 'maps\', 'mapsmp\', 'maps_unofficial\', 'mapsdev\');
 
-const
-  LOCALES_PATH: array [TKMTargetGame] of string = ('', 'data\locales.txt', 'data\text\locales.xml');
-  TAGS_PATH: array [TKMTargetGame] of string = ('', 'KM_TextIDs.inc', 'data\text\text_IDs.inc');
-  META_PATH: array [TKMTargetGame] of string = ('', 'KM_TextMeta.xml', 'data\text\text_meta.xml');
-
 type
   TForm1 = class(TForm)
     lbTagName: TLabel;
@@ -161,6 +156,11 @@ uses
 // + 6. use nicer form style / fonts. KMR TM window looks way nicer IMHO
 // 3. 4. 5. could be added as a menu
 
+const
+  LOCALES_PATH: array [TKMTargetGame] of string = ('', 'data\locales.txt', 'data\text\locales.xml');
+  TAGS_PATH: array [TKMTargetGame] of string = ('', 'KM_TextIDs.inc', 'data\text\text_IDs.inc');
+  META_PATH: array [TKMTargetGame] of string = ('', 'KM_TextMeta.xml', 'data\text\text_meta.xml');
+
 procedure DetectGameAndPath(aAltWorkDir: string; out aTargetGame: TKMTargetGame; out aWorkDir: string);
 var
   exeDir: string;
@@ -176,17 +176,29 @@ begin
     aTargetGame := tgKaMRemake;
     aWorkDir := aAltWorkDir;
   end else
+  if FileExists(exeDir + '..\..\' + LOCALES_PATH[tgKaMRemake]) then
+  begin
+    // KaM Remake\Utils\TMshared\TM.exe
+    aTargetGame := tgKaMRemake;
+    aWorkDir := ExpandFileName(exeDir + '..\..\');
+  end else
   if FileExists(exeDir + '..\' + LOCALES_PATH[tgKaMRemake]) then
   begin
     // KaM Remake\Utils\TM.exe
     aTargetGame := tgKaMRemake;
-    aWorkDir := exeDir + '..\';
+    aWorkDir := ExpandFileName(exeDir + '..\');
   end else
   if FileExists(exeDir + LOCALES_PATH[tgKaMRemake]) then
   begin
     // KaM Remake\TM.exe
     aTargetGame := tgKaMRemake;
     aWorkDir := exeDir;
+  end else
+  if FileExists(exeDir + '..\..\' + LOCALES_PATH[tgKnightsProvince]) then
+  begin
+    // Knights Province\Utils\TM\TM.exe
+    aTargetGame := tgKnightsProvince;
+    aWorkDir := ExpandFileName(exeDir + '..\..\');
   end else
   if FileExists(exeDir + LOCALES_PATH[tgKnightsProvince]) then
   begin
@@ -199,6 +211,8 @@ end;
 
 { TForm1 }
 function TForm1.Start: Boolean;
+const
+  MODE: array [Boolean] of TKMUsageMode = (umUser, umDeveloper);
 begin
   // Load settings first, including fAltWorkDir
   fSettingsPath := ChangeFileExt(ParamStr(0), '.xml');
@@ -222,10 +236,7 @@ begin
   end;
 
   // Detect the run from IDE
-  if DebugHook <> 0 then
-    fMode := umDeveloper
-  else
-    fMode := umUser;
+  fMode := MODE[DebugHook <> 0];
 
   Caption := Format('Translation Manager (%s) [%s] [%s]', [DateTimeToStr(GetExeBuildTime), TARGET_GAME[fTargetGame], USAGE_MODE[fMode]]);
 
