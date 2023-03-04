@@ -155,7 +155,7 @@ uses
 // + 5. Export selected languages to ZIP
 // + 6. use nicer form style / fonts. KMR TM window looks way nicer IMHO
 // 3. 4. 5. could be added as a menu
-
+// @Krom all is done there ^? If yes, comment could be deleted then
 const
   LOCALES_PATH: array [TKMTargetGame] of string = ('', 'data\locales.txt', 'data\text\locales.xml');
   TAGS_PATH: array [TKMTargetGame] of string = ('', 'KM_TextIDs.inc', 'data\text\text_IDs.inc');

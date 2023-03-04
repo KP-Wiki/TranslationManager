@@ -190,7 +190,7 @@ procedure TKMTextManager.LoadTags(const aFilename: string);
 var
   sl: TStringList;
   Line: string;
-  I, K, CenterPos, CommentPos: Integer;
+  I, K, centerPos, commentPos: Integer;
   id: Integer;
   tagName: string;
   prevIndex: Integer;
@@ -206,21 +206,21 @@ begin
   begin
     Line := Trim(sl[I]);
 
-    CenterPos := Pos(' = ', Line);
+    centerPos := Pos(' = ', Line);
     // Separator (line without ' = ')
-    if CenterPos = 0 then
+    if centerPos = 0 then
     begin
       if prevIndex <> -1 then
         fLines.Insert(prevIndex+1, TKMLine.CreateSpacer);
     end
     else
     begin
-      CommentPos := Pos('; //', Line);
-      if CommentPos = 0 then
-        id := StrToInt(Copy(Line, CenterPos + 3, Length(Line) - CenterPos - 3))
+      commentPos := Pos('; //', Line);
+      if commentPos = 0 then
+        id := StrToInt(Copy(Line, centerPos + 3, Length(Line) - centerPos - 3))
       else
-        id := StrToInt(Copy(Line, CenterPos + 3, CommentPos - CenterPos - 3));
-      tagName := Copy(Line, 1, CenterPos - 1);
+        id := StrToInt(Copy(Line, centerPos + 3, commentPos - centerPos - 3));
+      tagName := Copy(Line, 1, centerPos - 1);
 
       prevIndex := fLines.AddLine(TKMLine.Create(id, tagName));
     end;
