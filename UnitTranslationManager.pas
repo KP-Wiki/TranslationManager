@@ -273,7 +273,7 @@ end;
 procedure TForm1.FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
 begin
   if (ssCtrl in Shift) and (Key = Ord('S')) then
-    fTextManager.Save;
+    fTextManager.Save(fTargetGame = tgKaMRemake);
 end;
 
 
@@ -384,7 +384,7 @@ end;
 
 procedure TForm1.btnSaveClick(Sender: TObject);
 begin
-  fTextManager.Save;
+  fTextManager.Save(fTargetGame = tgKaMRemake);
 end;
 
 
@@ -1050,7 +1050,7 @@ end;
 
 procedure TForm1.btnPasteFromClipboardAllClick(Sender: TObject);
 begin
-  fTextManager.FromClipboardAll;
+  fTextManager.FromClipboardAll(fTargetGame = tgKaMRemake);
 end;
 
 

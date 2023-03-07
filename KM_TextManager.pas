@@ -44,7 +44,7 @@ type
     procedure LoadLibx(const aFilename: string; aLocaleId: Integer);
     procedure LoadMeta(const aFilename: string);
     procedure SaveTags(const aFilename: string);
-    procedure SaveLibx(const aFilename: string; aLocaleId: Integer);
+    procedure SaveLibx(const aFilename: string; aLocaleId: Integer; aSortByTag: Boolean);
     procedure SaveDict(const aFilename: string; aLocaleId: Integer);
     procedure SaveMeta(const aFilename: string);
     procedure TagsAutoName(const aPath: string);
@@ -59,7 +59,7 @@ type
     destructor Destroy; override;
 
     procedure Load4(const aTextPath: string; aLocales: TByteSet);
-    procedure Save;
+    procedure Save(aSortByTag: Boolean);
 
     property Count: Integer read GetCount;
     property Items[aIndex: Integer]: TKMLine read GetItem; default;
@@ -81,7 +81,7 @@ type
     procedure ToClipboard(aLocales: TByteSet; aExport: TKMClipboardExport);
     procedure ToClipboardAll(aList: TStringList; aLocales: TByteSet);
     procedure FromClipboard;
-    procedure FromClipboardAll;
+    procedure FromClipboardAll(aSortByTag: Boolean);
 
     procedure ListMismatchingAll(aFolders: TStringList; aList: TStringList; aLocales: TByteSet);
   end;
@@ -149,7 +149,7 @@ begin
 end;
 
 
-procedure TKMTextManager.Save;
+procedure TKMTextManager.Save(aSortByTag: Boolean);
 var
   I: Integer;
   fname: string;
@@ -157,7 +157,7 @@ begin
   for I := 0 to fLocales.Count - 1 do
   begin
     fname := Format(fTextPath, [fLocales[I].Code]);
-    SaveLibx(fname, I);
+    SaveLibx(fname, I, aSortByTag);
     // Did not work out  SaveDict(ChangeFileExt(fname, '.dict'), I);
   end;
 
@@ -359,24 +359,37 @@ begin
 end;
 
 
-procedure TKMTextManager.SaveLibx(const aFilename: string; aLocaleId: Integer);
+procedure TKMTextManager.SaveLibx(const aFilename: string; aLocaleId: Integer; aSortByTag: Boolean);
 var
   sl: TStringList;
   I: Integer;
   localeHasStrings: Boolean;
+  sortedLines: array of Integer;
 begin
+  // We want to sort lines by Tag only for the save, We do not want to change their order in TM
+  SetLength(sortedLines, 3333);
+  FillChar(sortedLines[0], Length(sortedLines) * SizeOf(sortedLines[0]), -1);
+  for I := 0 to fLines.Count - 1 do
+  begin
+    if (not fLines[I].IsSpacer and (fLines[I].Strings[aLocaleId] <> ''))
+    or (fLibType = ltMissions) then
+    if aSortByTag then
+      sortedLines[fLines[I].Id] := I
+    else
+      sortedLines[I] := I;
+  end;
+
   sl := TStringList.Create;
   try
     sl.DefaultEncoding := TEncoding.UTF8;
 
     localeHasStrings := False;
-    for I := 0 to fLines.Count - 1 do
-    if (not fLines[I].IsSpacer and (fLines[I].Strings[aLocaleId] <> ''))
-    or (fLibType = ltMissions) then
+    for I := 0 to High(sortedLines) do
+    if sortedLines[I] <> -1 then
     begin
-      sl.Append(fLines[I].GetLineForLibx(aLocaleId));
+      sl.Append(fLines[sortedLines[I]].GetLineForLibx(aLocaleId));
 
-      if fLines[I].Strings[aLocaleId] <> '' then
+      if fLines[sortedLines[I]].Strings[aLocaleId] <> '' then
         localeHasStrings := True;
     end;
 
@@ -767,7 +780,7 @@ begin
 end;
 
 
-procedure TKMTextManager.FromClipboardAll;
+procedure TKMTextManager.FromClipboardAll(aSortByTag: Boolean);
 var
   sl: TStringList;
   locIndex: TArray<Integer>;
@@ -802,7 +815,7 @@ begin
   begin
     // Save previous
     if I > 2 then
-      Save;
+      Save(aSortByTag);
 
     // Take 1st cell and trim the header
     fname := StringFromString(sl[I], #9, 0);
@@ -847,7 +860,7 @@ begin
     end;
   end;
 
-  Save;
+  Save(aSortByTag);
 
   ShowMessage(Format('%d files updated. %d lines updated', [filesCount, changesCount]));
 
