@@ -4,7 +4,7 @@ interface
 uses
   Classes, Controls, Dialogs, ExtCtrls, Forms, Graphics, Math, Menus,
   StdCtrls, StrUtils, Windows, SysUtils, CheckLst,
-  KM_ResLocales, KM_TextLines, KM_TextManager, Unit_PathManager;
+  KM_ResLocales, KM_TextLines, KM_TextManager, Unit_PathManager, Vcl.Buttons;
 
 type
   TKMTargetGame = (tgUnknown, tgKaMRemake, tgKnightsProvince);
@@ -23,34 +23,34 @@ type
     lbTagName: TLabel;
     ScrollBox1: TScrollBox;
     lbLibs: TListBox;
-    btnCopy: TButton;
-    btnPaste: TButton;
+    btnCopy: TBitBtn;
+    btnPaste: TBitBtn;
     clbShowLang: TCheckListBox;
-    btnEraseAllButEng: TButton;
+    btnEraseAllButEng: TBitBtn;
     Label1: TLabel;
     Label2: TLabel;
-    btnSortByIndex: TButton;
-    btnSortByTag: TButton;
-    btnCompactIndexes: TButton;
-    btnListUnusedTags: TButton;
-    btnCopyToClipboard: TButton;
-    btnPasteFromClipboard: TButton;
+    btnSortByIndex: TBitBtn;
+    btnSortByTag: TBitBtn;
+    btnCompactIndexes: TBitBtn;
+    btnListUnusedTags: TBitBtn;
+    btnCopyToClipboard: TBitBtn;
+    btnPasteFromClipboard: TBitBtn;
     lbTags: TListBox;
-    btnSave: TButton;
-    btnInsert: TButton;
-    btnInsertSeparator: TButton;
-    btnDelete: TButton;
-    btnRename: TButton;
-    btnMoveUp: TButton;
-    btnMoveDown: TButton;
+    btnSave: TBitBtn;
+    btnInsert: TBitBtn;
+    btnInsertSeparator: TBitBtn;
+    btnDelete: TBitBtn;
+    btnRename: TBitBtn;
+    btnMoveUp: TBitBtn;
+    btnMoveDown: TBitBtn;
     cbFilterDuplicateTexts: TCheckBox;
     cbFilterEmptyTexts: TCheckBox;
     edFilterText: TEdit;
     Label4: TLabel;
     Label5: TLabel;
-    btnPasteFromClipboardAll: TButton;
-    btnCopyToClipboardAll: TButton;
-    btnListMismatching: TButton;
+    btnPasteFromClipboardAll: TBitBtn;
+    btnCopyToClipboardAll: TBitBtn;
+    btnListMismatching: TBitBtn;
     Label3: TLabel;
     edFilterTagName: TEdit;
     cbFilterMismatching: TCheckBox;
@@ -60,8 +60,8 @@ type
     cbLibxDomains: TCheckListBox;
     edFilterTagId: TEdit;
     Label9: TLabel;
-    btnSaveToZip: TButton;
-    btnSaveAllToZip: TButton;
+    btnSaveToZip: TBitBtn;
+    btnSaveAllToZip: TBitBtn;
     sdExportZIP: TSaveDialog;
     procedure lbTagsClick(Sender: TObject);
     procedure btnSortByIndexClick(Sender: TObject);

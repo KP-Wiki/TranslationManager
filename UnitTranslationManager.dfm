@@ -14,9 +14,7 @@ object Form1: TForm1
   Font.Name = 'Tahoma'
   Font.Style = []
   KeyPreview = True
-  OldCreateOrder = True
   Position = poScreenCenter
-  Scaled = False
   OnCloseQuery = FormCloseQuery
   OnDestroy = FormDestroy
   OnKeyDown = FormKeyDown
@@ -24,7 +22,6 @@ object Form1: TForm1
   DesignSize = (
     993
     817)
-  PixelsPerInch = 96
   TextHeight = 16
   object Label1: TLabel
     Left = 8
@@ -97,45 +94,61 @@ object Form1: TForm1
     Height = 16
     Caption = 'Tag ID filter (1,2,3, 8-15):'
   end
-  object btnCompactIndexes: TButton
+  object btnCompactIndexes: TBitBtn
     Left = 336
     Top = 456
     Width = 225
     Height = 25
     Caption = 'Compact indexes'
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clMaroon
+    Font.Height = -13
+    Font.Name = 'Tahoma'
+    Font.Style = []
+    ParentFont = False
     TabOrder = 0
+    StyleName = 'Windows'
     OnClick = btnCompactIndexesClick
   end
-  object btnCopy: TButton
+  object btnCopy: TBitBtn
     Left = 568
     Top = 784
     Width = 121
     Height = 25
     Anchors = [akLeft, akBottom]
     Caption = 'Copy all strings'
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clMaroon
+    Font.Height = -13
+    Font.Name = 'Tahoma'
+    Font.Style = []
+    ParentFont = False
     TabOrder = 1
+    StyleName = 'Windows'
     OnClick = btnCopyClick
-    ExplicitTop = 781
+    ExplicitTop = 758
   end
-  object btnCopyToClipboard: TButton
+  object btnCopyToClipboard: TBitBtn
     Left = 336
     Top = 528
     Width = 225
     Height = 25
     Caption = 'Copy to clipboard'
     TabOrder = 2
+    StyleName = 'Windows'
     OnClick = btnCopyToCBClick
   end
-  object btnCopyToClipboardAll: TButton
+  object btnCopyToClipboardAll: TBitBtn
     Left = 336
     Top = 624
     Width = 225
     Height = 25
     Caption = 'Copy ALL to clipboard'
     TabOrder = 3
+    StyleName = 'Windows'
     OnClick = btnCopyToClipboardAllClick
   end
-  object btnEraseAllButEng: TButton
+  object btnEraseAllButEng: TBitBtn
     Left = 824
     Top = 784
     Width = 161
@@ -143,11 +156,18 @@ object Form1: TForm1
     Anchors = [akLeft, akBottom]
     Caption = 'Erase all but English'
     Default = True
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clMaroon
+    Font.Height = -13
+    Font.Name = 'Tahoma'
+    Font.Style = []
+    ParentFont = False
     TabOrder = 5
+    StyleName = 'Windows'
     OnClick = btnEraseAllButEngClick
-    ExplicitTop = 781
+    ExplicitTop = 758
   end
-  object btnPaste: TButton
+  object btnPaste: TBitBtn
     Left = 696
     Top = 784
     Width = 121
@@ -155,35 +175,45 @@ object Form1: TForm1
     Anchors = [akLeft, akBottom]
     Caption = 'Paste all strings'
     Enabled = False
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clMaroon
+    Font.Height = -13
+    Font.Name = 'Tahoma'
+    Font.Style = []
+    ParentFont = False
     TabOrder = 12
+    StyleName = 'Windows'
     OnClick = btnPasteClick
-    ExplicitTop = 781
+    ExplicitTop = 758
   end
-  object btnPasteFromClipboard: TButton
+  object btnPasteFromClipboard: TBitBtn
     Left = 336
     Top = 552
     Width = 225
     Height = 25
     Caption = 'Paste from clipboard'
     TabOrder = 13
+    StyleName = 'Windows'
     OnClick = btnPasteFromCBClick
   end
-  object btnPasteFromClipboardAll: TButton
+  object btnPasteFromClipboardAll: TBitBtn
     Left = 336
     Top = 648
     Width = 225
     Height = 25
     Caption = 'Paste ALL from clipboard'
     TabOrder = 14
+    StyleName = 'Windows'
     OnClick = btnPasteFromClipboardAllClick
   end
-  object btnSave: TButton
+  object btnSave: TBitBtn
     Left = 336
     Top = 712
     Width = 225
     Height = 33
     Caption = 'Save (Ctrl + S)'
     TabOrder = 16
+    StyleName = 'Windows'
     OnClick = btnSaveClick
   end
   object cbFilterDuplicateTexts: TCheckBox
@@ -207,7 +237,7 @@ object Form1: TForm1
   object cbFilterMismatching: TCheckBox
     Left = 336
     Top = 200
-    Width = 153
+    Width = 161
     Height = 17
     Caption = 'Filter mismatching texts'
     TabOrder = 21
@@ -218,10 +248,11 @@ object Form1: TForm1
     Top = 16
     Width = 225
     Height = 145
-    OnClickCheck = clbShowLangClickCheck
     AutoComplete = False
     Columns = 4
+    ItemHeight = 17
     TabOrder = 22
+    OnClickCheck = clbShowLangClickCheck
   end
   object edFilterText: TEdit
     Left = 336
@@ -256,7 +287,7 @@ object Form1: TForm1
     TabOrder = 26
     OnClick = lbTagsClick
     OnKeyPress = lbTagsKeyPress
-    ExplicitHeight = 544
+    ExplicitHeight = 521
   end
   object ScrollBox1: TScrollBox
     Left = 568
@@ -271,96 +302,159 @@ object Form1: TForm1
     BevelInner = bvNone
     BevelOuter = bvNone
     TabOrder = 27
-    ExplicitHeight = 758
   end
-  object btnInsert: TButton
+  object btnInsert: TBitBtn
     Left = 336
     Top = 376
     Width = 113
     Height = 25
     Caption = 'Insert New'
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clMaroon
+    Font.Height = -13
+    Font.Name = 'Tahoma'
+    Font.Style = []
+    ParentFont = False
     TabOrder = 6
+    StyleName = 'Windows'
     OnClick = btnInsertClick
   end
-  object btnInsertSeparator: TButton
+  object btnInsertSeparator: TBitBtn
     Left = 448
     Top = 376
     Width = 113
     Height = 25
     Caption = 'Insert Separator'
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clMaroon
+    Font.Height = -13
+    Font.Name = 'Tahoma'
+    Font.Style = []
+    ParentFont = False
     TabOrder = 7
+    StyleName = 'Windows'
     OnClick = btnInsertSeparatorClick
   end
-  object btnRename: TButton
+  object btnRename: TBitBtn
     Left = 336
     Top = 400
     Width = 113
     Height = 25
     Caption = 'Rename'
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clMaroon
+    Font.Height = -13
+    Font.Name = 'Tahoma'
+    Font.Style = []
+    ParentFont = False
     TabOrder = 15
+    StyleName = 'Windows'
     OnClick = btnRenameClick
   end
-  object btnDelete: TButton
+  object btnDelete: TBitBtn
     Left = 448
     Top = 400
     Width = 113
     Height = 25
     Caption = 'Delete'
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clMaroon
+    Font.Height = -13
+    Font.Name = 'Tahoma'
+    Font.Style = []
+    ParentFont = False
     TabOrder = 4
+    StyleName = 'Windows'
     OnClick = btnDeleteClick
   end
-  object btnMoveUp: TButton
+  object btnMoveUp: TBitBtn
     Left = 336
     Top = 424
     Width = 113
     Height = 25
     Caption = 'Move Up'
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clMaroon
+    Font.Height = -13
+    Font.Name = 'Tahoma'
+    Font.Style = []
+    ParentFont = False
     TabOrder = 11
+    StyleName = 'Windows'
     OnClick = btnMoveUpClick
   end
-  object btnMoveDown: TButton
+  object btnMoveDown: TBitBtn
     Left = 448
     Top = 424
     Width = 113
     Height = 25
     Caption = 'Move Down'
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clMaroon
+    Font.Height = -13
+    Font.Name = 'Tahoma'
+    Font.Style = []
+    ParentFont = False
     TabOrder = 10
+    StyleName = 'Windows'
     OnClick = btnMoveDownClick
   end
-  object btnSortByIndex: TButton
+  object btnSortByIndex: TBitBtn
     Left = 336
     Top = 480
     Width = 113
     Height = 25
     Caption = 'Sort by index'
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clMaroon
+    Font.Height = -13
+    Font.Name = 'Tahoma'
+    Font.Style = []
+    ParentFont = False
     TabOrder = 17
+    StyleName = 'Windows'
     OnClick = btnSortByIndexClick
   end
-  object btnSortByTag: TButton
+  object btnSortByTag: TBitBtn
     Left = 448
     Top = 480
     Width = 113
     Height = 25
     Caption = 'Sort by tag'
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clMaroon
+    Font.Height = -13
+    Font.Name = 'Tahoma'
+    Font.Style = []
+    ParentFont = False
     TabOrder = 18
+    StyleName = 'Windows'
     OnClick = btnSortByTagClick
   end
-  object btnListUnusedTags: TButton
+  object btnListUnusedTags: TBitBtn
     Left = 336
     Top = 576
     Width = 225
     Height = 25
     Caption = 'List unused tags'
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clMaroon
+    Font.Height = -13
+    Font.Name = 'Tahoma'
+    Font.Style = []
+    ParentFont = False
     TabOrder = 9
+    StyleName = 'Windows'
     OnClick = btnListUnusedTagsClick
   end
-  object btnListMismatching: TButton
+  object btnListMismatching: TBitBtn
     Left = 336
     Top = 672
     Width = 225
     Height = 25
     Caption = 'List ALL mismatching'
     TabOrder = 8
+    StyleName = 'Windows'
     OnClick = btnListMismatchingClick
   end
   object cbLibxDomains: TCheckListBox
@@ -368,11 +462,12 @@ object Form1: TForm1
     Top = 16
     Width = 321
     Height = 57
-    OnClickCheck = clbShowLangClickCheck
     AutoComplete = False
     Columns = 3
+    ItemHeight = 17
     TabOrder = 28
     OnClick = cbLibxDomainsClick
+    OnClickCheck = clbShowLangClickCheck
   end
   object edFilterTagId: TEdit
     Left = 336
@@ -382,22 +477,24 @@ object Form1: TForm1
     TabOrder = 29
     OnChange = edFilterTextChange
   end
-  object btnSaveToZip: TButton
+  object btnSaveToZip: TBitBtn
     Left = 336
     Top = 752
     Width = 225
     Height = 25
     Caption = 'Save selected languages to ZIP'
     TabOrder = 30
+    StyleName = 'Windows'
     OnClick = btnSaveToZipClick
   end
-  object btnSaveAllToZip: TButton
+  object btnSaveAllToZip: TBitBtn
     Left = 336
     Top = 784
     Width = 225
     Height = 25
     Caption = 'Save ALL to ZIP'
     TabOrder = 31
+    StyleName = 'Windows'
     OnClick = btnSaveAllToZipClick
   end
   object sdExportZIP: TSaveDialog
