@@ -40,14 +40,14 @@ object Form1: TForm1
   end
   object Label3: TLabel
     Left = 336
-    Top = 304
+    Top = 320
     Width = 60
     Height = 16
     Caption = 'Text filter:'
   end
   object Label4: TLabel
     Left = 336
-    Top = 224
+    Top = 240
     Width = 211
     Height = 16
     Caption = 'Tag name filter (*TAG, TAG, TAG*):'
@@ -68,35 +68,35 @@ object Form1: TForm1
   end
   object Label6: TLabel
     Left = 336
-    Top = 360
+    Top = 376
     Width = 28
     Height = 16
     Caption = 'Tags'
   end
   object Label7: TLabel
     Left = 336
-    Top = 512
+    Top = 528
     Width = 66
     Height = 16
     Caption = 'Current libx'
   end
   object Label8: TLabel
     Left = 336
-    Top = 608
+    Top = 624
     Width = 37
     Height = 16
     Caption = 'All libx'
   end
   object Label9: TLabel
     Left = 336
-    Top = 264
+    Top = 280
     Width = 150
     Height = 16
     Caption = 'Tag ID filter (1,2,3, 8-15):'
   end
   object btnCompactIndexes: TBitBtn
     Left = 336
-    Top = 456
+    Top = 472
     Width = 225
     Height = 25
     Caption = 'Compact indexes'
@@ -130,7 +130,7 @@ object Form1: TForm1
   end
   object btnCopyToClipboard: TBitBtn
     Left = 336
-    Top = 528
+    Top = 544
     Width = 225
     Height = 25
     Caption = 'Copy to clipboard'
@@ -140,7 +140,7 @@ object Form1: TForm1
   end
   object btnCopyToClipboardAll: TBitBtn
     Left = 336
-    Top = 624
+    Top = 640
     Width = 225
     Height = 25
     Caption = 'Copy ALL to clipboard'
@@ -188,7 +188,7 @@ object Form1: TForm1
   end
   object btnPasteFromClipboard: TBitBtn
     Left = 336
-    Top = 552
+    Top = 568
     Width = 225
     Height = 25
     Caption = 'Paste from clipboard'
@@ -198,7 +198,7 @@ object Form1: TForm1
   end
   object btnPasteFromClipboardAll: TBitBtn
     Left = 336
-    Top = 648
+    Top = 664
     Width = 225
     Height = 25
     Caption = 'Paste ALL from clipboard'
@@ -208,7 +208,7 @@ object Form1: TForm1
   end
   object btnSave: TBitBtn
     Left = 336
-    Top = 712
+    Top = 728
     Width = 225
     Height = 33
     Caption = 'Save (Ctrl + S)'
@@ -218,7 +218,7 @@ object Form1: TForm1
   end
   object cbFilterDuplicateTexts: TCheckBox
     Left = 336
-    Top = 184
+    Top = 200
     Width = 145
     Height = 17
     Caption = 'Filter repeating texts'
@@ -236,7 +236,7 @@ object Form1: TForm1
   end
   object cbFilterMismatching: TCheckBox
     Left = 336
-    Top = 200
+    Top = 216
     Width = 161
     Height = 17
     Caption = 'Filter mismatching texts'
@@ -250,12 +250,13 @@ object Form1: TForm1
     Height = 145
     AutoComplete = False
     Columns = 4
+    ItemHeight = 17
     TabOrder = 22
     OnClickCheck = clbShowLangClickCheck
   end
   object edFilterText: TEdit
     Left = 336
-    Top = 320
+    Top = 336
     Width = 225
     Height = 24
     TabOrder = 23
@@ -263,7 +264,7 @@ object Form1: TForm1
   end
   object edFilterTagName: TEdit
     Left = 336
-    Top = 240
+    Top = 256
     Width = 225
     Height = 24
     TabOrder = 24
@@ -291,7 +292,7 @@ object Form1: TForm1
   object ScrollBox1: TScrollBox
     Left = 568
     Top = 16
-    Width = 417
+    Width = 405
     Height = 761
     HorzScrollBar.Visible = False
     VertScrollBar.Smooth = True
@@ -301,12 +302,12 @@ object Form1: TForm1
     BevelInner = bvNone
     BevelOuter = bvNone
     TabOrder = 27
-    ExplicitWidth = 405
+    ExplicitWidth = 393
     ExplicitHeight = 735
   end
   object btnInsert: TBitBtn
     Left = 336
-    Top = 376
+    Top = 392
     Width = 113
     Height = 25
     Caption = 'Insert New'
@@ -322,7 +323,7 @@ object Form1: TForm1
   end
   object btnInsertSeparator: TBitBtn
     Left = 448
-    Top = 376
+    Top = 392
     Width = 113
     Height = 25
     Caption = 'Insert Separator'
@@ -338,7 +339,7 @@ object Form1: TForm1
   end
   object btnRename: TBitBtn
     Left = 336
-    Top = 400
+    Top = 416
     Width = 113
     Height = 25
     Caption = 'Rename'
@@ -354,7 +355,7 @@ object Form1: TForm1
   end
   object btnDelete: TBitBtn
     Left = 448
-    Top = 400
+    Top = 416
     Width = 113
     Height = 25
     Caption = 'Delete'
@@ -370,7 +371,7 @@ object Form1: TForm1
   end
   object btnMoveUp: TBitBtn
     Left = 336
-    Top = 424
+    Top = 440
     Width = 113
     Height = 25
     Caption = 'Move Up'
@@ -386,7 +387,7 @@ object Form1: TForm1
   end
   object btnMoveDown: TBitBtn
     Left = 448
-    Top = 424
+    Top = 440
     Width = 113
     Height = 25
     Caption = 'Move Down'
@@ -402,7 +403,7 @@ object Form1: TForm1
   end
   object btnSortByIndex: TBitBtn
     Left = 336
-    Top = 480
+    Top = 496
     Width = 113
     Height = 25
     Caption = 'Sort by index'
@@ -418,7 +419,7 @@ object Form1: TForm1
   end
   object btnSortByTag: TBitBtn
     Left = 448
-    Top = 480
+    Top = 496
     Width = 113
     Height = 25
     Caption = 'Sort by tag'
@@ -434,7 +435,7 @@ object Form1: TForm1
   end
   object btnListUnusedTags: TBitBtn
     Left = 336
-    Top = 576
+    Top = 592
     Width = 225
     Height = 25
     Caption = 'List unused tags'
@@ -450,7 +451,7 @@ object Form1: TForm1
   end
   object btnListMismatching: TBitBtn
     Left = 336
-    Top = 672
+    Top = 688
     Width = 225
     Height = 25
     Caption = 'List mismatching lines'
@@ -465,13 +466,14 @@ object Form1: TForm1
     Height = 57
     AutoComplete = False
     Columns = 3
+    ItemHeight = 17
     TabOrder = 28
     OnClick = cbLibxDomainsClick
     OnClickCheck = clbShowLangClickCheck
   end
   object edFilterTagId: TEdit
     Left = 336
-    Top = 280
+    Top = 296
     Width = 225
     Height = 24
     TabOrder = 29
@@ -479,7 +481,7 @@ object Form1: TForm1
   end
   object btnSaveToZip: TBitBtn
     Left = 336
-    Top = 752
+    Top = 760
     Width = 225
     Height = 25
     Caption = 'Save selected languages to ZIP'
@@ -496,6 +498,15 @@ object Form1: TForm1
     TabOrder = 31
     StyleName = 'Windows'
     OnClick = btnSaveAllToZipClick
+  end
+  object cbFilterNonEmptyTexts: TCheckBox
+    Left = 336
+    Top = 184
+    Width = 145
+    Height = 17
+    Caption = 'Filter non-empty texts'
+    TabOrder = 32
+    OnClick = cbFilterEmptyTextsClick
   end
   object sdExportZIP: TSaveDialog
     DefaultExt = 'zip'

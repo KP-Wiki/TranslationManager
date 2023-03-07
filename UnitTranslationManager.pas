@@ -63,6 +63,7 @@ type
     btnSaveToZip: TBitBtn;
     btnSaveAllToZip: TBitBtn;
     sdExportZIP: TSaveDialog;
+    cbFilterNonEmptyTexts: TCheckBox;
     procedure lbTagsClick(Sender: TObject);
     procedure btnSortByIndexClick(Sender: TObject);
     procedure btnSortByTagClick(Sender: TObject);
@@ -438,7 +439,10 @@ var
     Result := True;
 
     if cbFilterEmptyTexts.Checked then
-      Result := aLine.HasEmptyTexts(selectedLocales);
+      Result := not aLine.IsSpacer and aLine.HasEmptyTexts(selectedLocales);
+
+    if cbFilterNonEmptyTexts.Checked then
+      Result := not aLine.IsSpacer and not aLine.HasEmptyTexts(selectedLocales);
 
     if Result and cbFilterDuplicateTexts.Checked then
       Result := aLine.HasDuplicates(selectedLocales);
@@ -871,13 +875,14 @@ begin
   isItemSelected := id <> -1;
   isMainFile := isItemSelected and SameText(lbLibs.Items[id], TKMTextManager.GAME_TEXT_PATH);
   isFiltered := (edFilterText.Text <> '') or (edFilterTagName.Text <> '') or
-                cbFilterEmptyTexts.Checked or cbFilterDuplicateTexts.Checked or cbFilterMismatching.Checked;
+                cbFilterEmptyTexts.Checked or cbFilterNonEmptyTexts.Checked or cbFilterDuplicateTexts.Checked or cbFilterMismatching.Checked;
 
   btnCopyToClipboard.Enabled := isItemSelected;
   btnPasteFromClipboard.Enabled := isItemSelected;
 
   cbFilterDuplicateTexts.Enabled := isItemSelected;
   cbFilterEmptyTexts.Enabled := isItemSelected;
+  cbFilterNonEmptyTexts.Enabled := isItemSelected;
   cbFilterMismatching.Enabled := isItemSelected;
 
   btnSortByIndex.Enabled := isItemSelected and isMainFile and not isFiltered;
