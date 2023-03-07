@@ -83,7 +83,7 @@ type
     procedure FromClipboard;
     procedure FromClipboardAll;
 
-    procedure ListMismatchingAll(aFolders: TStringList; aList: TStringList);
+    procedure ListMismatchingAll(aFolders: TStringList; aList: TStringList; aLocales: TByteSet);
   end;
 
 
@@ -855,7 +855,7 @@ begin
 end;
 
 
-procedure TKMTextManager.ListMismatchingAll(aFolders: TStringList; aList: TStringList);
+procedure TKMTextManager.ListMismatchingAll(aFolders: TStringList; aList: TStringList; aLocales: TByteSet);
 var
   I, K: Integer;
   newFile: Boolean;
@@ -876,24 +876,24 @@ var
 begin
   for I := 0 to aFolders.Count - 1 do
   begin
-    Load4(aFolders[I], []);
+    Load4(aFolders[I], aLocales);
 
     newFile := True;
 
     // Linebreaks
     for K := 0 to fLines.Count - 1 do
-      if not fLines[K].CheckMatchingForCharCount(['|'], []) then
-        Append('| in ' + fLines[K].Tag);
+      if not fLines[K].CheckMatchingForCharCount(['|'], aLocales) then
+        Append('  | in ' + fLines[K].Tag);
 
     // Formats
     for K := 0 to fLines.Count - 1 do
-      if not fLines[K].CheckMatchingForCharCount(['%'], []) then
-        Append('% in ' + fLines[K].Tag);
+      if not fLines[K].CheckMatchingForCharCount(['%'], aLocales) then
+        Append('  % in ' + fLines[K].Tag);
 
     // Colors
     for K := 0 to fLines.Count - 1 do
-      if not fLines[K].CheckMatchingForCharCount(['[$'], []) then
-        Append('[$ in ' + fLines[K].Tag);
+      if not fLines[K].CheckMatchingForCharCount(['[$'], aLocales) then
+        Append('  [$ in ' + fLines[K].Tag);
   end;
 end;
 

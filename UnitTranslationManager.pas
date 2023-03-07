@@ -936,7 +936,7 @@ var
 begin
   slMismatching := TStringList.Create;
   try
-    fTextManager.ListMismatchingAll(fPathManager.GetPaths, slMismatching);
+    fTextManager.ListMismatchingAll(fPathManager.GetPaths, slMismatching, GetSelectedLocales);
 
     slMismatching.SaveToFile(fWorkDir + 'TM_Mismatching.txt');
     ShowMessage(slMismatching.Text);

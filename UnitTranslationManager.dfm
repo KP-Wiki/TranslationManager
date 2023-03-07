@@ -250,7 +250,6 @@ object Form1: TForm1
     Height = 145
     AutoComplete = False
     Columns = 4
-    ItemHeight = 17
     TabOrder = 22
     OnClickCheck = clbShowLangClickCheck
   end
@@ -302,6 +301,8 @@ object Form1: TForm1
     BevelInner = bvNone
     BevelOuter = bvNone
     TabOrder = 27
+    ExplicitWidth = 405
+    ExplicitHeight = 735
   end
   object btnInsert: TBitBtn
     Left = 336
@@ -452,7 +453,7 @@ object Form1: TForm1
     Top = 672
     Width = 225
     Height = 25
-    Caption = 'List ALL mismatching'
+    Caption = 'List mismatching lines'
     TabOrder = 8
     StyleName = 'Windows'
     OnClick = btnListMismatchingClick
@@ -464,7 +465,6 @@ object Form1: TForm1
     Height = 57
     AutoComplete = False
     Columns = 3
-    ItemHeight = 17
     TabOrder = 28
     OnClick = cbLibxDomainsClick
     OnClickCheck = clbShowLangClickCheck
