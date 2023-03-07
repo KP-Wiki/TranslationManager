@@ -133,6 +133,7 @@ type
     procedure SaveSettings(const aPath: string);
     procedure UpdateMenuItemVisibility;
     procedure SaveToZip(const aZipName: string; aLocales: TByteSet);
+    function GetSelectedLocales: TByteSet;
   public
     function Start: Boolean;
   end;
@@ -302,6 +303,17 @@ begin
 end;
 
 
+function TForm1.GetSelectedLocales: TByteSet;
+var
+  I: Integer;
+begin
+  Result := [];
+  for I := 1 to clbShowLang.Count - 1 do
+    if clbShowLang.Checked[I] then
+      Result := Result + [I-1];
+end;
+
+
 procedure TForm1.UpdateMenuItemVisibility;
 begin
   // Hide entries that Users should not access
@@ -376,19 +388,11 @@ end;
 
 
 procedure TForm1.btnSaveToZipClick(Sender: TObject);
-var
-  I: Integer;
-  localesToZip: TByteSet;
 begin
   sdExportZIP.InitialDir := fWorkDir;
   if not sdExportZIP.Execute(Handle) then Exit;
 
-  localesToZip := [];
-  for I := 1 to clbShowLang.Count - 1 do
-    if clbShowLang.Checked[I] then
-      localesToZip := localesToZip + [I-1];
-
-  SaveToZip(sdExportZIP.FileName, localesToZip);
+  SaveToZip(sdExportZIP.FileName, GetSelectedLocales);
 end;
 
 
@@ -464,10 +468,7 @@ begin
     SetLength(ListBoxLookup, 0);
     SetLength(ListBoxLookup, fTextManager.Count);
 
-    selectedLocales := [];
-    for I := 0 to fLocales.Count - 1 do
-      if clbShowLang.Checked[I+1] then
-        selectedLocales := selectedLocales + [I];
+    selectedLocales := GetSelectedLocales;
 
     for I := 0 to fTextManager.Count - 1 do
     if ShowTag(fTextManager[I]) then
@@ -931,16 +932,16 @@ end;
 
 procedure TForm1.btnListMismatchingClick(Sender: TObject);
 var
-  slMiss: TStringList;
+  slMismatching: TStringList;
 begin
-  slMiss := TStringList.Create;
+  slMismatching := TStringList.Create;
   try
-    fTextManager.ListMismatchingAll(fPathManager.GetPaths, slMiss);
+    fTextManager.ListMismatchingAll(fPathManager.GetPaths, slMismatching);
 
-    slMiss.SaveToFile(fWorkDir + 'TM_Mismatching.txt');
-    ShowMessage(slMiss.Text);
+    slMismatching.SaveToFile(fWorkDir + 'TM_Mismatching.txt');
+    ShowMessage(slMismatching.Text);
   finally
-    slMiss.Free;
+    slMismatching.Free;
   end;
 end;
 
@@ -1024,30 +1025,14 @@ end;
 
 
 procedure TForm1.btnCopyToCBClick(Sender: TObject);
-var
-  I: Integer;
-  localesToCopy: TByteSet;
 begin
-  localesToCopy := [];
-  for I := 1 to clbShowLang.Count - 1 do
-    if clbShowLang.Checked[I] then
-      localesToCopy := localesToCopy + [I-1];
-
-  fTextManager.ToClipboard(localesToCopy, ceSimple);
+  fTextManager.ToClipboard(GetSelectedLocales, ceSimple);
 end;
 
 
 procedure TForm1.btnCopyToClipboardAllClick(Sender: TObject);
-var
-  I: Integer;
-  localesToCopy: TByteSet;
 begin
-  localesToCopy := [];
-  for I := 1 to clbShowLang.Count - 1 do
-    if clbShowLang.Checked[I] then
-      localesToCopy := localesToCopy + [I-1];
-
-  fTextManager.ToClipboardAll(fPathManager.GetPaths, localesToCopy);
+  fTextManager.ToClipboardAll(fPathManager.GetPaths, GetSelectedLocales);
 end;
 
 
