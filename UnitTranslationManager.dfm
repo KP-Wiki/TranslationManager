@@ -107,7 +107,6 @@ object Form1: TForm1
     Font.Style = []
     ParentFont = False
     TabOrder = 0
-    StyleName = 'Windows'
     OnClick = btnCompactIndexesClick
   end
   object btnCopy: TBitBtn
@@ -124,9 +123,7 @@ object Form1: TForm1
     Font.Style = []
     ParentFont = False
     TabOrder = 1
-    StyleName = 'Windows'
     OnClick = btnCopyClick
-    ExplicitTop = 758
   end
   object btnCopyToClipboard: TBitBtn
     Left = 336
@@ -135,7 +132,6 @@ object Form1: TForm1
     Height = 25
     Caption = 'Copy to clipboard'
     TabOrder = 2
-    StyleName = 'Windows'
     OnClick = btnCopyToCBClick
   end
   object btnCopyToClipboardAll: TBitBtn
@@ -145,7 +141,6 @@ object Form1: TForm1
     Height = 25
     Caption = 'Copy ALL to clipboard'
     TabOrder = 3
-    StyleName = 'Windows'
     OnClick = btnCopyToClipboardAllClick
   end
   object btnEraseAllButEng: TBitBtn
@@ -163,9 +158,7 @@ object Form1: TForm1
     Font.Style = []
     ParentFont = False
     TabOrder = 5
-    StyleName = 'Windows'
     OnClick = btnEraseAllButEngClick
-    ExplicitTop = 758
   end
   object btnPaste: TBitBtn
     Left = 696
@@ -182,9 +175,7 @@ object Form1: TForm1
     Font.Style = []
     ParentFont = False
     TabOrder = 12
-    StyleName = 'Windows'
     OnClick = btnPasteClick
-    ExplicitTop = 758
   end
   object btnPasteFromClipboard: TBitBtn
     Left = 336
@@ -193,7 +184,6 @@ object Form1: TForm1
     Height = 25
     Caption = 'Paste from clipboard'
     TabOrder = 13
-    StyleName = 'Windows'
     OnClick = btnPasteFromCBClick
   end
   object btnPasteFromClipboardAll: TBitBtn
@@ -203,7 +193,6 @@ object Form1: TForm1
     Height = 25
     Caption = 'Paste ALL from clipboard'
     TabOrder = 14
-    StyleName = 'Windows'
     OnClick = btnPasteFromClipboardAllClick
   end
   object btnSave: TBitBtn
@@ -213,7 +202,6 @@ object Form1: TForm1
     Height = 33
     Caption = 'Save (Ctrl + S)'
     TabOrder = 16
-    StyleName = 'Windows'
     OnClick = btnSaveClick
   end
   object cbFilterDuplicateTexts: TCheckBox
@@ -248,11 +236,10 @@ object Form1: TForm1
     Top = 16
     Width = 225
     Height = 145
+    OnClickCheck = clbShowLangClickCheck
     AutoComplete = False
     Columns = 4
-    ItemHeight = 17
     TabOrder = 22
-    OnClickCheck = clbShowLangClickCheck
   end
   object edFilterText: TEdit
     Left = 336
@@ -287,12 +274,11 @@ object Form1: TForm1
     TabOrder = 26
     OnClick = lbTagsClick
     OnKeyPress = lbTagsKeyPress
-    ExplicitHeight = 521
   end
   object ScrollBox1: TScrollBox
     Left = 568
     Top = 16
-    Width = 405
+    Width = 417
     Height = 761
     HorzScrollBar.Visible = False
     VertScrollBar.Smooth = True
@@ -302,8 +288,6 @@ object Form1: TForm1
     BevelInner = bvNone
     BevelOuter = bvNone
     TabOrder = 27
-    ExplicitWidth = 393
-    ExplicitHeight = 735
   end
   object btnInsert: TBitBtn
     Left = 336
@@ -318,7 +302,6 @@ object Form1: TForm1
     Font.Style = []
     ParentFont = False
     TabOrder = 6
-    StyleName = 'Windows'
     OnClick = btnInsertClick
   end
   object btnInsertSeparator: TBitBtn
@@ -334,7 +317,6 @@ object Form1: TForm1
     Font.Style = []
     ParentFont = False
     TabOrder = 7
-    StyleName = 'Windows'
     OnClick = btnInsertSeparatorClick
   end
   object btnRename: TBitBtn
@@ -350,7 +332,6 @@ object Form1: TForm1
     Font.Style = []
     ParentFont = False
     TabOrder = 15
-    StyleName = 'Windows'
     OnClick = btnRenameClick
   end
   object btnDelete: TBitBtn
@@ -366,7 +347,6 @@ object Form1: TForm1
     Font.Style = []
     ParentFont = False
     TabOrder = 4
-    StyleName = 'Windows'
     OnClick = btnDeleteClick
   end
   object btnMoveUp: TBitBtn
@@ -382,7 +362,6 @@ object Form1: TForm1
     Font.Style = []
     ParentFont = False
     TabOrder = 11
-    StyleName = 'Windows'
     OnClick = btnMoveUpClick
   end
   object btnMoveDown: TBitBtn
@@ -398,7 +377,6 @@ object Form1: TForm1
     Font.Style = []
     ParentFont = False
     TabOrder = 10
-    StyleName = 'Windows'
     OnClick = btnMoveDownClick
   end
   object btnSortByIndex: TBitBtn
@@ -414,7 +392,6 @@ object Form1: TForm1
     Font.Style = []
     ParentFont = False
     TabOrder = 17
-    StyleName = 'Windows'
     OnClick = btnSortByIndexClick
   end
   object btnSortByTag: TBitBtn
@@ -430,7 +407,6 @@ object Form1: TForm1
     Font.Style = []
     ParentFont = False
     TabOrder = 18
-    StyleName = 'Windows'
     OnClick = btnSortByTagClick
   end
   object btnListUnusedTags: TBitBtn
@@ -446,7 +422,6 @@ object Form1: TForm1
     Font.Style = []
     ParentFont = False
     TabOrder = 9
-    StyleName = 'Windows'
     OnClick = btnListUnusedTagsClick
   end
   object btnListMismatching: TBitBtn
@@ -456,7 +431,6 @@ object Form1: TForm1
     Height = 25
     Caption = 'List mismatching lines'
     TabOrder = 8
-    StyleName = 'Windows'
     OnClick = btnListMismatchingClick
   end
   object cbLibxDomains: TCheckListBox
@@ -464,12 +438,11 @@ object Form1: TForm1
     Top = 16
     Width = 321
     Height = 57
+    OnClickCheck = clbShowLangClickCheck
     AutoComplete = False
     Columns = 3
-    ItemHeight = 17
     TabOrder = 28
     OnClick = cbLibxDomainsClick
-    OnClickCheck = clbShowLangClickCheck
   end
   object edFilterTagId: TEdit
     Left = 336
@@ -486,7 +459,6 @@ object Form1: TForm1
     Height = 25
     Caption = 'Save selected languages to ZIP'
     TabOrder = 30
-    StyleName = 'Windows'
     OnClick = btnSaveToZipClick
   end
   object btnSaveAllToZip: TBitBtn
@@ -496,7 +468,6 @@ object Form1: TForm1
     Height = 25
     Caption = 'Save ALL to ZIP'
     TabOrder = 31
-    StyleName = 'Windows'
     OnClick = btnSaveAllToZipClick
   end
   object cbFilterNonEmptyTexts: TCheckBox

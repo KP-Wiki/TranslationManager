@@ -297,8 +297,8 @@ begin
   for I := 0 to fLocales.Count - 1 do
   if clbShowLang.Checked[I+1] then
   begin
-    fTransLabels[I].SetBounds(8, 2 + K * secHeight, 160, 20);
-    fTransMemos[I].SetBounds(8, 22 + K * secHeight, ScrollBox1.Width - 20, secHeight - 24);
+    fTransLabels[I].SetBounds(8, 2 + K * secHeight, 160, 16);
+    fTransMemos[I].SetBounds(8, 18 + K * secHeight, ScrollBox1.Width - 20, secHeight - 20);
     Inc(K);
   end;
 end;
