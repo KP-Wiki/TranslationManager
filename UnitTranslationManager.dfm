@@ -2,7 +2,7 @@ object Form1: TForm1
   Left = 230
   Top = 140
   Caption = 'Translation Manager'
-  ClientHeight = 814
+  ClientHeight = 817
   ClientWidth = 993
   Color = clBtnFace
   Constraints.MinHeight = 600
@@ -14,6 +14,7 @@ object Form1: TForm1
   Font.Name = 'Tahoma'
   Font.Style = []
   KeyPreview = True
+  OldCreateOrder = True
   Position = poScreenCenter
   Scaled = False
   OnCloseQuery = FormCloseQuery
@@ -22,7 +23,8 @@ object Form1: TForm1
   OnResize = FormResize
   DesignSize = (
     993
-    814)
+    817)
+  PixelsPerInch = 96
   TextHeight = 16
   object Label1: TLabel
     Left = 8
@@ -106,14 +108,14 @@ object Form1: TForm1
   end
   object btnCopy: TButton
     Left = 568
-    Top = 781
+    Top = 784
     Width = 121
     Height = 25
     Anchors = [akLeft, akBottom]
     Caption = 'Copy all strings'
     TabOrder = 1
     OnClick = btnCopyClick
-    ExplicitTop = 720
+    ExplicitTop = 781
   end
   object btnCopyToClipboard: TButton
     Left = 336
@@ -135,7 +137,7 @@ object Form1: TForm1
   end
   object btnEraseAllButEng: TButton
     Left = 824
-    Top = 781
+    Top = 784
     Width = 161
     Height = 25
     Anchors = [akLeft, akBottom]
@@ -143,11 +145,11 @@ object Form1: TForm1
     Default = True
     TabOrder = 5
     OnClick = btnEraseAllButEngClick
-    ExplicitTop = 720
+    ExplicitTop = 781
   end
   object btnPaste: TButton
     Left = 696
-    Top = 781
+    Top = 784
     Width = 121
     Height = 25
     Anchors = [akLeft, akBottom]
@@ -155,7 +157,7 @@ object Form1: TForm1
     Enabled = False
     TabOrder = 12
     OnClick = btnPasteClick
-    ExplicitTop = 720
+    ExplicitTop = 781
   end
   object btnPasteFromClipboard: TButton
     Left = 336
@@ -216,10 +218,10 @@ object Form1: TForm1
     Top = 16
     Width = 225
     Height = 145
+    OnClickCheck = clbShowLangClickCheck
     AutoComplete = False
     Columns = 4
     TabOrder = 22
-    OnClickCheck = clbShowLangClickCheck
   end
   object edFilterText: TEdit
     Left = 336
@@ -249,18 +251,18 @@ object Form1: TForm1
     Left = 8
     Top = 264
     Width = 321
-    Height = 544
+    Height = 547
     Anchors = [akLeft, akTop, akBottom]
     TabOrder = 26
     OnClick = lbTagsClick
     OnKeyPress = lbTagsKeyPress
-    ExplicitHeight = 483
+    ExplicitHeight = 544
   end
   object ScrollBox1: TScrollBox
     Left = 568
     Top = 16
     Width = 417
-    Height = 758
+    Height = 761
     HorzScrollBar.Visible = False
     VertScrollBar.Smooth = True
     VertScrollBar.Tracking = True
@@ -269,7 +271,7 @@ object Form1: TForm1
     BevelInner = bvNone
     BevelOuter = bvNone
     TabOrder = 27
-    ExplicitHeight = 697
+    ExplicitHeight = 758
   end
   object btnInsert: TButton
     Left = 336
@@ -366,11 +368,11 @@ object Form1: TForm1
     Top = 16
     Width = 321
     Height = 57
+    OnClickCheck = clbShowLangClickCheck
     AutoComplete = False
     Columns = 3
     TabOrder = 28
     OnClick = cbLibxDomainsClick
-    OnClickCheck = clbShowLangClickCheck
   end
   object edFilterTagId: TEdit
     Left = 336
@@ -381,8 +383,8 @@ object Form1: TForm1
     OnChange = edFilterTextChange
   end
   object btnSaveToZip: TButton
-    Left = 337
-    Top = 750
+    Left = 336
+    Top = 752
     Width = 225
     Height = 25
     Caption = 'Save selected languages to ZIP'
@@ -390,8 +392,8 @@ object Form1: TForm1
     OnClick = btnSaveToZipClick
   end
   object btnSaveAllToZip: TButton
-    Left = 337
-    Top = 780
+    Left = 336
+    Top = 784
     Width = 225
     Height = 25
     Caption = 'Save ALL to ZIP'
