@@ -163,7 +163,7 @@ const
   TAGS_PATH: array [TKMTargetGame] of string = ('', 'KM_TextIDs.inc', 'data\text\text_IDs.inc');
   META_PATH: array [TKMTargetGame] of string = ('', 'KM_TextMeta.xml', 'data\text\text_meta.xml');
 
-procedure DetectGameAndPath(aAltWorkDir: string; out aTargetGame: TKMTargetGame; out aWorkDir: string);
+procedure DetectGameAndPath(aAltWorkDir: string; out aTargetGame: TKMTargetGame; out aWorkDir: string; out aTagsPath: string);
 var
   exeDir: string;
 begin
@@ -208,6 +208,15 @@ begin
     aTargetGame := tgKnightsProvince;
     aWorkDir := exeDir;
   end;
+
+  // Detect tags path
+  // KMR could have KM_TextIDs.inc at workDir and at workDir/Utils
+  aTagsPath := TAGS_PATH[aTargetGame];
+  if (aTargetGame = tgKaMRemake)
+    and not FileExists(aWorkDir + aTagsPath) 
+    and FileExists(aWorkDir + 'Utils' + PathDelim + aTagsPath) then
+    aTagsPath := 'Utils' + PathDelim + aTagsPath;
+  
 end;
 
 
@@ -215,13 +224,15 @@ end;
 function TForm1.Start: Boolean;
 const
   MODE: array [Boolean] of TKMUsageMode = (umUser, umDeveloper);
+var
+  tagsPath: string;
 begin
   // Load settings first, including fAltWorkDir
   fSettingsPath := ChangeFileExt(ParamStr(0), '.xml');
   LoadSettings(fSettingsPath);
 
   // Detect the game
-  DetectGameAndPath(fAltWorkDir, fTargetGame, fWorkDir);
+  DetectGameAndPath(fAltWorkDir, fTargetGame, fWorkDir, tagsPath);
 
   case fTargetGame of
     tgUnknown:          begin
@@ -248,7 +259,7 @@ begin
   fPathManager := TPathManager.Create;
   RefreshFolders;
 
-  fTextManager := TKMTextManager.Create(fLocales, fWorkDir, TAGS_PATH[fTargetGame], META_PATH[fTargetGame]);
+  fTextManager := TKMTextManager.Create(fLocales, fWorkDir, tagsPath, META_PATH[fTargetGame]);
 
   UpdateMenuItemVisibility;
 
