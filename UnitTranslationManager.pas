@@ -148,16 +148,6 @@ uses
 {$R *.dfm}
 
 
-// todo: Feature requests by Rey:
-// + 1. add libx filter, same as in KMR TM (game / tutorial (?) / maps / mapsMP / campaigns
-// + 2. add filter for label name contains
-// + 2. add filter for label ID or ID range
-// + 3. Save via Ctrl + S hotkey
-// + 4. Export all languages to ZIP
-// + 5. Export selected languages to ZIP
-// + 6. use nicer form style / fonts. KMR TM window looks way nicer IMHO
-// 3. 4. 5. could be added as a menu
-// @Krom all is done there ^? If yes, comment could be deleted then
 const
   LOCALES_PATH: array [TKMTargetGame] of string = ('', 'data\locales.txt', 'data\text\locales.xml');
   TAGS_PATH: array [TKMTargetGame] of string = ('', 'KM_TextIDs.inc', 'data\text\text_IDs.inc');
@@ -213,10 +203,9 @@ begin
   // KMR could have KM_TextIDs.inc at workDir and at workDir/Utils
   aTagsPath := TAGS_PATH[aTargetGame];
   if (aTargetGame = tgKaMRemake)
-    and not FileExists(aWorkDir + aTagsPath) 
-    and FileExists(aWorkDir + 'Utils' + PathDelim + aTagsPath) then
+  and not FileExists(aWorkDir + aTagsPath)
+  and FileExists(aWorkDir + 'Utils' + PathDelim + aTagsPath) then
     aTagsPath := 'Utils' + PathDelim + aTagsPath;
-  
 end;
 
 
