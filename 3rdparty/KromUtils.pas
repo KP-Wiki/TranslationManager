@@ -42,7 +42,7 @@ uses
   function GetLengthF(A, B: Single): Single;
   function GetLengthSqr(aX, aY: Integer): Integer;
 
-  function Lerp(A,B: Single; aMixValue: Single): Single;
+  function Lerp(A,B: Single; aMixValue: Single): Single; inline;
 
   procedure SwapStr(var A, B: string);
   procedure SwapInt(var A, B: Byte); overload;
@@ -230,7 +230,7 @@ begin
 end;
 
 
-function Lerp(A,B: Single; aMixValue: Single): Single; inline;
+function Lerp(A,B: Single; aMixValue: Single): Single;
 begin
   Result := A + (B - A) * aMixValue;
 end;
