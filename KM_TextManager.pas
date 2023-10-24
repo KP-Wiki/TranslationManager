@@ -618,7 +618,7 @@ begin
             Result := Result + #9 + '' // New localization (not saved in Meta)
           else
           if (fLines[I].LastChanged[K] < fLines[I].LastChanged[LOCALE_DEFAULT]) then
-            Result := Result + #9 + 'NEEDS UPDATE'
+            Result := Result + #9 + 'UPDATED'
           else
             Result := Result + #9 + '';
         end;
@@ -657,9 +657,11 @@ procedure TKMTextManager.ToClipboardAll(aList: TStringList; aLocales: TByteSet);
     for I := 0 to fLocales.Count - 1 do
     if (aLocales = []) or (I in aLocales) then
     begin
-      Result := Result + #9 + '=ROUND(COUNTA('+Chr(Ord('B')+K)+fromStr+':'+Chr(Ord('B')+K)+toStr+')/COUNTA(B'+fromStr+':B'+toStr+')*100,2)&" %"';
+      Result := Result + #9 + '=ROUND(COUNTA('+Chr(Ord('B')+K)+fromStr+':'+Chr(Ord('B')+K)+toStr+')/COUNTA(B'+fromStr+':B'+toStr+')*100,2)&"% (use <== when translation is not needed)"';
       Inc(K);
     end;
+
+    Result := Result + #9 + 'Conditional formatting range is `C3:C2600` and formula is `=AND(ISBLANK(C3), NOT (ISBLANK(B3)))`';
   end;
 var
   localesCount: Integer;
