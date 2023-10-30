@@ -657,7 +657,12 @@ procedure TKMTextManager.ToClipboardAll(aList: TStringList; aLocales: TByteSet);
     for I := 0 to fLocales.Count - 1 do
     if (aLocales = []) or (I in aLocales) then
     begin
-      Result := Result + #9 + '=ROUND(COUNTA('+Chr(Ord('B')+K)+fromStr+':'+Chr(Ord('B')+K)+toStr+')/COUNTA(B'+fromStr+':B'+toStr+')*100,2)&"% (use <== when translation is not needed)"';
+      Result := Result + #9;
+
+      // Add % and a hint for localizations that can reference Eng
+      if I <> LOCALE_DEFAULT then
+        Result := Result + '=ROUND(COUNTA('+Chr(Ord('B')+K)+fromStr+':'+Chr(Ord('B')+K)+toStr+')/COUNTA(B'+fromStr+':B'+toStr+')*100,2)' + '&"% (use <== when translation is not needed)"';
+
       Inc(K);
     end;
 
