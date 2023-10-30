@@ -91,7 +91,7 @@ uses
 
   function GetExeBuildTime: TDateTime;
 
-  function CreateProcessSimple(aFilename: string; aShowWindow, aWait: Boolean): NativeUInt;
+  function CreateProcessSimple(const aFilename: string; aShowWindow, aWait: Boolean): NativeUInt;
   procedure TerminateProcessSimple(aProcessHandle: NativeUInt);
   function GetMemUsed: NativeUInt;
   function GetCommittedStackSize: NativeUInt;
@@ -590,7 +590,7 @@ begin
 end;
 
 
-function CreateProcessSimple(aFilename: string; aShowWindow, aWait: Boolean): NativeUInt;
+function CreateProcessSimple(const aFilename: string; aShowWindow, aWait: Boolean): NativeUInt;
 var
   appName: array [0..512] of Char;
   StartupInfo: TStartupInfo;
