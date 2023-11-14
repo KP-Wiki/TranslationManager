@@ -853,7 +853,7 @@ begin
     idLine := fLines.IndexOfTag(tag);
 
     if idLine = -1 then
-      Assert(False, Format('Line %d. Tag "%s" can not be found', [I, tag]));
+      Continue; // Tag was removed from the game
 
     for K := 0 to High(locIndex) do
     begin

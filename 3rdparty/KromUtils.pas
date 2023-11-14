@@ -44,19 +44,6 @@ uses
 
   function Lerp(A,B: Single; aMixValue: Single): Single; inline;
 
-  procedure SwapStr(var A, B: string);
-  procedure SwapInt(var A, B: Byte); overload;
-  procedure SwapInt(var A, B: ShortInt); overload;
-  procedure SwapInt(var A, B: SmallInt); overload;
-  procedure SwapInt(var A, B: Word); overload;
-  procedure SwapInt(var A, B: Integer); overload;
-  procedure SwapInt(var A, B: Cardinal); overload;
-  {$IFDEF WDC}
-  procedure SwapInt(var A, B: NativeUInt); overload;
-  {$ENDIF}
-  procedure SwapFloat(var A, B: Single);
-  function Equals(A, B: Single; const Epsilon: Single = 0.001): Boolean;
-
   function MakePOT(num: Integer): Integer;
   function Adler32CRC(aPointer: Pointer; aLength: Cardinal): Cardinal; overload;
   function Adler32CRC(const aText: string): Cardinal; overload;
@@ -233,76 +220,6 @@ end;
 function Lerp(A,B: Single; aMixValue: Single): Single;
 begin
   Result := A + (B - A) * aMixValue;
-end;
-
-
-procedure SwapStr(var A, B: string);
-var
-  S: string;
-begin
-  S := A; A := B; B := S;
-end;
-
-
-procedure SwapInt(var A, B: Byte);
-var
-  S: Byte;
-begin
-  S := A; A := B; B := S;
-end;
-
-
-procedure SwapInt(var A, B: ShortInt);
-var
-  S: ShortInt;
-begin
-  S := A; A := B; B := S;
-end;
-
-
-procedure SwapInt(var A, B: SmallInt);
-var s: SmallInt;
-begin
-  s:=A; A:=B; B:=s;
-end;
-
-
-procedure SwapInt(var A, B: Word);
-var s: Word;
-begin
-  s:=A; A:=B; B:=s;
-end;
-
-procedure SwapInt(var A, B: Integer);
-var s: Integer;
-begin
-  s:=A; A:=B; B:=s;
-end;
-
-procedure SwapInt(var A, B: Cardinal);
-var s: Cardinal;
-begin
-  s:=A; A:=B; B:=s;
-end;
-
-{$IFDEF WDC}
-procedure SwapInt(var A, B: NativeUInt);
-var s:NativeUInt;
-begin
-  s:=A; A:=B; B:=s;
-end;
-{$ENDIF}
-
-procedure SwapFloat(var A, B: Single);
-var s: Single;
-begin
-  s:=A; A:=B; B:=s;
-end;
-
-
-function Equals(A, B: Single; const Epsilon: Single = 0.001): Boolean;
-begin
-  Result := Abs(A-B) <= Epsilon;
 end;
 
 
