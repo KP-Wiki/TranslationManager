@@ -149,7 +149,7 @@ uses
 
 
 const
-  LOCALES_PATH: array [TKMTargetGame] of string = ('', 'data\locales.txt', 'data\text\locales.xml');
+  LOCALES_PATH: array [TKMTargetGame] of string = ('', 'data\locales.txt', 'data\locales.xml');
   TAGS_PATH: array [TKMTargetGame] of string = ('', 'KM_TextIDs.inc', 'data\text\text_IDs.inc');
   META_PATH: array [TKMTargetGame] of string = ('', 'KM_TextMeta.xml', 'data\text\text_meta.xml');
 
