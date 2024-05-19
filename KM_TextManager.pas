@@ -45,7 +45,6 @@ type
     procedure LoadMeta(const aFilename: string);
     procedure SaveTags(const aFilename: string);
     procedure SaveLibx(const aFilename: string; aLocaleId: Integer; aSortByTag: Boolean);
-    procedure SaveDict(const aFilename: string; aLocaleId: Integer);
     procedure SaveMeta(const aFilename: string);
     procedure TagsAutoName(const aPath: string);
     function ToClipboardHeader(aLocales: TByteSet; aExport: TKMClipboardExport): string;
@@ -158,7 +157,6 @@ begin
   begin
     fname := Format(fTextPath, [fLocales[I].Code]);
     SaveLibx(fname, I, aSortByTag);
-    // Did not work out  SaveDict(ChangeFileExt(fname, '.dict'), I);
   end;
 
   if fLibType = ltGame then
@@ -395,29 +393,6 @@ begin
 
     if localeHasStrings then
       sl.SaveToFile(aFilename);
-  finally
-    sl.Free;
-  end;
-end;
-
-
-// Not sure if this is a better alternative, especially since with Sheets we dont rely on IDs anyway
-procedure TKMTextManager.SaveDict(const aFilename: string; aLocaleId: Integer);
-var
-  sl: TStringList;
-  I: Integer;
-begin
-  Assert(fLibType = ltGame);
-
-  sl := TStringList.Create;
-  try
-    sl.DefaultEncoding := TEncoding.UTF8;
-
-    for I := 0 to fLines.Count - 1 do
-    if (not fLines[I].IsSpacer and (fLines[I].Strings[aLocaleId] <> '')) or (fLibType = ltMissions) then
-      sl.Append(fLines[I].GetLineForDict(aLocaleId));
-
-    sl.SaveToFile(aFilename);
   finally
     sl.Free;
   end;

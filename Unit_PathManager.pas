@@ -2,11 +2,10 @@ unit Unit_PathManager;
 {$I KM_CompilerDirectives.inc}
 interface
 uses
-  Classes, StrUtils, SysUtils;
-
+  Classes;
 
 type
-  // Scans folder and subfolders in search of a .libx files
+  // Scans folder and subfolders in search of .libx files
   // Provides list of found files as "fullpath\filename.%s.libx"
   TPathManager = class
   private
@@ -16,6 +15,7 @@ type
   public
     constructor Create;
     destructor Destroy; override;
+
     property Count: Integer read GetCount;
     property Paths[aIndex: Integer]: string read GetPath; default;
     property GetPaths: TStringList read fPaths;
@@ -25,6 +25,8 @@ type
 
 
 implementation
+uses
+  StrUtils, SysUtils;
 
 
 { TPathManager }

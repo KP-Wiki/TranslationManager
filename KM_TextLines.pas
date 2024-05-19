@@ -25,11 +25,11 @@ type
     constructor CreateSpacer;
     constructor Create(aId: Integer); overload;
     constructor Create(aId: Integer; aTag: string); overload;
+
     procedure Autoname(const aPath: string);
     function IsSpacer: Boolean;
     function GetLineForConst: string;
     function GetLineForLibx(aLoc: Integer): string;
-    function GetLineForDict(aLoc: Integer): string;
     function GetLastChanged(aLoc: Integer): string;
     procedure SetLastChanged(aLoc: Integer; aLastChanged: string);
     function CheckMatchingForCharCount(const aSub: array of string; aLocales: TByteSet): Boolean;
@@ -268,14 +268,6 @@ end;
 function TKMLine.GetLineForLibx(aLoc: Integer): string;
 begin
   Result := IntToStr(Id) + ':' + Strings[aLoc];
-  Result := StringReplace(Result, '\', '\\', [rfReplaceAll, rfIgnoreCase]);
-  Result := StringReplace(Result, sLineBreak, '\n', [rfReplaceAll, rfIgnoreCase]);
-end;
-
-
-function TKMLine.GetLineForDict(aLoc: Integer): string;
-begin
-  Result := Tag + ':' + Strings[aLoc];
   Result := StringReplace(Result, '\', '\\', [rfReplaceAll, rfIgnoreCase]);
   Result := StringReplace(Result, sLineBreak, '\n', [rfReplaceAll, rfIgnoreCase]);
 end;
