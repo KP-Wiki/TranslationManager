@@ -187,8 +187,8 @@ end;
 procedure TKMTextManager.LoadTags(const aFilename: string);
 var
   sl: TStringList;
-  Line: string;
-  I, K, centerPos, commentPos: Integer;
+  newLine: string;
+  I, K, delimiterPos, commentPos: Integer;
   id: Integer;
   tagName: string;
   prevIndex: Integer;
@@ -202,23 +202,23 @@ begin
   prevIndex := -1;
   for I := 0 to sl.Count - 1 do
   begin
-    Line := Trim(sl[I]);
+    newLine := Trim(sl[I]);
 
-    centerPos := Pos(' = ', Line);
-    // Separator (line without ' = ')
-    if centerPos = 0 then
+    delimiterPos := Pos(' = ', newLine);
+    // Separator (newLine without ' = ')
+    if delimiterPos = 0 then
     begin
       if prevIndex <> -1 then
         fLines.Insert(prevIndex+1, TKMLine.CreateSpacer);
     end
     else
     begin
-      commentPos := Pos('; //', Line);
+      commentPos := Pos('; //', newLine);
       if commentPos = 0 then
-        id := StrToInt(Copy(Line, centerPos + 3, Length(Line) - centerPos - 3))
+        id := StrToInt(Copy(newLine, delimiterPos + 3, Length(newLine) - delimiterPos - 3))
       else
-        id := StrToInt(Copy(Line, centerPos + 3, commentPos - centerPos - 3));
-      tagName := Copy(Line, 1, centerPos - 1);
+        id := StrToInt(Copy(newLine, delimiterPos + 3, commentPos - delimiterPos - 3));
+      tagName := Copy(newLine, 1, delimiterPos - 1);
 
       prevIndex := fLines.AddLine(TKMLine.Create(id, tagName));
     end;
@@ -241,37 +241,40 @@ end;
 
 procedure TKMTextManager.LoadLibx(const aFilename: string; aLocaleId: Integer);
 var
-  SL: TStringList;
-  firstDelimiter: Integer;
+  sl: TStringList;
+  delimiterPos: Integer;
   I: Integer;
   id: Integer;
-  Line: string;
+  newLine: string;
 begin
   if not FileExists(aFilename) then Exit;
 
-  SL := TStringList.Create;
+  sl := TStringList.Create;
   try
-    SL.LoadFromFile(aFilename);
+    sl.LoadFromFile(aFilename);
 
-    for I := 0 to SL.Count - 1 do
+    for I := 0 to sl.Count - 1 do
     begin
-      Line := Trim(SL[I]);
+      newLine := Trim(sl[I]);
 
-      firstDelimiter := Pos(':', Line);
-      if firstDelimiter = 0 then Continue;
-      if not TryStrToInt(TrimLeft(LeftStr(Line, firstDelimiter-1)), id) then Continue;
+      delimiterPos := Pos(':', newLine);
 
-      Line := RightStr(Line, Length(Line) - firstDelimiter);
+      // If there's no delimiter we can not extract anything anyway (but we could insert spacer or somment?)
+      if delimiterPos = 0 then Continue;
+
+      if not TryStrToInt(TrimLeft(LeftStr(newLine, delimiterPos-1)), id) then Continue;
+
+      newLine := RightStr(newLine, Length(newLine) - delimiterPos);
       // Required characters that can't be stored in plain text
-      Line := StringReplace(Line, '\n', sLineBreak, [rfReplaceAll, rfIgnoreCase]);
-      Line := StringReplace(Line, '\\', '\', [rfReplaceAll, rfIgnoreCase]);
+      newLine := StringReplace(newLine, '\n', sLineBreak, [rfReplaceAll, rfIgnoreCase]);
+      newLine := StringReplace(newLine, '\\', '\', [rfReplaceAll, rfIgnoreCase]);
 
       Assert(id <= 4096, 'Dont allow too many strings for no reason');
 
-      fLines.AddOrAppendString(id, aLocaleId, Line);
+      fLines.AddOrAppendString(id, aLocaleId, newLine);
     end;
   finally
-    SL.Free;
+    sl.Free;
   end;
 end;
 
