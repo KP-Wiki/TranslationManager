@@ -11,13 +11,14 @@ uses
   KM_IoXml in 'common\KM_IoXml.pas',
   Xml.VerySimple in 'common\Xml.VerySimple.pas',
 
+  KM_PathManager in 'KM_PathManager.pas',
+
   KM_ResLocales in 'res\KM_ResLocales.pas',
   KM_ResLocales_KMR in 'res\KM_ResLocales_KMR.pas',
   KM_ResLocales_KP in 'res\KM_ResLocales_KP.pas',
 
   KM_TextLines in 'KM_TextLines.pas',
-  KM_TextManager in 'KM_TextManager.pas',
-  Unit_PathManager in 'Unit_PathManager.pas';
+  KM_TextManager in 'KM_TextManager.pas';
 
 {$R *.res}
 

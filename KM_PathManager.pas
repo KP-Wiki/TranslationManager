@@ -1,4 +1,4 @@
-unit Unit_PathManager;
+unit KM_PathManager;
 {$I KM_CompilerDirectives.inc}
 interface
 uses
@@ -7,7 +7,7 @@ uses
 type
   // Scans folder and subfolders in search of .libx files
   // Provides list of found files as "fullpath\filename.%s.libx"
-  TPathManager = class
+  TKMPathManager = class
   private
     fPaths: TStringList;
     function GetPath(aIndex: Integer): string;
@@ -29,8 +29,8 @@ uses
   StrUtils, SysUtils;
 
 
-{ TPathManager }
-constructor TPathManager.Create;
+{ TKMPathManager }
+constructor TKMPathManager.Create;
 begin
   inherited;
 
@@ -38,34 +38,34 @@ begin
 end;
 
 
-destructor TPathManager.Destroy;
+destructor TKMPathManager.Destroy;
 begin
-  fPaths.Free;
+  FreeAndNil(fPaths);
 
   inherited;
 end;
 
 
-function TPathManager.GetCount: Integer;
+function TKMPathManager.GetCount: Integer;
 begin
   Result := fPaths.Count;
 end;
 
 
-function TPathManager.GetPath(aIndex: Integer): string;
+function TKMPathManager.GetPath(aIndex: Integer): string;
 begin
   Result := fPaths[aIndex];
 end;
 
 
-procedure TPathManager.Clear;
+procedure TKMPathManager.Clear;
 begin
   fPaths.Clear;
 end;
 
 
 // aRoot - which path is considered to be root
-procedure TPathManager.AddPath(const aRoot, aFolder: string);
+procedure TKMPathManager.AddPath(const aRoot, aFolder: string);
 var
   I: Integer;
   fileMask: string;

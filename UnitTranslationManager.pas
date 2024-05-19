@@ -4,7 +4,7 @@ interface
 uses
   Classes, Controls, Dialogs, ExtCtrls, Forms, Graphics, Math, Menus,
   StdCtrls, StrUtils, Windows, SysUtils, CheckLst,
-  KM_ResLocales, KM_TextLines, KM_TextManager, Unit_PathManager, Vcl.Buttons;
+  KM_ResLocales, KM_TextLines, KM_TextManager, KM_PathManager, Vcl.Buttons;
 
 type
   TKMTargetGame = (tgUnknown, tgKaMRemake, tgKnightsProvince);
@@ -105,7 +105,7 @@ type
     fWorkDir: string;
 
     // Components
-    fPathManager: TPathManager;
+    fPathManager: TKMPathManager;
     fTextManager: TKMTextManager;
     fLocales: TKMResLocales;
 
@@ -245,7 +245,7 @@ begin
   InitLibxDomainsList;
   InitLocalesList;
 
-  fPathManager := TPathManager.Create;
+  fPathManager := TKMPathManager.Create;
   RefreshFolders;
 
   fTextManager := TKMTextManager.Create(fLocales, fWorkDir, tagsPath, META_PATH[fTargetGame]);
