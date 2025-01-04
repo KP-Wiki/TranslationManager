@@ -41,7 +41,6 @@ type
 
     function GetCount: Integer;
     function GetItem(aIndex: Integer): TKMLine;
-    procedure LoadTags(const aFilename: string);
     procedure LoadLibx(const aFilename: string; aLocaleId: Integer);
     procedure LoadMeta(const aFilename: string);
     procedure SaveLibx(const aFilename: string; aLocaleId: Integer; aSortById: Boolean);
@@ -133,7 +132,7 @@ begin
 
   // If we have consts - good, use them
   if fLibType = ltGame then
-    LoadTags(fTagsPath);
+    fLines.LoadTags(fTagsPath);
 
   for I := 0 to fLocales.Count - 1 do
     LoadLibx(Format(fTextPath, [fLocales[I].Code]), I);
@@ -168,61 +167,6 @@ begin
   end;
 
   fHasChanges := False;
-end;
-
-
-procedure TKMTextManager.LoadTags(const aFilename: string);
-var
-  sl: TStringList;
-  newLine: string;
-  I, K, delimiterPos, commentPos: Integer;
-  id: Integer;
-  tagName: string;
-  prevIndex: Integer;
-begin
-  if not FileExists(aFilename) then
-    Exit;
-
-  sl := TStringList.Create;
-  sl.LoadFromFile(aFilename);
-
-  prevIndex := -1;
-  for I := 0 to sl.Count - 1 do
-  begin
-    newLine := Trim(sl[I]);
-
-    delimiterPos := Pos(' = ', newLine);
-    // Separator (newLine without ' = ')
-    if delimiterPos = 0 then
-    begin
-      if prevIndex <> -1 then
-        fLines.Insert(prevIndex+1, TKMLine.CreateSpacer);
-    end
-    else
-    begin
-      commentPos := Pos('; //', newLine);
-      if commentPos = 0 then
-        id := StrToInt(Copy(newLine, delimiterPos + 3, Length(newLine) - delimiterPos - 3))
-      else
-        id := StrToInt(Copy(newLine, delimiterPos + 3, commentPos - delimiterPos - 3));
-      tagName := Copy(newLine, 1, delimiterPos - 1);
-
-      prevIndex := fLines.AddLine(TKMLine.Create(id, tagName));
-    end;
-  end;
-
-  // Ensure there are no duplicates, because that's a very bad situation
-  for I := 0 to fLines.Count - 1 do
-    for K := I+1 to fLines.Count - 1 do
-      if not fLines[I].IsSpacer then
-      begin
-        if fLines[I].Id = fLines[K].Id then
-          ShowMessage('Error: Two constants have the same ID!' + sLineBreak + fLines[I].Tag + ' & ' + fLines[K].Tag + ' = ' + IntToStr(fLines[I].Id));
-        if fLines[I].Tag = fLines[K].Tag then
-          ShowMessage('Error: Two constants have the same name!' + sLineBreak + fLines[I].Tag);
-      end;
-
-  sl.Free;
 end;
 
 

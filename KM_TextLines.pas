@@ -2,7 +2,7 @@ unit KM_TextLines;
 {$I KM_CompilerDirectives.inc}
 interface
 uses
-  Generics.Collections,
+  Dialogs, Generics.Collections,
   StrUtils, SysUtils;
 
 
@@ -54,6 +54,7 @@ type
     procedure AddOrAppendString(aId: Integer; aLocale: Integer; aString: string);
     procedure Clear; reintroduce;
     procedure TagsAutoName(const aPath: string);
+    procedure LoadTags(const aFilename: string);
     procedure SaveGameConsts(const aFilename: string);
   end;
 
@@ -458,6 +459,61 @@ begin
     WriteLn(myFile, Items[I].GetLineForGameConst);
 
   CloseFile(myFile);
+end;
+
+
+procedure TKMLines.LoadTags(const aFilename: string);
+var
+  sl: TStringList;
+  newLine: string;
+  I, K, delimiterPos, commentPos: Integer;
+  id: Integer;
+  tagName: string;
+  prevIndex: Integer;
+begin
+  if not FileExists(aFilename) then
+    Exit;
+
+  sl := TStringList.Create;
+  sl.LoadFromFile(aFilename);
+
+  prevIndex := -1;
+  for I := 0 to sl.Count - 1 do
+  begin
+    newLine := Trim(sl[I]);
+
+    delimiterPos := Pos(' = ', newLine);
+    // Separator (newLine without ' = ')
+    if delimiterPos = 0 then
+    begin
+      if prevIndex <> -1 then
+        Insert(prevIndex+1, TKMLine.CreateSpacer);
+    end
+    else
+    begin
+      commentPos := Pos('; //', newLine);
+      if commentPos = 0 then
+        id := StrToInt(Copy(newLine, delimiterPos + 3, Length(newLine) - delimiterPos - 3))
+      else
+        id := StrToInt(Copy(newLine, delimiterPos + 3, commentPos - delimiterPos - 3));
+      tagName := Copy(newLine, 1, delimiterPos - 1);
+
+      prevIndex := AddLine(TKMLine.Create(id, tagName));
+    end;
+  end;
+
+  // Ensure there are no duplicates, because that's a very bad situation
+  for I := 0 to Count - 1 do
+    for K := I+1 to Count - 1 do
+      if not Items[I].IsSpacer then
+      begin
+        if Items[I].Id = Items[K].Id then
+          ShowMessage('Error: Two constants have the same ID!' + sLineBreak + Items[I].Tag + ' & ' + Items[K].Tag + ' = ' + IntToStr(Items[I].Id));
+        if Items[I].Tag = Items[K].Tag then
+          ShowMessage('Error: Two constants have the same name!' + sLineBreak + Items[I].Tag);
+      end;
+
+  sl.Free;
 end;
 
 
