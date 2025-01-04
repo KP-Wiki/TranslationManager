@@ -54,7 +54,7 @@ type
     procedure AddOrAppendString(aId: Integer; aLocale: Integer; aString: string);
     procedure Clear; reintroduce;
     procedure TagsAutoName(const aPath: string);
-    procedure LoadTags(const aFilename: string);
+    procedure LoadGameConsts(const aFilename: string);
     procedure SaveGameConsts(const aFilename: string);
   end;
 
@@ -462,7 +462,7 @@ begin
 end;
 
 
-procedure TKMLines.LoadTags(const aFilename: string);
+procedure TKMLines.LoadGameConsts(const aFilename: string);
 var
   sl: TStringList;
   newLine: string;
@@ -508,9 +508,9 @@ begin
       if not Items[I].IsSpacer then
       begin
         if Items[I].Id = Items[K].Id then
-          ShowMessage('Error: Two constants have the same ID!' + sLineBreak + Items[I].Tag + ' & ' + Items[K].Tag + ' = ' + IntToStr(Items[I].Id));
+          ShowMessage('Error: Two lines have the same Id!' + sLineBreak + Items[I].Tag + ' & ' + Items[K].Tag + ' = ' + IntToStr(Items[I].Id));
         if Items[I].Tag = Items[K].Tag then
-          ShowMessage('Error: Two constants have the same name!' + sLineBreak + Items[I].Tag);
+          ShowMessage('Error: Two lines have the same Tag!' + sLineBreak + Items[I].Tag);
       end;
 
   sl.Free;

@@ -132,7 +132,7 @@ begin
 
   // If we have consts - good, use them
   if fLibType = ltGame then
-    fLines.LoadTags(fTagsPath);
+    fLines.LoadGameConsts(fTagsPath);
 
   for I := 0 to fLocales.Count - 1 do
     LoadLibx(Format(fTextPath, [fLocales[I].Code]), I);
