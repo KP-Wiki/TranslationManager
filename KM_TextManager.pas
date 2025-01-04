@@ -20,7 +20,6 @@ type
     COL_NAME_TAG = 'Tag';
     COL_NAME_NEEDS_UPDATE = 'Needs update';
     COL_NAME_DESC = 'Description';
-    MAX_ALLOWED_ID = 4096;
   private class var
     LOCALE_DEFAULT: Integer;
   private
@@ -41,9 +40,7 @@ type
 
     function GetCount: Integer;
     function GetItem(aIndex: Integer): TKMLine;
-    procedure LoadLibx(const aFilename: string; aLocaleId: Integer);
     procedure LoadMeta(const aFilename: string);
-    procedure SaveLibx(const aFilename: string; aLocaleId: Integer; aSortById: Boolean);
     procedure SaveMeta(const aFilename: string);
     procedure TagsAutoName(const aPath: string);
     function ToClipboardHeader(aLocales: TByteSet; aExport: TKMClipboardExport): string;
@@ -135,7 +132,7 @@ begin
     fLines.LoadGameConsts(fTagsPath);
 
   for I := 0 to fLocales.Count - 1 do
-    LoadLibx(Format(fTextPath, [fLocales[I].Code]), I);
+    fLines.LoadLibx(Format(fTextPath, [fLocales[I].Code]), I);
 
   if fLibType = ltGame then
     LoadMeta(fMetaPath);
@@ -156,7 +153,7 @@ begin
   for I := 0 to fLocales.Count - 1 do
   begin
     fname := Format(fTextPath, [fLocales[I].Code]);
-    SaveLibx(fname, I, aSortById);
+    fLines.SaveLibx(fname, I, (fLibType = ltMissions), aSortById);
   end;
 
   // For the game also save the consts and meta
@@ -167,46 +164,6 @@ begin
   end;
 
   fHasChanges := False;
-end;
-
-
-procedure TKMTextManager.LoadLibx(const aFilename: string; aLocaleId: Integer);
-var
-  sl: TStringList;
-  delimiterPos: Integer;
-  I: Integer;
-  id: Integer;
-  newLine: string;
-begin
-  if not FileExists(aFilename) then Exit;
-
-  sl := TStringList.Create;
-  try
-    sl.LoadFromFile(aFilename);
-
-    for I := 0 to sl.Count - 1 do
-    begin
-      newLine := Trim(sl[I]);
-
-      delimiterPos := Pos(':', newLine);
-
-      // If there's no delimiter we can not extract anything anyway (but we could insert spacer or somment?)
-      if delimiterPos = 0 then Continue;
-
-      if not TryStrToInt(TrimLeft(LeftStr(newLine, delimiterPos-1)), id) then Continue;
-
-      newLine := RightStr(newLine, Length(newLine) - delimiterPos);
-      // Required characters that can't be stored in plain text
-      newLine := StringReplace(newLine, '\n', sLineBreak, [rfReplaceAll, rfIgnoreCase]);
-      newLine := StringReplace(newLine, '\\', '\', [rfReplaceAll, rfIgnoreCase]);
-
-      Assert(id <= MAX_ALLOWED_ID, Format('Dont allow ids higher than %d for no reason', [MAX_ALLOWED_ID]));
-
-      fLines.AddOrAppendString(id, aLocaleId, newLine);
-    end;
-  finally
-    sl.Free;
-  end;
 end;
 
 
@@ -287,48 +244,6 @@ begin
     xml.SaveToFile(aFilename);
   finally
     xml.Free;
-  end;
-end;
-
-
-procedure TKMTextManager.SaveLibx(const aFilename: string; aLocaleId: Integer; aSortById: Boolean);
-var
-  sl: TStringList;
-  I: Integer;
-  localeHasStrings: Boolean;
-  sortedLines: array of Integer;
-begin
-  // We want to sort lines by Id only for the save, We do not want to change their order in TM
-  SetLength(sortedLines, MAX_ALLOWED_ID+1);
-  FillChar(sortedLines[0], Length(sortedLines) * SizeOf(sortedLines[0]), -1);
-  for I := 0 to fLines.Count - 1 do
-  begin
-    if (not fLines[I].IsSpacer and (fLines[I].Strings[aLocaleId] <> ''))
-    or (fLibType = ltMissions) then
-      if aSortById then
-        sortedLines[fLines[I].Id] := I
-      else
-        sortedLines[I] := I;
-  end;
-
-  sl := TStringList.Create;
-  try
-    sl.DefaultEncoding := TEncoding.UTF8;
-
-    localeHasStrings := False;
-    for I := 0 to High(sortedLines) do
-    if sortedLines[I] <> -1 then
-    begin
-      sl.Append(fLines[sortedLines[I]].GetLineForLibx(aLocaleId));
-
-      if fLines[sortedLines[I]].Strings[aLocaleId] <> '' then
-        localeHasStrings := True;
-    end;
-
-    if localeHasStrings then
-      sl.SaveToFile(aFilename);
-  finally
-    sl.Free;
   end;
 end;
 

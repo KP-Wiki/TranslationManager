@@ -41,7 +41,10 @@ type
     function HasTagNameFilter(const aSub: string): Boolean;
   end;
 
+  // For the sake of SRP, this is only a list of lines. No locales, no libType, etc
   TKMLines = class(TList<TKMLine>)
+  private const
+    MAX_ALLOWED_ID = 4096;
   private
     fTagToIdLookup: TDictionary<string,Integer>;
   public
@@ -56,6 +59,9 @@ type
     procedure TagsAutoName(const aPath: string);
     procedure LoadGameConsts(const aFilename: string);
     procedure SaveGameConsts(const aFilename: string);
+
+    procedure LoadLibx(const aFilename: string; aLocaleId: Integer);
+    procedure SaveLibx(const aFilename: string; aLocaleId: Integer; aForceSort, aSortById: Boolean);
   end;
 
 
@@ -514,6 +520,88 @@ begin
       end;
 
   sl.Free;
+end;
+
+
+procedure TKMLines.LoadLibx(const aFilename: string; aLocaleId: Integer);
+var
+  sl: TStringList;
+  delimiterPos: Integer;
+  I: Integer;
+  id: Integer;
+  newLine: string;
+begin
+  if not FileExists(aFilename) then Exit;
+
+  sl := TStringList.Create;
+  try
+    sl.LoadFromFile(aFilename);
+
+    for I := 0 to sl.Count - 1 do
+    begin
+      newLine := Trim(sl[I]);
+
+      delimiterPos := Pos(':', newLine);
+
+      // If there's no delimiter we can not extract anything anyway (but we could insert spacer or comment?)
+      if delimiterPos = 0 then Continue;
+
+      if not TryStrToInt(TrimLeft(LeftStr(newLine, delimiterPos-1)), id) then Continue;
+
+      newLine := RightStr(newLine, Length(newLine) - delimiterPos);
+      // Required characters that can't be stored in plain text
+      newLine := StringReplace(newLine, '\n', sLineBreak, [rfReplaceAll, rfIgnoreCase]);
+      newLine := StringReplace(newLine, '\\', '\', [rfReplaceAll, rfIgnoreCase]);
+
+      Assert(id <= MAX_ALLOWED_ID, Format('Dont allow ids higher than %d for no reason', [MAX_ALLOWED_ID]));
+
+      AddOrAppendString(id, aLocaleId, newLine);
+    end;
+  finally
+    sl.Free;
+  end;
+end;
+
+
+procedure TKMLines.SaveLibx(const aFilename: string; aLocaleId: Integer; aForceSort, aSortById: Boolean);
+var
+  sl: TStringList;
+  I: Integer;
+  localeHasStrings: Boolean;
+  sortedLines: array of Integer;
+begin
+  // We want to sort lines by Id only for the save, We do not want to change their order in TM
+  SetLength(sortedLines, MAX_ALLOWED_ID+1);
+  FillChar(sortedLines[0], Length(sortedLines) * SizeOf(sortedLines[0]), -1);
+  for I := 0 to Count - 1 do
+  begin
+    if (not Items[I].IsSpacer and (Items[I].Strings[aLocaleId] <> ''))
+    or aForceSort then
+      if aSortById then
+        sortedLines[Items[I].Id] := I
+      else
+        sortedLines[I] := I;
+  end;
+
+  sl := TStringList.Create;
+  try
+    sl.DefaultEncoding := TEncoding.UTF8;
+
+    localeHasStrings := False;
+    for I := 0 to High(sortedLines) do
+    if sortedLines[I] <> -1 then
+    begin
+      sl.Append(Items[sortedLines[I]].GetLineForLibx(aLocaleId));
+
+      if Items[sortedLines[I]].Strings[aLocaleId] <> '' then
+        localeHasStrings := True;
+    end;
+
+    if localeHasStrings then
+      sl.SaveToFile(aFilename);
+  finally
+    sl.Free;
+  end;
 end;
 
 
