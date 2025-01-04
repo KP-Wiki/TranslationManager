@@ -43,7 +43,6 @@ type
     procedure LoadTags(const aFilename: string);
     procedure LoadLibx(const aFilename: string; aLocaleId: Integer);
     procedure LoadMeta(const aFilename: string);
-    procedure SaveTags(const aFilename: string);
     procedure SaveLibx(const aFilename: string; aLocaleId: Integer; aSortByTag: Boolean);
     procedure SaveMeta(const aFilename: string);
     procedure TagsAutoName(const aPath: string);
@@ -153,34 +152,21 @@ var
   I: Integer;
   fname: string;
 begin
+  // Save Libx files
   for I := 0 to fLocales.Count - 1 do
   begin
     fname := Format(fTextPath, [fLocales[I].Code]);
     SaveLibx(fname, I, aSortByTag);
   end;
 
+  // For the game also save the consts and meta
   if fLibType = ltGame then
   begin
-    SaveTags(fTagsPath);
+    fLines.SaveGameConsts(fTagsPath);
     SaveMeta(fMetaPath);
   end;
 
   fHasChanges := False;
-end;
-
-
-procedure TKMTextManager.SaveTags(const aFilename: string);
-var
-  myFile: TextFile;
-  I: Integer;
-begin
-  AssignFile(myFile, aFilename);
-  Rewrite(myFile);
-
-  for I := 0 to fLines.Count - 1 do
-    WriteLn(myFile, fLines[I].GetLineForConst);
-
-  CloseFile(myFile);
 end;
 
 

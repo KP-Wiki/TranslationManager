@@ -17,9 +17,9 @@ type
     LOCALE_COUNT: Integer;
     LOCALE_DEFAULT: Integer;
   public
-    Id: Integer; // Unique
-    Tag: string; // Unique
-    Strings: array {locale} of string;
+    Id: Integer; // Unique                           // Used by mission libx files
+    Tag: string; // Unique                           // Used by game consts
+    Strings: array {locale} of string;               // All localization strings
     LastChanged: array {locale} of TDateTime;
     Description: string;
     constructor CreateSpacer;
@@ -28,7 +28,7 @@ type
 
     procedure Autoname(const aPath: string);
     function IsSpacer: Boolean;
-    function GetLineForConst: string;
+    function GetLineForGameConst: string;
     function GetLineForLibx(aLoc: Integer): string;
     function GetLastChanged(aLoc: Integer): string;
     procedure SetLastChanged(aLoc: Integer; aLastChanged: string);
@@ -54,6 +54,7 @@ type
     procedure AddOrAppendString(aId: Integer; aLocale: Integer; aString: string);
     procedure Clear; reintroduce;
     procedure TagsAutoName(const aPath: string);
+    procedure SaveGameConsts(const aFilename: string);
   end;
 
 
@@ -252,21 +253,30 @@ begin
 end;
 
 
-function TKMLine.GetLineForConst: string;
+function TKMLine.GetLineForGameConst: string;
+var
+  txt: string;
 begin
   if IsSpacer then Exit('');
 
-  Result := Strings[LOCALE_DEFAULT];
-  Result := StringReplace(Result, '\', '\\', [rfReplaceAll, rfIgnoreCase]);
-  Result := StringReplace(Result, sLineBreak, '\n', [rfReplaceAll, rfIgnoreCase]);
+  // Output format:
+  // CONST_TAG = 123; //English line
+
+  // Escape the EOL same as we do for the libx for consistency
+  txt := Strings[LOCALE_DEFAULT];
+  txt := StringReplace(txt, '\', '\\', [rfReplaceAll, rfIgnoreCase]);
+  txt := StringReplace(txt, sLineBreak, '\n', [rfReplaceAll, rfIgnoreCase]);
 
   // Append english text for easier lookup from code
-  Result := Tag + ' = ' + IntToStr(Id) + '; //' + Result;
+  Result := Tag + ' = ' + IntToStr(Id) + '; //' + txt;
 end;
 
 
 function TKMLine.GetLineForLibx(aLoc: Integer): string;
 begin
+  // Output format:
+  // 123:Localized line
+
   Result := IntToStr(Id) + ':' + Strings[aLoc];
   Result := StringReplace(Result, '\', '\\', [rfReplaceAll, rfIgnoreCase]);
   Result := StringReplace(Result, sLineBreak, '\n', [rfReplaceAll, rfIgnoreCase]);
@@ -433,6 +443,21 @@ begin
     Result := fTagToIdLookup[aTag]
   else
     Result := -1;
+end;
+
+
+procedure TKMLines.SaveGameConsts(const aFilename: string);
+var
+  myFile: TextFile;
+  I: Integer;
+begin
+  AssignFile(myFile, aFilename);
+  Rewrite(myFile);
+
+  for I := 0 to Count - 1 do
+    WriteLn(myFile, Items[I].GetLineForGameConst);
+
+  CloseFile(myFile);
 end;
 
 
