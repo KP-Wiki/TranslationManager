@@ -20,6 +20,7 @@ type
     COL_NAME_TAG = 'Tag';
     COL_NAME_NEEDS_UPDATE = 'Needs update';
     COL_NAME_DESC = 'Description';
+    MAX_ALLOWED_ID = 4096;
   private class var
     LOCALE_DEFAULT: Integer;
   private
@@ -43,7 +44,7 @@ type
     procedure LoadTags(const aFilename: string);
     procedure LoadLibx(const aFilename: string; aLocaleId: Integer);
     procedure LoadMeta(const aFilename: string);
-    procedure SaveLibx(const aFilename: string; aLocaleId: Integer; aSortByTag: Boolean);
+    procedure SaveLibx(const aFilename: string; aLocaleId: Integer; aSortById: Boolean);
     procedure SaveMeta(const aFilename: string);
     procedure TagsAutoName(const aPath: string);
     function ToClipboardHeader(aLocales: TByteSet; aExport: TKMClipboardExport): string;
@@ -57,7 +58,7 @@ type
     destructor Destroy; override;
 
     procedure Load4(const aTextPath: string; aLocales: TByteSet);
-    procedure Save(aSortByTag: Boolean);
+    procedure Save(aSortById: Boolean);
 
     property Count: Integer read GetCount;
     property Items[aIndex: Integer]: TKMLine read GetItem; default;
@@ -79,7 +80,7 @@ type
     procedure ToClipboard(aLocales: TByteSet; aExport: TKMClipboardExport);
     procedure ToClipboardAll(aList: TStringList; aLocales: TByteSet);
     procedure FromClipboard;
-    procedure FromClipboardAll(aSortByTag: Boolean);
+    procedure FromClipboardAll(aSortById: Boolean);
 
     procedure ListMismatchingAll(aFolders: TStringList; aList: TStringList; aLocales: TByteSet);
   end;
@@ -147,7 +148,7 @@ begin
 end;
 
 
-procedure TKMTextManager.Save(aSortByTag: Boolean);
+procedure TKMTextManager.Save(aSortById: Boolean);
 var
   I: Integer;
   fname: string;
@@ -156,7 +157,7 @@ begin
   for I := 0 to fLocales.Count - 1 do
   begin
     fname := Format(fTextPath, [fLocales[I].Code]);
-    SaveLibx(fname, I, aSortByTag);
+    SaveLibx(fname, I, aSortById);
   end;
 
   // For the game also save the consts and meta
@@ -255,7 +256,7 @@ begin
       newLine := StringReplace(newLine, '\n', sLineBreak, [rfReplaceAll, rfIgnoreCase]);
       newLine := StringReplace(newLine, '\\', '\', [rfReplaceAll, rfIgnoreCase]);
 
-      Assert(id <= 4096, 'Dont allow too many strings for no reason');
+      Assert(id <= MAX_ALLOWED_ID, Format('Dont allow ids higher than %d for no reason', [MAX_ALLOWED_ID]));
 
       fLines.AddOrAppendString(id, aLocaleId, newLine);
     end;
@@ -346,24 +347,24 @@ begin
 end;
 
 
-procedure TKMTextManager.SaveLibx(const aFilename: string; aLocaleId: Integer; aSortByTag: Boolean);
+procedure TKMTextManager.SaveLibx(const aFilename: string; aLocaleId: Integer; aSortById: Boolean);
 var
   sl: TStringList;
   I: Integer;
   localeHasStrings: Boolean;
   sortedLines: array of Integer;
 begin
-  // We want to sort lines by Tag only for the save, We do not want to change their order in TM
-  SetLength(sortedLines, 3333);
+  // We want to sort lines by Id only for the save, We do not want to change their order in TM
+  SetLength(sortedLines, MAX_ALLOWED_ID+1);
   FillChar(sortedLines[0], Length(sortedLines) * SizeOf(sortedLines[0]), -1);
   for I := 0 to fLines.Count - 1 do
   begin
     if (not fLines[I].IsSpacer and (fLines[I].Strings[aLocaleId] <> ''))
     or (fLibType = ltMissions) then
-    if aSortByTag then
-      sortedLines[fLines[I].Id] := I
-    else
-      sortedLines[I] := I;
+      if aSortById then
+        sortedLines[fLines[I].Id] := I
+      else
+        sortedLines[I] := I;
   end;
 
   sl := TStringList.Create;
@@ -751,7 +752,7 @@ begin
 end;
 
 
-procedure TKMTextManager.FromClipboardAll(aSortByTag: Boolean);
+procedure TKMTextManager.FromClipboardAll(aSortById: Boolean);
 var
   sl: TStringList;
   locIndex: TArray<Integer>;
@@ -786,7 +787,7 @@ begin
   begin
     // Save previous
     if I > 2 then
-      Save(aSortByTag);
+      Save(aSortById);
 
     // Take 1st cell and trim the header
     fname := StringFromString(sl[I], #9, 0);
@@ -831,7 +832,7 @@ begin
     end;
   end;
 
-  Save(aSortByTag);
+  Save(aSortById);
 
   ShowMessage(Format('%d files updated. %d lines updated', [filesCount, changesCount]));
 
