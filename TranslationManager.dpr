@@ -11,7 +11,7 @@ uses
   KM_IoXml in 'common\KM_IoXml.pas',
   Xml.VerySimple in 'common\Xml.VerySimple.pas',
 
-  KM_PathManager in 'KM_PathManager.pas',
+  KM_LibxFinder in 'KM_LibxFinder.pas',
 
   KM_ResLocales in 'res\KM_ResLocales.pas',
   KM_ResLocales_KMR in 'res\KM_ResLocales_KMR.pas',

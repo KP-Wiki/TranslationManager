@@ -3,8 +3,8 @@ unit UnitTranslationManager;
 interface
 uses
   Classes, Controls, Dialogs, ExtCtrls, Forms, Graphics, Math, Menus,
-  StdCtrls, StrUtils, Windows, SysUtils, CheckLst,
-  KM_ResLocales, KM_TextLines, KM_TextManager, KM_PathManager, Vcl.Buttons;
+  StdCtrls, StrUtils, Windows, SysUtils, CheckLst, Vcl.Buttons,
+  KM_ResLocales, KM_TextLines, KM_TextManager, KM_LibxFinder;
 
 type
   TKMTargetGame = (tgUnknown, tgKaMRemake, tgKnightsProvince);
@@ -105,7 +105,7 @@ type
     fWorkDir: string;
 
     // Components
-    fPathManager: TKMPathManager;
+    fLibxFinder: TKMLibxFinder;
     fTextManager: TKMTextManager;
     fLocales: TKMResLocales;
 
@@ -245,7 +245,7 @@ begin
   InitLibxDomainsList;
   InitLocalesList;
 
-  fPathManager := TKMPathManager.Create;
+  fLibxFinder := TKMLibxFinder.Create;
   RefreshFolders;
 
   fTextManager := TKMTextManager.Create(fLocales, fWorkDir, tagsPath, META_PATH[fTargetGame]);
@@ -264,9 +264,9 @@ begin
   if fTargetGame <> tgUnknown then
     SaveSettings(fSettingsPath);
 
-  fTextManager.Free;
-  fLocales.Free;
-  //gIoPack.Free;
+  FreeAndNil(fTextManager);
+  FreeAndNil(fLibxFinder);
+  FreeAndNil(fLocales);
 end;
 
 
@@ -345,15 +345,15 @@ var
   I: Integer;
 begin
   lbLibs.Clear;
-  fPathManager.Clear;
+  fLibxFinder.Clear;
 
   // Whitelist of paths to scan (so we dont include build folders and such)
   for I := 0 to cbLibxDomains.Count - 1 do
   if cbLibxDomains.Checked[I] then
-    fPathManager.AddPath(fWorkDir, cbLibxDomains.Items[I]);
+    fLibxFinder.AddPath(fWorkDir, cbLibxDomains.Items[I]);
 
-  for I := 0 to fPathManager.Count - 1 do
-    lbLibs.Items.Add(fPathManager[I]);
+  for I := 0 to fLibxFinder.Count - 1 do
+    lbLibs.Items.Add(fLibxFinder[I]);
 end;
 
 
@@ -414,11 +414,11 @@ var
 begin
   newZip := TZippit.Create;
   try
-    for I := 0 to fPathManager.Count - 1 do
+    for I := 0 to fLibxFinder.Count - 1 do
       for K := 0 to fLocales.Count - 1 do
         if (aLocales = []) or (K in aLocales) then
         begin
-          libxName := Format(fPathManager[I], [fLocales[K].Code]);
+          libxName := Format(fLibxFinder[I], [fLocales[K].Code]);
           if FileExists(fWorkDir + libxName) then
             newZip.AddFile(fWorkDir + libxName, ExtractFilePath(libxName));
         end;
@@ -941,7 +941,7 @@ var
 begin
   slMismatching := TStringList.Create;
   try
-    fTextManager.ListMismatchingAll(fPathManager.GetPaths, slMismatching, GetSelectedLocales);
+    fTextManager.ListMismatchingAll(fLibxFinder.GetPaths, slMismatching, GetSelectedLocales);
 
     slMismatching.SaveToFile(fWorkDir + 'TM_Mismatching.txt');
     ShowMessage(slMismatching.Text);
@@ -1037,7 +1037,7 @@ end;
 
 procedure TForm1.btnCopyToClipboardAllClick(Sender: TObject);
 begin
-  fTextManager.ToClipboardAll(fPathManager.GetPaths, GetSelectedLocales);
+  fTextManager.ToClipboardAll(fLibxFinder.GetPaths, GetSelectedLocales);
 end;
 
 
