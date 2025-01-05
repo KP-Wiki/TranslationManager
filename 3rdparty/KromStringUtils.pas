@@ -17,6 +17,7 @@ interface
   function TryFloatFromString(const aString: string; aDelimiter: Char; aPlace: Byte; out aResult: Single): Boolean;
   function TryStringFromString(const aString: string; aDelimiter: Char; aPlace: Byte; out aResult: string): Boolean;
 
+  function HasLineBreakChars(const aString: string): Boolean;
   function UpperCaseByWord(const aString: string): string;
 
   function EscapeTextForGoogleSheets(const aString: string): string;
@@ -159,14 +160,20 @@ begin
 end;
 
 
+function HasLineBreakChars(const aString: string): Boolean;
+begin
+  Result := False;
+  for var I := StringLow(aString) to StringHigh(aString) do
+  if (aString[I] = #10) or (aString[I] = #13) then
+    Exit(True);
+end;
+
+
 // Keep in mind, that Delphi UpCase&UpperCase handle only Latin
 function UpperCaseByWord(const aString: string): string;
-var
-  I: Integer;
 begin
   Result := aString;
-
-  for I := StringLow(Result) to StringHigh(Result) do
+  for var I := StringLow(Result) to StringHigh(Result) do
     if (I = StringLow(Result)) or (Result[I-1] = #32) then
       Result[I] := UpCase(Result[I]);
 end;
