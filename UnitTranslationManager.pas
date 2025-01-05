@@ -7,8 +7,6 @@ uses
   KM_ResLocales, KM_TextLines, KM_TextManager, KM_LibxFinder;
 
 type
-  TKMTargetGame = (tgUnknown, tgKaMRemake, tgKnightsProvince);
-
   TKMUsageMode = (umDeveloper, umUser);
 
   TKMLibxDomain = (ldGame, ldTutorials, ldCampaigns, ldMaps, ldMapsMP, ldMapsUnofficial, ldMapdDev);
@@ -248,7 +246,7 @@ begin
   fLibxFinder := TKMLibxFinder.Create;
   RefreshFolders;
 
-  fTextManager := TKMTextManager.Create(fLocales, fWorkDir, tagsPath, META_PATH[fTargetGame]);
+  fTextManager := TKMTextManager.Create(fTargetGame, fLocales, fWorkDir, tagsPath, META_PATH[fTargetGame]);
 
   UpdateMenuItemVisibility;
 

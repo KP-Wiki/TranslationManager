@@ -4,6 +4,7 @@ uses
 
   UnitTranslationManager in 'UnitTranslationManager.pas' {Form1},
 
+  KromNestedLibrary in '3rdparty\KromNestedLibrary.pas',
   KromStringUtils in '3rdparty\KromStringUtils.pas',
   KromUtils in '3rdparty\KromUtils.pas',
   SciZipFile in '3rdparty\SciZipFile.pas',

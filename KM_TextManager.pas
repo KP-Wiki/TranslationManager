@@ -9,7 +9,13 @@ uses
 
 
 type
-  TKMLibraryType = (ltGame, ltMissions);
+  TKMTargetGame = (tgUnknown, tgKaMRemake, tgKnightsProvince);
+
+  TKMLibraryType = (
+    ltGame,
+    ltMissions
+  );
+
   TKMClipboardExport = (
     ceSimple,     // Just columns with locales
     ceLastChanged // Include LastChanged for each locale
@@ -31,6 +37,7 @@ type
     fMetaPath: string; // We use meta only for ingame library, others don't need it
 
     fLines: TKMLines;
+    fTargetGame: TKMTargetGame;
     fLibType: TKMLibraryType;
 
     // For copy/paste
@@ -50,7 +57,7 @@ type
     // Path matches for KMR and KP
     GAME_TEXT_PATH = 'data\text\text.%s.libx';
 
-    constructor Create(aLocales: TKMResLocales; const aWorkDir, aTagsPath, aMetaPath: string);
+    constructor Create(aTargetGame: TKMTargetGame; aLocales: TKMResLocales; const aWorkDir, aTagsPath, aMetaPath: string);
     destructor Destroy; override;
 
     procedure Load4(const aTextPath: string; aLocales: TByteSet);
@@ -89,11 +96,13 @@ uses
 
 
 { TKMTextManager }
-constructor TKMTextManager.Create(aLocales: TKMResLocales; const aWorkDir, aTagsPath, aMetaPath: string);
+constructor TKMTextManager.Create(aTargetGame: TKMTargetGame; aLocales: TKMResLocales; const aWorkDir, aTagsPath, aMetaPath: string);
 begin
   inherited Create;
 
   fLines := TKMLines.Create;
+
+  fTargetGame := aTargetGame;
   fLocales := aLocales;
   fWorkDir := aWorkDir;
   fTagsPath := fWorkDir + aTagsPath;
@@ -132,12 +141,16 @@ begin
     fLines.LoadGameConsts(fTagsPath);
 
   for I := 0 to fLocales.Count - 1 do
-    fLines.LoadLibx(Format(fTextPath, [fLocales[I].Code]), I);
+    if (fTargetGame = tgKaMRemake)
+    or ((fTargetGame = tgKnightsProvince) and (fLibType = ltGame)) then
+      fLines.LoadLibx(Format(fTextPath, [fLocales[I].Code]), I)
+    else
+      fLines.LoadLibxKP(Format(fTextPath, [fLocales[I].Code]), I);
 
   if fLibType = ltGame then
     LoadMeta(fMetaPath);
 
-  if fLibType = ltMissions then
+  if (fTargetGame = tgKaMRemake) and (fLibType = ltMissions) then
     TagsAutoName(aTextPath); // Name tags just for UI, they wont be saved
 
   fHasChanges := False;
@@ -153,7 +166,12 @@ begin
   for I := 0 to fLocales.Count - 1 do
   begin
     fname := Format(fTextPath, [fLocales[I].Code]);
-    fLines.SaveLibx(fname, I, (fLibType = ltMissions), aSortById);
+
+    if (fTargetGame = tgKaMRemake)
+    or ((fTargetGame = tgKnightsProvince) and (fLibType = ltGame)) then
+      fLines.SaveLibx(fname, I, (fLibType = ltMissions), aSortById)
+    else
+      fLines.SaveLibxKP(fname, I, (fLibType = ltGame));
   end;
 
   // For the game also save the consts and meta

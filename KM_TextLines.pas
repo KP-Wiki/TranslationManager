@@ -45,6 +45,7 @@ type
   TKMLines = class(TList<TKMLine>)
   private const
     MAX_ALLOWED_ID = 4096;
+    SAME_TEXT = '<==';
   private
     fTagToIdLookup: TDictionary<string,Integer>;
   public
@@ -61,13 +62,16 @@ type
     procedure SaveGameConsts(const aFilename: string);
 
     procedure LoadLibx(const aFilename: string; aLocaleId: Integer);
+    procedure LoadLibxKP(const aFilename: string; aLocaleId: Integer);
     procedure SaveLibx(const aFilename: string; aLocaleId: Integer; aForceSort, aSortById: Boolean);
+    procedure SaveLibxKP(const aFilename: string; aLocaleId: Integer; aAddComment: Boolean);
   end;
 
 
 implementation
 uses
-  Classes, DateUtils, Math;
+  Classes, DateUtils, Math,
+  KromNestedLibrary;
 
 
 // Custom S -> DT -> S functions that read/write into reliable format quickly
@@ -563,6 +567,40 @@ begin
 end;
 
 
+procedure TKMLines.LoadLibxKP(const aFilename: string; aLocaleId: Integer);
+var
+  sa: TArray<TKMPair>;
+begin
+  if not FileExists(aFilename) then Exit;
+
+  var nl := TKMNestedLibrary.Create;
+  try
+    var sl := TStringList.Create;
+    try
+      sl.LoadFromFile(aFilename);
+      nl.LoadFromString(sl.Text);
+    finally
+      FreeAndNil(sl);
+    end;
+
+    sa := nl.ToArray;
+  finally
+    nl.Free;
+  end;
+
+  for var I := 0 to High(sa) do
+  begin
+    var id: Integer;
+    if fTagToIdLookup.ContainsKey(sa[I].Name) then
+      id := fTagToIdLookup[sa[I].Name]
+    else
+      id := AddLine(TKMLine.Create(I, sa[I].Name));
+
+    AddOrAppendString(id, aLocaleId, sa[I].Value);
+  end;
+end;
+
+
 procedure TKMLines.SaveLibx(const aFilename: string; aLocaleId: Integer; aForceSort, aSortById: Boolean);
 var
   sl: TStringList;
@@ -601,6 +639,43 @@ begin
       sl.SaveToFile(aFilename);
   finally
     sl.Free;
+  end;
+end;
+
+
+procedure TKMLines.SaveLibxKP(const aFilename: string; aLocaleId: Integer; aAddComment: Boolean);
+begin
+  var nl := TKMNestedLibrary.Create;
+
+  if aAddComment then
+    nl.Root.Comment := 'Knights Province localization file' + sLineBreak +
+                       'Padding is purely visual thing. Format does not care about it';
+
+  try
+    var localeHasStrings := False;
+
+    for var I := 0 to Count - 1 do
+      if (not Items[I].IsSpacer and (Items[I].Tag <> '')) then
+      begin
+        nl.Root.AddNode(Items[I].Tag, Items[I].Strings[aLocaleId]);
+
+        if (Items[I].Strings[aLocaleId] <> '') and (Items[I].Strings[aLocaleId] <> SAME_TEXT) then
+          localeHasStrings := True;
+      end;
+
+    if not localeHasStrings then
+      Exit;
+
+    var sl := TStringList.Create;
+    try
+      sl.DefaultEncoding := TEncoding.UTF8;
+      sl.Text := nl.SaveToString;
+      sl.SaveToFile(aFilename);
+    finally
+      sl.Free;
+    end;
+  finally
+    nl.Free;
   end;
 end;
 
