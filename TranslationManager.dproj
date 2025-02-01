@@ -82,20 +82,21 @@
             <MainSource>MainSource</MainSource>
         </DelphiCompile>
         <DCCReference Include="UnitTranslationManager.pas">
-            <Form>Form1</Form>
+            <Form>fmTranslationManager</Form>
         </DCCReference>
+        <DCCReference Include="3rdparty\KromNestedLibrary.pas"/>
         <DCCReference Include="3rdparty\KromStringUtils.pas"/>
         <DCCReference Include="3rdparty\KromUtils.pas"/>
         <DCCReference Include="3rdparty\SciZipFile.pas"/>
         <DCCReference Include="3rdparty\Zippit.pas"/>
         <DCCReference Include="common\KM_IoXml.pas"/>
         <DCCReference Include="common\Xml.VerySimple.pas"/>
+        <DCCReference Include="KM_LibxFinder.pas"/>
         <DCCReference Include="res\KM_ResLocales.pas"/>
         <DCCReference Include="res\KM_ResLocales_KMR.pas"/>
         <DCCReference Include="res\KM_ResLocales_KP.pas"/>
         <DCCReference Include="KM_TextLines.pas"/>
         <DCCReference Include="KM_TextManager.pas"/>
-        <DCCReference Include="Unit_PathManager.pas"/>
         <BuildConfiguration Include="Debug">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>

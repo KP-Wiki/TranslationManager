@@ -1,4 +1,4 @@
-object Form1: TForm1
+object fmTranslationManager: TfmTranslationManager
   Left = 230
   Top = 140
   Caption = 'Translation Manager'

@@ -17,7 +17,7 @@ const
   LIBX_DOMAIN: array [TKMLibxDomain] of string = ('data\', 'tutorials\', 'campaigns\', 'maps\', 'mapsmp\', 'maps_unofficial\', 'mapsdev\');
 
 type
-  TForm1 = class(TForm)
+  TfmTranslationManager = class(TForm)
     lbTagName: TLabel;
     ScrollBox1: TScrollBox;
     lbLibs: TListBox;
@@ -207,8 +207,8 @@ begin
 end;
 
 
-{ TForm1 }
-function TForm1.Start: Boolean;
+{ TfmTranslationManager }
+function TfmTranslationManager.Start: Boolean;
 const
   MODE: array [Boolean] of TKMUsageMode = (umUser, umDeveloper);
 var
@@ -257,7 +257,7 @@ begin
 end;
 
 
-procedure TForm1.FormDestroy(Sender: TObject);
+procedure TfmTranslationManager.FormDestroy(Sender: TObject);
 begin
   if fTargetGame <> tgUnknown then
     SaveSettings(fSettingsPath);
@@ -268,14 +268,14 @@ begin
 end;
 
 
-procedure TForm1.FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
+procedure TfmTranslationManager.FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
 begin
   if (ssCtrl in Shift) and (Key = Ord('S')) then
     fTextManager.Save(fTargetGame = tgKaMRemake);
 end;
 
 
-procedure TForm1.FormResize(Sender: TObject);
+procedure TfmTranslationManager.FormResize(Sender: TObject);
 var
   I,K: Integer;
   selCount, secHeight: Word;
@@ -302,7 +302,7 @@ begin
 end;
 
 
-function TForm1.GetSelectedLocales: TByteSet;
+function TfmTranslationManager.GetSelectedLocales: TByteSet;
 var
   I: Integer;
 begin
@@ -313,7 +313,7 @@ begin
 end;
 
 
-procedure TForm1.UpdateMenuItemVisibility;
+procedure TfmTranslationManager.UpdateMenuItemVisibility;
 begin
   // Hide entries that Users should not access
 
@@ -338,7 +338,7 @@ begin
 end;
 
 
-procedure TForm1.RefreshFolders;
+procedure TfmTranslationManager.RefreshFolders;
 var
   I: Integer;
 begin
@@ -355,7 +355,7 @@ begin
 end;
 
 
-procedure TForm1.lbLibsClick(Sender: TObject);
+procedure TfmTranslationManager.lbLibsClick(Sender: TObject);
 const
   MSG_WARNING: string = 'You have unsaved changes that will be lost, load new libx anyway?';
 var
@@ -380,13 +380,13 @@ begin
 end;
 
 
-procedure TForm1.btnSaveClick(Sender: TObject);
+procedure TfmTranslationManager.btnSaveClick(Sender: TObject);
 begin
   fTextManager.Save(fTargetGame = tgKaMRemake);
 end;
 
 
-procedure TForm1.btnSaveToZipClick(Sender: TObject);
+procedure TfmTranslationManager.btnSaveToZipClick(Sender: TObject);
 begin
   sdExportZIP.InitialDir := fWorkDir;
   if not sdExportZIP.Execute(Handle) then Exit;
@@ -395,7 +395,7 @@ begin
 end;
 
 
-procedure TForm1.btnSaveAllToZipClick(Sender: TObject);
+procedure TfmTranslationManager.btnSaveAllToZipClick(Sender: TObject);
 begin
   sdExportZIP.InitialDir := fWorkDir;
   if not sdExportZIP.Execute(Handle) then Exit;
@@ -404,7 +404,7 @@ begin
 end;
 
 
-procedure TForm1.SaveToZip(const aZipName: string; aLocales: TByteSet);
+procedure TfmTranslationManager.SaveToZip(const aZipName: string; aLocales: TByteSet);
 var
   newZip: TZippit;
   I, K: Integer;
@@ -428,7 +428,7 @@ begin
 end;
 
 
-procedure TForm1.RefreshList;
+procedure TfmTranslationManager.RefreshList;
 var
   selectedLocales: TByteSet;
 
@@ -495,7 +495,7 @@ begin
 end;
 
 
-procedure TForm1.InitLibxDomainsList;
+procedure TfmTranslationManager.InitLibxDomainsList;
 var
   LD: TKMLibxDomain;
 begin
@@ -510,7 +510,7 @@ begin
 end;
 
 
-procedure TForm1.InitLocalesList;
+procedure TfmTranslationManager.InitLocalesList;
   function GetCharset(const aLang: string): TFontCharset;
   begin
     // Using slower but more compact comparisons
@@ -558,7 +558,7 @@ begin
 end;
 
 
-procedure TForm1.UpdateVisibleLocales;
+procedure TfmTranslationManager.UpdateVisibleLocales;
 var
   I: Integer;
 begin
@@ -572,7 +572,7 @@ begin
 end;
 
 
-procedure TForm1.InitFormControls;
+procedure TfmTranslationManager.InitFormControls;
 var
   I: Integer;
 begin
@@ -588,7 +588,7 @@ begin
 end;
 
 
-procedure TForm1.LoadSettings(const aPath: string);
+procedure TfmTranslationManager.LoadSettings(const aPath: string);
 var
   xml: TKMXMLDocument;
   isMaximized: Boolean;
@@ -612,7 +612,7 @@ begin
 end;
 
 
-procedure TForm1.SaveSettings(const aPath: string);
+procedure TfmTranslationManager.SaveSettings(const aPath: string);
 var
   selectedLocales: string;
   selectedFolders: string;
@@ -643,7 +643,7 @@ begin
 end;
 
 
-procedure TForm1.lbTagsClick(Sender: TObject);
+procedure TfmTranslationManager.lbTagsClick(Sender: TObject);
 var
   I,ID: Integer;
 begin
@@ -667,48 +667,48 @@ begin
 end;
 
 
-procedure TForm1.lbTagsKeyPress(Sender: TObject; var Key: Char);
+procedure TfmTranslationManager.lbTagsKeyPress(Sender: TObject; var Key: Char);
 begin
   if Ord(Key) = VK_DELETE then
     btnDeleteClick(Self);
 end;
 
 
-procedure TForm1.btnSortByIndexClick(Sender: TObject);
+procedure TfmTranslationManager.btnSortByIndexClick(Sender: TObject);
 begin
   fTextManager.SortByIndex;
   RefreshList;
 end;
 
 
-procedure TForm1.btnSortByTagClick(Sender: TObject);
+procedure TfmTranslationManager.btnSortByTagClick(Sender: TObject);
 begin
   fTextManager.SortByTag;
   RefreshList;
 end;
 
 
-procedure TForm1.btnCompactIndexesClick(Sender: TObject);
+procedure TfmTranslationManager.btnCompactIndexesClick(Sender: TObject);
 begin
   fTextManager.CompactIndexes;
   RefreshList;
 end;
 
 
-procedure TForm1.edFilterTextChange(Sender: TObject);
+procedure TfmTranslationManager.edFilterTextChange(Sender: TObject);
 begin
   RefreshControls;
   RefreshList;
 end;
 
 
-procedure TForm1.btnExitClick(Sender: TObject);
+procedure TfmTranslationManager.btnExitClick(Sender: TObject);
 begin
   Close;
 end;
 
 
-procedure TForm1.MemoChange(Sender: TObject);
+procedure TfmTranslationManager.MemoChange(Sender: TObject);
 var
   idx,T: Integer;
 begin
@@ -724,7 +724,7 @@ begin
 end;
 
 
-procedure TForm1.btnInsertClick(Sender: TObject);
+procedure TfmTranslationManager.btnInsertClick(Sender: TObject);
 var
   idx: Integer;
 begin
@@ -736,7 +736,7 @@ begin
 end;
 
 
-procedure TForm1.btnInsertSeparatorClick(Sender: TObject);
+procedure TfmTranslationManager.btnInsertSeparatorClick(Sender: TObject);
 var
   idx: Integer;
 begin
@@ -748,7 +748,7 @@ begin
 end;
 
 
-procedure TForm1.btnDeleteClick(Sender: TObject);
+procedure TfmTranslationManager.btnDeleteClick(Sender: TObject);
 var
   idx: Integer;
 begin
@@ -760,7 +760,7 @@ begin
 end;
 
 
-procedure TForm1.btnMoveUpClick(Sender: TObject);
+procedure TfmTranslationManager.btnMoveUpClick(Sender: TObject);
 var
   idx: Integer;
 begin
@@ -773,7 +773,7 @@ begin
 end;
 
 
-procedure TForm1.btnCopyClick(Sender: TObject);
+procedure TfmTranslationManager.btnCopyClick(Sender: TObject);
 var
   idx: Integer;
 begin
@@ -786,7 +786,7 @@ begin
 end;
 
 
-procedure TForm1.btnPasteClick(Sender: TObject);
+procedure TfmTranslationManager.btnPasteClick(Sender: TObject);
 var
   idx: Integer;
 begin
@@ -799,7 +799,7 @@ begin
 end;
 
 
-procedure TForm1.btnEraseAllButEngClick(Sender: TObject);
+procedure TfmTranslationManager.btnEraseAllButEngClick(Sender: TObject);
 var
   idx: Integer;
 begin
@@ -812,7 +812,7 @@ begin
 end;
 
 
-procedure TForm1.btnRenameClick(Sender: TObject);
+procedure TfmTranslationManager.btnRenameClick(Sender: TObject);
 var
   newName: string;
   idx: Integer;
@@ -832,7 +832,7 @@ begin
 end;
 
 
-procedure TForm1.btnMoveDownClick(Sender: TObject);
+procedure TfmTranslationManager.btnMoveDownClick(Sender: TObject);
 var
   idx: Integer;
 begin
@@ -846,7 +846,7 @@ begin
 end;
 
 
-procedure TForm1.cbFilterEmptyTextsClick(Sender: TObject);
+procedure TfmTranslationManager.cbFilterEmptyTextsClick(Sender: TObject);
 begin
   RefreshControls;
   RefreshList;
@@ -857,13 +857,13 @@ begin
 end;
 
 
-procedure TForm1.cbLibxDomainsClick(Sender: TObject);
+procedure TfmTranslationManager.cbLibxDomainsClick(Sender: TObject);
 begin
   RefreshFolders;
 end;
 
 
-procedure TForm1.RefreshControls;
+procedure TfmTranslationManager.RefreshControls;
 var
   id: Integer;
   isItemSelected, isMainFile, isFiltered: Boolean;
@@ -897,7 +897,7 @@ begin
 end;
 
 
-procedure TForm1.clbShowLangClickCheck(Sender: TObject);
+procedure TfmTranslationManager.clbShowLangClickCheck(Sender: TObject);
 var
   I,K: Integer;
 begin
@@ -927,13 +927,13 @@ begin
 end;
 
 
-procedure TForm1.FormCloseQuery(Sender: TObject; var CanClose: Boolean);
+procedure TfmTranslationManager.FormCloseQuery(Sender: TObject; var CanClose: Boolean);
 begin
   CanClose := not fTextManager.HasChanges or (MessageDlg('Exit without saving?', mtWarning, [mbYes, mbNo], 0) = mrYes);
 end;
 
 
-procedure TForm1.btnListMismatchingClick(Sender: TObject);
+procedure TfmTranslationManager.btnListMismatchingClick(Sender: TObject);
 var
   slMismatching: TStringList;
 begin
@@ -949,7 +949,7 @@ begin
 end;
 
 
-procedure TForm1.btnListUnusedTagsClick(Sender: TObject);
+procedure TfmTranslationManager.btnListUnusedTagsClick(Sender: TObject);
 var
   slTags: TStringList;
 
@@ -1027,26 +1027,26 @@ begin
 end;
 
 
-procedure TForm1.btnCopyToCBClick(Sender: TObject);
+procedure TfmTranslationManager.btnCopyToCBClick(Sender: TObject);
 begin
   fTextManager.ToClipboard(GetSelectedLocales, ceSimple);
 end;
 
 
-procedure TForm1.btnCopyToClipboardAllClick(Sender: TObject);
+procedure TfmTranslationManager.btnCopyToClipboardAllClick(Sender: TObject);
 begin
   fTextManager.ToClipboardAll(fLibxFinder.GetPaths, GetSelectedLocales);
 end;
 
 
-procedure TForm1.btnPasteFromCBClick(Sender: TObject);
+procedure TfmTranslationManager.btnPasteFromCBClick(Sender: TObject);
 begin
   fTextManager.FromClipboard;
   RefreshList;
 end;
 
 
-procedure TForm1.btnPasteFromClipboardAllClick(Sender: TObject);
+procedure TfmTranslationManager.btnPasteFromClipboardAllClick(Sender: TObject);
 begin
   fTextManager.FromClipboardAll(fTargetGame = tgKaMRemake);
 end;

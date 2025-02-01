@@ -2,7 +2,7 @@ program TranslationManager;
 uses
   Forms,
 
-  UnitTranslationManager in 'UnitTranslationManager.pas' {Form1},
+  UnitTranslationManager in 'UnitTranslationManager.pas' {fmTranslationManager},
 
   KromNestedLibrary in '3rdparty\KromNestedLibrary.pas',
   KromStringUtils in '3rdparty\KromStringUtils.pas',
@@ -13,24 +13,22 @@ uses
   Xml.VerySimple in 'common\Xml.VerySimple.pas',
 
   KM_LibxFinder in 'KM_LibxFinder.pas',
+  KM_TextLines in 'KM_TextLines.pas',
+  KM_TextManager in 'KM_TextManager.pas',
 
   KM_ResLocales in 'res\KM_ResLocales.pas',
   KM_ResLocales_KMR in 'res\KM_ResLocales_KMR.pas',
-  KM_ResLocales_KP in 'res\KM_ResLocales_KP.pas',
-
-  KM_TextLines in 'KM_TextLines.pas',
-  KM_TextManager in 'KM_TextManager.pas';
+  KM_ResLocales_KP in 'res\KM_ResLocales_KP.pas';
 
 {$R *.res}
 
 var
-  Form1: TForm1;
+  fmTranslationManager: TfmTranslationManager;
 
 begin
   Application.Initialize;
-  Application.CreateForm(TForm1, Form1);
-
-  if not Form1.Start then
+  Application.CreateForm(TfmTranslationManager, fmTranslationManager);
+  if not fmTranslationManager.Start then
     Exit;
 
   Application.Run;
