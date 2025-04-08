@@ -755,6 +755,8 @@ begin
   idx := lbTags.ItemIndex; //Item place we are deleting
   if idx = -1 then Exit;
 
+  //todo: This does not take into account applied filtering
+
   fTextManager.Delete(idx);
   RefreshList;
 end;
