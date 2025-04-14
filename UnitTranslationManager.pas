@@ -116,7 +116,6 @@ type
     fTransLabels: array of TLabel;
     fTransMemos: array of TMemo;
 
-    ListBoxLookup: array of Integer;
     fUpdating: Boolean;
     fPreviousFolder: Integer;
     procedure MemoChange(Sender: TObject);
@@ -458,35 +457,31 @@ var
       Result := aLine.HasTagIdFilter(Trim(edFilterTagId.Text));
   end;
 var
-  I, TopIdx, ItemIdx: Integer;
+  I, topIdx, itemIdx: Integer;
   s: string;
 begin
   lbTags.Items.BeginUpdate;
-  ItemIdx := lbTags.ItemIndex;
-  TopIdx := lbTags.TopIndex;
+  itemIdx := lbTags.ItemIndex;
+  topIdx := lbTags.TopIndex;
   try
     lbTags.Clear;
-
-    SetLength(ListBoxLookup, 0);
-    SetLength(ListBoxLookup, fTextManager.Count);
 
     selectedLocales := GetSelectedLocales;
 
     for I := 0 to fTextManager.Count - 1 do
     if ShowTag(fTextManager[I]) then
     begin
-      ListBoxLookup[lbTags.Items.Count] := I;
       if fTextManager[I].IsSpacer then
         s := ''
       else
         s := IntToStr(fTextManager[I].Id) + ': ' + fTextManager[I].Tag;
 
-      lbTags.Items.Add(s);
+      lbTags.Items.AddObject(s, TObject(I));
     end;
   finally
     lbTags.Items.EndUpdate;
-    lbTags.ItemIndex := EnsureRange(ItemIdx, 0, lbTags.Count - 1);
-    lbTags.TopIndex := TopIdx;
+    lbTags.ItemIndex := EnsureRange(itemIdx, 0, lbTags.Count - 1);
+    lbTags.TopIndex := topIdx;
   end;
 
   lbTagsClick(lbTags);
@@ -645,21 +640,22 @@ end;
 
 procedure TfmTranslationManager.lbTagsClick(Sender: TObject);
 var
-  I,ID: Integer;
+  I, idx: Integer;
 begin
   if lbTags.ItemIndex = -1 then Exit;
 
   fUpdating := True;
 
-  ID := ListBoxLookup[lbTags.ItemIndex];
+  idx := lbTags.ItemIndex;
+  idx := Integer(lbTags.Items.Objects[idx]);
 
-  btnRename.Enabled := not fTextManager[ID].IsSpacer;
+  btnRename.Enabled := not fTextManager[idx].IsSpacer;
 
-  lbTagName.Caption := fTextManager[ID].Tag;
+  lbTagName.Caption := fTextManager[idx].Tag;
 
   for I := 0 to fLocales.Count - 1 do
-    if not fTextManager[ID].IsSpacer then
-      fTransMemos[I].Text := {$IFDEF FPC}AnsiToUTF8{$ENDIF}(fTextManager[ID].Strings[I])
+    if not fTextManager[idx].IsSpacer then
+      fTransMemos[I].Text := {$IFDEF FPC}AnsiToUTF8{$ENDIF}(fTextManager[idx].Strings[I])
     else
       fTransMemos[I].Text := '';
 
@@ -710,15 +706,18 @@ end;
 
 procedure TfmTranslationManager.MemoChange(Sender: TObject);
 var
-  idx,T: Integer;
+  idx, localeTag: Integer;
 begin
   if fUpdating then Exit;
 
-  idx := ListBoxLookup[lbTags.ItemIndex];
+  idx := lbTags.ItemIndex;
+  if idx = -1 then Exit;
+  idx := Integer(lbTags.Items.Objects[idx]);
+
   if fTextManager[idx].IsSpacer then Exit;
 
-  T := TMemo(Sender).Tag;
-  fTextManager[idx].Strings[T] := {$IFDEF FPC}Utf8ToAnsi{$ENDIF}(TMemo(Sender).Text);
+  localeTag := TMemo(Sender).Tag;
+  fTextManager[idx].Strings[localeTag] := {$IFDEF FPC}Utf8ToAnsi{$ENDIF}(TMemo(Sender).Text);
 
   fTextManager.HasChanges := True;
 end;
@@ -728,8 +727,9 @@ procedure TfmTranslationManager.btnInsertClick(Sender: TObject);
 var
   idx: Integer;
 begin
-  idx := lbTags.ItemIndex; // Item place we are adding
+  idx := lbTags.ItemIndex;
   if idx = -1 then Exit;
+  idx := Integer(lbTags.Items.Objects[idx]);
 
   fTextManager.Insert(idx);
   RefreshList;
@@ -740,8 +740,9 @@ procedure TfmTranslationManager.btnInsertSeparatorClick(Sender: TObject);
 var
   idx: Integer;
 begin
-  idx := lbTags.ItemIndex; //Item place we are adding
+  idx := lbTags.ItemIndex;
   if idx = -1 then Exit;
+  idx := Integer(lbTags.Items.Objects[idx]);
 
   fTextManager.InsertSeparator(idx);
   RefreshList;
@@ -752,10 +753,9 @@ procedure TfmTranslationManager.btnDeleteClick(Sender: TObject);
 var
   idx: Integer;
 begin
-  idx := lbTags.ItemIndex; //Item place we are deleting
+  idx := lbTags.ItemIndex;
   if idx = -1 then Exit;
-
-  //todo: This does not take into account applied filtering
+  idx := Integer(lbTags.Items.Objects[idx]);
 
   fTextManager.Delete(idx);
   RefreshList;
@@ -767,6 +767,9 @@ var
   idx: Integer;
 begin
   idx := lbTags.ItemIndex;
+  if idx = -1 then Exit;
+
+  idx := Integer(lbTags.Items.Objects[idx]);
 
   fTextManager.MoveUp(idx);
   RefreshList;
@@ -781,8 +784,9 @@ var
 begin
   idx := lbTags.ItemIndex;
   if idx = -1 then Exit;
+  idx := Integer(lbTags.Items.Objects[idx]);
 
-  fTextManager.TextCopy(ListBoxLookup[idx]);
+  fTextManager.TextCopy(idx);
 
   btnPaste.Enabled := True;
 end;
@@ -794,8 +798,9 @@ var
 begin
   idx := lbTags.ItemIndex;
   if idx = -1 then Exit;
+  idx := Integer(lbTags.Items.Objects[idx]);
 
-  fTextManager.TextPaste(ListBoxLookup[idx]);
+  fTextManager.TextPaste(idx);
 
   lbTagsClick(nil);
 end;
@@ -807,8 +812,9 @@ var
 begin
   idx := lbTags.ItemIndex;
   if idx = -1 then Exit;
+  idx := Integer(lbTags.Items.Objects[idx]);
 
-  fTextManager.EraseAllStringsButEng(ListBoxLookup[idx]);
+  fTextManager.EraseAllStringsButEng(idx);
 
   lbTagsClick(nil);
 end;
@@ -819,9 +825,10 @@ var
   newName: string;
   idx: Integer;
 begin
-  if lbTags.ItemIndex = -1 then Exit;
+  idx := lbTags.ItemIndex;
+  if idx = -1 then Exit;
+  idx := Integer(lbTags.Items.Objects[idx]);
 
-  idx := ListBoxLookup[lbTags.ItemIndex];
   if fTextManager[idx].IsSpacer then Exit;
 
   newName := UpperCase(InputBox('', 'New name:', fTextManager[idx].Tag));
@@ -840,6 +847,7 @@ var
 begin
   idx := lbTags.ItemIndex;
   if idx = -1 then Exit;
+  idx := Integer(lbTags.Items.Objects[idx]);
 
   fTextManager.MoveDown(idx);
   RefreshList;
