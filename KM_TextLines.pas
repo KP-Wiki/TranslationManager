@@ -2,14 +2,14 @@ unit KM_TextLines;
 {$I KM_CompilerDirectives.inc}
 interface
 uses
-  Dialogs, Generics.Collections,
-  StrUtils, SysUtils;
+  Vcl.Dialogs, System.Generics.Collections,
+  System.StrUtils, System.SysUtils;
 
 
 type
   TByteSet = set of Byte;
 
-  // Maybe slower, but it's much simpler to manage classes (when there are strings in them)
+  // Maybe slower, but it's much simpler to manage Classes (when there are strings in them)
   TKMLine = class
   private const
     ID_SPACER = -1;
@@ -70,7 +70,7 @@ type
 
 implementation
 uses
-  Classes, DateUtils, Math,
+  System.Classes, System.DateUtils, System.Math,
   KromNestedLibrary;
 
 

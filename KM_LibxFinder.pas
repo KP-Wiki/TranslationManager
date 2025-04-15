@@ -2,7 +2,7 @@ unit KM_LibxFinder;
 {$I KM_CompilerDirectives.inc}
 interface
 uses
-  Classes;
+  System.Classes;
 
 type
   // Scans folder and subfolders in search of .libx files
@@ -26,7 +26,7 @@ type
 
 implementation
 uses
-  StrUtils, SysUtils;
+  System.StrUtils, System.SysUtils;
 
 
 { TKMLibxFinder }

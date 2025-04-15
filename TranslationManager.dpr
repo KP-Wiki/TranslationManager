@@ -1,6 +1,6 @@
 program TranslationManager;
 uses
-  Forms,
+  Vcl.Forms,
 
   UnitTranslationManager in 'UnitTranslationManager.pas' {fmTranslationManager},
 

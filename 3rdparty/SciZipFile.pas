@@ -15,9 +15,9 @@ unit SciZipFile;
 // Marcin Wojda <Marcin@sacer.com.pl> added exceptions and try finally blocks
 
 interface
-uses SysUtils, Classes
-     {$IFDEF MSWindows} ,Windows {$ENDIF}
-     ,zlib
+uses System.SysUtils, System.Classes
+     {$IFDEF MSWindows} ,Winapi.Windows {$ENDIF}
+     ,System.zlib
      {$IFDEF FPC} ,zstream {$ENDIF}
      ;
 

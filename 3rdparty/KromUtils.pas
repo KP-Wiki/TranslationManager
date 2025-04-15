@@ -2,23 +2,23 @@ unit KromUtils;
 {$I ..\KM_CompilerDirectives.inc}
 interface
 uses
-  Classes, Math, StrUtils,
+  System.Classes, System.Math, System.StrUtils,
   {$IFDEF ANDROID}
 
   {$ENDIF}
   {$IFDEF MSWINDOWS}
     {$IFDEF WDC}
-    Vcl.Controls, Vcl.Dialogs, Vcl.ExtCtrls, Vcl.Forms, DateUtils, ImageHlp,
+    Vcl.Controls, Vcl.Dialogs, Vcl.ExtCtrls, Vcl.Forms, System.DateUtils, Winapi.ImageHlp,
     {$IF CompilerVersion >= 29.0}
     // in XE8 (2015) we got the System.Hash unit, which brought the MD5, SHA-1, and Bob Jenkins hashes.
     // Then in 10.0 Seattle (2015) it was expanded with SHA-2 support.
     System.Hash,
     {$IFEND}
-    ActiveX, ComObj, Variants, ShellApi,
+    Winapi.ActiveX, System.Win.ComObj, System.Variants, Winapi.ShellAPI,
     {$ENDIF}
-    Windows, MMSystem, psAPI,
+    Winapi.Windows, Winapi.MMSystem, Winapi.PsAPI,
   {$ENDIF}
-  SysUtils;
+  System.SysUtils;
 
 
   procedure FreeThenNil(var Obj);
@@ -103,19 +103,19 @@ end;
 
 function Min(const A, B, C, D: Byte): Byte;
 begin
-  Result := Math.Min(Math.Min(A, B), Math.Min(C, D));
+  Result := Min(Min(A, B), Min(C, D));
 end;
 
 
 function Min(const A, B, C, D: Single): Single;
 begin
-  Result := Math.Min(Math.Min(A, B), Math.Min(C, D));
+  Result := Min(Min(A, B), Min(C, D));
 end;
 
 
 function Min(const A, B, C, D, E: Single): Single;
 begin
-  Result := Math.Min(Math.Min(A, B), Math.Min(Math.Min(C, D), E));
+  Result := Min(Min(A, B), Min(Min(C, D), E));
 end;
 
 
@@ -165,13 +165,13 @@ end;
 
 function Max(const A, B, C, D: Single): Single;
 begin
-  Result := Math.Max(Math.Max(A, B), Math.Max(C, D));
+  Result := Max(Max(A, B), Max(C, D));
 end;
 
 
 function Max(const A, B, C, D, E: Single): Single;
 begin
-  Result := Math.Max(Math.Max(A, B), Math.Max(Math.Max(C, D), E));
+  Result := Max(Max(A, B), Max(Max(C, D), E));
 end;
 
 

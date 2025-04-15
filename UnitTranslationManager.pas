@@ -2,8 +2,8 @@ unit UnitTranslationManager;
 {$I KM_CompilerDirectives.inc}
 interface
 uses
-  Classes, Controls, Dialogs, ExtCtrls, Forms, Graphics, Math, Menus,
-  StdCtrls, StrUtils, Windows, SysUtils, CheckLst, Vcl.Buttons,
+  System.Classes, Vcl.Controls, Vcl.Dialogs, Vcl.ExtCtrls, Vcl.Forms, Vcl.Graphics, System.Math, Vcl.Menus,
+  Vcl.StdCtrls, System.StrUtils, Winapi.Windows, System.SysUtils, Vcl.CheckLst, Vcl.Buttons,
   KM_ResLocales, KM_TextLines, KM_TextManager, KM_LibxFinder;
 
 type
@@ -970,7 +970,7 @@ var
     I, K: Integer;
     SearchRec: TSearchRec;
   begin
-    if not SysUtils.DirectoryExists(aPath) then Exit;
+    if not DirectoryExists(aPath) then Exit;
 
     slPas := TStringList.Create;
     slPaths := TStringList.Create;

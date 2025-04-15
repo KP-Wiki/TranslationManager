@@ -2,7 +2,7 @@ unit KromNestedLibrary;
 {$I KM_CompilerDirectives.inc}
 interface
 uses
-  Classes, Generics.Collections, Generics.Defaults;
+  System.Classes, System.Generics.Collections, System.Generics.Defaults;
 
 // NestedLibrary is backwards compatible with LIBX
 // Features description - https://github.com/Kromster80/knights_province/wiki/Text-localizations-(libx-files)
@@ -76,7 +76,8 @@ type
 
 implementation
 uses
-  KromStringUtils, SysUtils, StrUtils;
+  System.SysUtils, System.StrUtils,
+  KromStringUtils;
 
 
 { TKMPair }

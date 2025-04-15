@@ -2,7 +2,7 @@ unit KM_ResLocales_KP;
 // Mirror copy from KP
 interface
 uses
-  Math, SysUtils, StrUtils,
+  System.Math, System.SysUtils, System.StrUtils,
   KM_IoXML;
 
 

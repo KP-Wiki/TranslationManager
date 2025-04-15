@@ -26,7 +26,7 @@ unit Zippit;
 interface
 
 uses
-  Classes, SysUtils, SciZipFile;
+  System.Classes, System.SysUtils, SciZipFile;
 
 type
   TZippit = class(TZipFile)
@@ -107,7 +107,7 @@ var
   B: AnsiString;
 begin
   if not FileExists(Name) then exit;
-  if PathOnZip <> '' then PathOnZip := SysUtils.IncludeTrailingBackslash(PathOnZip);
+  if PathOnZip <> '' then PathOnZip := System.SysUtils.IncludeTrailingBackslash(PathOnZip);
   F := TFileStream.Create(Name, fmOpenRead);
   try
     SetLength(B, F.Size);

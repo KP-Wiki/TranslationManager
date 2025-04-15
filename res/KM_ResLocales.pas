@@ -2,7 +2,7 @@ unit KM_ResLocales;
 {$I KM_CompilerDirectives.inc}
 interface
 uses
-  SysUtils,
+  System.SysUtils,
   KM_ResLocales_KMR,
   KM_ResLocales_KP,
   KM_IoXML;

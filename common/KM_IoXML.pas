@@ -1,7 +1,7 @@
 unit KM_IoXML;
 interface
 uses
-  Classes, SysUtils,
+  System.Classes, System.SysUtils,
 
   Xml.VerySimple; // (Attributes can be only 'string', which is not convenient)
 

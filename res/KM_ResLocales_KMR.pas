@@ -2,7 +2,7 @@ unit KM_ResLocales_KMR;
 // Mirror copy from KMR
 interface
 uses
-  Classes, Math, SysUtils, StrUtils;
+  System.Classes, System.Math, System.SysUtils, System.StrUtils;
 
 
 type

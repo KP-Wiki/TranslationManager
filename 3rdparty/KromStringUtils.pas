@@ -24,7 +24,7 @@ interface
 
 implementation
 uses
-  SysUtils, StrUtils;
+  System.SysUtils, System.StrUtils;
 
 
 function StringLow(const aString: string): Integer;

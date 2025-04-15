@@ -22,7 +22,7 @@ unit Xml.VerySimple;
 interface
 
 uses
-  Classes, SysUtils, Generics.Defaults, Generics.Collections, Variants, Rtti;
+  System.Classes, System.SysUtils, System.Generics.Defaults, System.Generics.Collections, System.Variants, System.Rtti;
 
 const
   TXmlSpaces = #$20 + #$0A + #$0D + #9;
@@ -325,7 +325,7 @@ type
 implementation
 
 uses
-  DateUtils, StrUtils;
+  System.DateUtils, System.StrUtils;
 
 type
   TStreamReaderHelper = class helper for TStreamReader

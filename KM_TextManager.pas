@@ -2,8 +2,8 @@ unit KM_TextManager;
 {$I KM_CompilerDirectives.inc}
 interface
 uses
-  Classes, Dialogs, Math, Vcl.Clipbrd, Generics.Defaults,
-  StrUtils, SysUtils, Types,
+  System.Classes, Vcl.Dialogs, System.Math, Vcl.Clipbrd, System.Generics.Defaults,
+  System.StrUtils, System.SysUtils, System.Types,
   KM_ResLocales,
   KM_TextLines;
 
