@@ -408,10 +408,8 @@ end;
 
 
 procedure TKMLines.TagsAutoName(const aPath: string);
-var
-  I: Integer;
 begin
-  for I := 0 to Count - 1 do
+  for var I := 0 to Count - 1 do
   if not Items[I].IsSpacer then
   begin
     Items[I].Autoname(aPath);
@@ -425,24 +423,20 @@ end;
 
 
 procedure TKMLines.AddOrAppendString(aId, aLocale: Integer; aString: string);
-var
-  I: Integer;
 begin
-  I := IndexOfId(aId);
+  var idx := IndexOfId(aId);
 
-  if I = -1 then
-    I := Add(TKMLine.Create(aId));
+  if idx = -1 then
+    idx := Add(TKMLine.Create(aId));
 
-  Items[I].Strings[aLocale] := aString;
+  Items[idx].Strings[aLocale] := aString;
 end;
 
 
 function TKMLines.IndexOfId(aId: Integer): Integer;
-var
-  I: Integer;
 begin
   Result := -1;
-  for I := 0 to Count - 1 do
+  for var I := 0 to Count - 1 do
     if Items[I].Id = aId then
       Exit(I);
 end;
@@ -528,28 +522,23 @@ end;
 
 
 procedure TKMLines.LoadLibx(const aFilename: string; aLocaleId: Integer);
-var
-  sl: TStringList;
-  delimiterPos: Integer;
-  I: Integer;
-  id: Integer;
-  newLine: string;
 begin
   if not FileExists(aFilename) then Exit;
 
-  sl := TStringList.Create;
+  var sl := TStringList.Create;
   try
     sl.LoadFromFile(aFilename);
 
-    for I := 0 to sl.Count - 1 do
+    for var I := 0 to sl.Count - 1 do
     begin
-      newLine := Trim(sl[I]);
+      var newLine := Trim(sl[I]);
 
-      delimiterPos := Pos(':', newLine);
+      var delimiterPos := Pos(':', newLine);
 
       // If there's no delimiter we can not extract anything anyway (but we could insert spacer or comment?)
       if delimiterPos = 0 then Continue;
 
+      var id: Integer;
       if not TryStrToInt(TrimLeft(LeftStr(newLine, delimiterPos-1)), id) then Continue;
 
       newLine := RightStr(newLine, Length(newLine) - delimiterPos);
@@ -602,16 +591,12 @@ end;
 
 
 procedure TKMLines.SaveLibx(const aFilename: string; aLocaleId: Integer; aForceSort, aSortById: Boolean);
-var
-  sl: TStringList;
-  I: Integer;
-  localeHasStrings: Boolean;
-  sortedLines: array of Integer;
 begin
   // We want to sort lines by Id only for the save, We do not want to change their order in TM
+  var sortedLines: TArray<Integer>;
   SetLength(sortedLines, MAX_ALLOWED_ID+1);
   FillChar(sortedLines[0], Length(sortedLines) * SizeOf(sortedLines[0]), -1);
-  for I := 0 to Count - 1 do
+  for var I := 0 to Count - 1 do
   begin
     if (not Items[I].IsSpacer and (Items[I].Strings[aLocaleId] <> ''))
     or aForceSort then
@@ -621,12 +606,12 @@ begin
         sortedLines[I] := I;
   end;
 
-  sl := TStringList.Create;
+  var sl := TStringList.Create;
   try
     sl.DefaultEncoding := TEncoding.UTF8;
 
-    localeHasStrings := False;
-    for I := 0 to High(sortedLines) do
+    var localeHasStrings := False;
+    for var I := 0 to High(sortedLines) do
     if sortedLines[I] <> -1 then
     begin
       sl.Append(Items[sortedLines[I]].GetLineForLibx(aLocaleId));
@@ -646,12 +631,11 @@ end;
 procedure TKMLines.SaveLibxKP(const aFilename: string; aLocaleId: Integer; aAddComment: Boolean);
 begin
   var nl := TKMNestedLibrary.Create;
-
-  if aAddComment then
-    nl.Root.Comment := 'Knights Province localization file' + sLineBreak +
-                       'Padding is purely visual thing. Format does not care about it';
-
   try
+    if aAddComment then
+      nl.Root.Comment := 'Knights Province localization file' + sLineBreak +
+                         'Padding is purely visual thing. Format does not care about it';
+
     var localeHasStrings := False;
 
     for var I := 0 to Count - 1 do
