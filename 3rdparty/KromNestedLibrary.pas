@@ -212,7 +212,7 @@ begin
     begin
       var newNode := Copy(thisLine, 2, Length(thisLine) - 2);
       if not ValidateNode(newNode) then
-        raise Exception.Create(Format('Node "%s" does not comply with libx requirements', [newNode]));
+        raise Exception.CreateFmt('Node "%s" does not comply with libx requirements', [newNode]);
 
       lastNode := newNode;
 
@@ -230,7 +230,7 @@ begin
     var thisValue := RightStr(thisLine, Length(thisLine) - delimPos);
 
     if not ValidateKey(thisKey) then
-      raise Exception.Create(Format('Key "%s" does not comply with libx requirements', [thisKey]));
+      raise Exception.CreateFmt('Key "%s" does not comply with libx requirements', [thisKey]);
 
     AddNode(lastNode + IfThen(lastNode <> '', '.') + thisKey, thisValue);
   end;
