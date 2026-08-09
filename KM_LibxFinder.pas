@@ -81,7 +81,7 @@ begin
   I := 0;
   repeat
     if FindFirst(subFolders[I] + '*', faAnyFile, searchRec) = 0 then
-    begin
+    try
       pathAdded := False;
       repeat
         if (searchRec.Name <> '.') and (searchRec.Name <> '..') then
@@ -96,9 +96,11 @@ begin
               fPaths.Add(ExtractRelativePath(aRoot, subFolders[I]) + fileMask);
               pathAdded := True;
             end;
-      until (FindNext(searchRec) <> 0);
+      until FindNext(searchRec) <> 0;
+    finally
       FindClose(searchRec);
     end;
+
     Inc(I);
   until (I >= subFolders.Count);
 

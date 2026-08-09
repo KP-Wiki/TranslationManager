@@ -980,7 +980,7 @@ var
     while I < slPaths.Count do
     begin
       if FindFirst(aPath + slPaths[I] + '*', faAnyFile, SearchRec) = 0 then
-      begin
+      try
         repeat
           if (SearchRec.Attr and faDirectory) <> 0 then
           begin
@@ -995,10 +995,10 @@ var
             if Pos(slTags[K], slPas.Text) <> 0 then
               slTags.Delete(K);
           end;
-        until (FindNext(SearchRec) <> 0);
+        until FindNext(SearchRec) <> 0;
 
         Inc(I);
-
+      finally
         FindClose(SearchRec);
       end;
     end;
