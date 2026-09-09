@@ -16,6 +16,7 @@
 {$IFDEF VER340} {$DEFINE WDC} {$ENDIF} // Delphi 10.4 Sydney
 {$IFDEF VER350} {$DEFINE WDC} {$ENDIF} // Delphi 11 Alexandria
 {$IFDEF VER360} {$DEFINE WDC} {$ENDIF} // Delphi 12
+{$IFDEF VER370} {$DEFINE WDC} {$ENDIF} // Delphi 13
 {.$DEFINE FPC} // Define Free Pascal compiler (defined automatically by Lazarus)
 
 
