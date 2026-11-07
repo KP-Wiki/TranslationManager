@@ -7,14 +7,17 @@ uses
   KM_ResLocales, KM_TextLines, KM_TextManager, KM_LibxFinder;
 
 type
-  TKMUsageMode = (umDeveloper, umUser);
+  TKMUsageMode = (
+    umDeveloper,  // Advanced destructive controls
+    umUser
+  );
 
-  TKMLibxDomain = (ldGame, ldTutorials, ldCampaigns, ldMaps, ldMapsMP, ldMapsUnofficial, ldMapdDev);
+  TKMLibxDomain = (ldGame, ldTutorials, ldCampaigns, ldMaps, ldMapsMP, ldMapsUnofficial, ldMapdDev, ldMods);
 
 const
   TARGET_GAME: array [TKMTargetGame] of string = ('Unknown', 'KaM Remake', 'Knights Province');
   USAGE_MODE: array [TKMUsageMode] of string = ('Developer mode', 'User mode');
-  LIBX_DOMAIN: array [TKMLibxDomain] of string = ('data\', 'tutorials\', 'campaigns\', 'maps\', 'mapsmp\', 'maps_unofficial\', 'mapsdev\');
+  LIBX_DOMAIN: array [TKMLibxDomain] of string = ('data\', 'tutorials\', 'campaigns\', 'maps\', 'mapsmp\', 'maps_unofficial\', 'mapsdev\', 'mods\');
 
 type
   TfmTranslationManager = class(TForm)
